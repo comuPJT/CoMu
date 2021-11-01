@@ -1,0 +1,47 @@
+ .mainpage {
+ width:100vw;
+ height:100vh;
+ background-image:url("../../assets/images/mainpage_background.png");
+ background-repeat: no-repeat;
+ background-size: 100vw 100vh;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ .logo{
+   width:14vw; 
+   position:absolute ; 
+   left:1vw ; 
+   top:1vw;
+ }
+ div{
+   .box1{
+     position:relative; 
+     display:flex ;
+    justify-content: center; 
+    align-items: center ; 
+    width:27vw ; 
+    height:27vw;
+    .lp{
+      width:27vw ; 
+      position:absolute ; 
+      top:0 ; 
+      left:0 ; 
+      z-index:0;
+    }
+    .lp_text{
+      z-index:1 ; 
+      width:8vw;
+    }
+   }
+   .box2{
+      display:flex ; 
+      justify-content: center; 
+      align-items: center;
+      .enter_button{
+        width:14vw;
+        margin-bottom:6vw;
+        cursor:pointer;
+      }
+    }
+ }
+}
