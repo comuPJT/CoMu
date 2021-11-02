@@ -22,43 +22,115 @@
     <div class="login" v-if="order == 2">
       <div class="login_box1">
         <img class="lp" src="@/assets/images/mainpage_lp.gif" />
-        <div class="button kakao">
-          <img src="@/assets/images/kakao.svg" />
-          Kakao로 로그인
-        </div>
-        <div class="button google">
-          <img src="@/assets/images/google.svg" />
-          Google로 로그인
-        </div>
-        <div class="button naver">
-          <img src="@/assets/images/naver.svg" />
-          Naver로 로그인
-        </div>
-        <div class="button guest">비회원으로 시작</div>
+        <img
+          class="login_button"
+          src="@/assets/images/kakao_login_button.png"
+          @click="[socialLoginUrl('kakao'), nextStep()]"
+        />
+        <img
+          class="login_button"
+          src="@/assets/images/google_login_button.png"
+          @click="socialLoginUrl('google')"
+        />
+        <img
+          class="login_button"
+          src="@/assets/images/naver_login_button.png"
+          @click="socialLoginUrl('naver')"
+        />
+        <img
+          class="login_button"
+          src="@/assets/images/guest_login_button.png"
+          @click="socialLoginUrl('guest')"
+        />
       </div>
     </div>
     <!--로그인화면 끝-->
+
+    <!--첫 소셜 로그인시 회원가입-->
+    <div class="login" v-if="order == 3">
+      <div class="join_box1">
+        <div class="join_wrapper">
+          <div class="join_wrapper_text">회원가입</div>
+        </div>
+        <div class="join_character_wrapper">
+          <div class="join_character_wrapper_text">캐릭터 선택</div>
+          <div class="join_carousel">
+            <carousel
+            class="join_carousel_inner"
+              :navigation-enabled="true"
+              :navigation-next-label="nextLabel"
+              :navigation-prev-label="prevLabel"
+              :per-page="1"
+              :pagination-enabled="false"
+            >
+              <slide class="join_carousel_slide">
+                <img src="@/assets/images/tempchar1.png" />
+              </slide>
+              <slide class="join_carousel_slide">
+                <img src="@/assets/images/tempchar2.png" />
+              </slide>
+            </carousel>
+          </div>
+        </div>
+
+        <div class="join_nickname_wrapper">
+          <div class="input_box" style="width: 18vw">
+            <div class="title">닉네임</div>
+            <input placeholder="2~8자 이내의 닉네임을 입력해주세요." />
+            <div class="nickname_valid" v-if="false">
+              사용 가능한 닉네임입니다.
+            </div>
+            <div class="nickname_unvalid">유효한 닉네임을 입력해주세요.</div>
+          </div>
+        </div>
+
+        <div class="join_button_wrapper">
+          <div class="smallbuttonbrown">
+            <div class="buttoncontent">가입하기</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--첫 소셜 로그인시 회원가입 끝-->
   </div>
 </template>
 
 <script>
+import $ from "@/util/utils";
+import { Carousel, Slide } from "vue-carousel";
+
 export default {
   name: "Main",
+
+  components: {
+    Carousel,
+    Slide,
+  },
+
   props: {},
   data() {
     return {
       order: 1,
       //1=시작화면, 2=로그인, 3=회원가입
+      nextLabel:
+        "<img src='https://i.ibb.co/SsQz0vB/next-1.png' style='width:1.2vw'/>",
+      prevLabel:
+        "<img src='https://i.ibb.co/0GW9F05/prev-1.png' style='width:1.2vw'/>",
+      //캐릭터선택 좌/우 버튼
+      inputNickname: "",
     };
   },
   methods: {
     nextStep() {
       //다음 화면으로 이동하는 메소드
-      this.order = 2;
+      this.order += 1;
     },
     refresh() {
       //새로고침
       this.$router.go();
+    },
+    socialLoginUrl(socialType) {
+      return $.getSocialLoginUrl(socialType);
     },
   },
 };

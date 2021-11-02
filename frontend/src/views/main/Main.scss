@@ -8,10 +8,10 @@
   justify-content: center;
   align-items: center;
   .logo {
-    width: 14vw;
+    width: 12vw;
     position: absolute;
-    left: 1vw;
-    top: 1vw;
+    left: 2vw;
+    top: 2vw;
     cursor: pointer;
   }
   div {
@@ -48,8 +48,8 @@
 }
 
 .login_box1 {
-  width: 25vw;
-  height: 60vh;
+  width: 28vw;
+  height: 30vw;
   text-align: center;
 
   /* main/beige */
@@ -62,47 +62,95 @@
   box-shadow: 3px 3px 0px #613a2e;
   border-radius: 20px;
   .lp {
-    width: 30vh;
+    width: 15vw;
     z-index: 0;
   }
-  .button {
-    position: relative;
-    margin: auto;
-    width: 30vh;
-    height: 5vh;
-    margin-bottom: 2vh;
-    border: 1px solid #613a2e;
-    box-sizing: border-box;
-    box-shadow: 0px 0px 0px 2px #ffffff, 0px 0px 0px 4px #613a2e;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .login_button {
+    height: 3vw;
     cursor: pointer;
+  }
+}
 
-    /*font*/
-    font-size: 16px;
-    font-family: BMHANNA;
-    img {
+.join_box1 {
+  width: 28vw;
+  height: 30vw;
+  text-align: center;
+  background: #eee3d7;
+  border: 2px solid #613a2e;
+  box-sizing: border-box;
+  box-shadow: 3px 3px 0px #613a2e;
+  border-radius: 20px;
+  .join_wrapper {
+    width: 100%;
+    height: 20%;
+    position: relative;
+    .join_wrapper_text {
       position: absolute;
-      left: 10px;
-      top: calc((5vh - 24px) / 2);
+      top: 1.5vw;
+      left: 1.5vw;
+      font-family: BMHANNA;
+      font-size: 1.56vw;
+      color: #613a2e;
     }
   }
-  .kakao {
+  .join_character_wrapper {
+    width: 100%;
+    height: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    .join_character_wrapper_text {
+      font-family: NANUMBOLD;
+      font-size: 0.83vw;
+      color: #613a2e;
+      position: absolute;
+      left: 5vw;
+      top: 0;
+    }
+    .join_carousel {
+      width: 14vw;
+      .join_carousel_inner {
+        .join_carousel_slide {
+          width: 100%;
+          img {
+            height: 10vw;
+          }
+        }
+      }
+    }
+  }
+  .join_nickname_wrapper {
+    width: 100%;
+    height: 17%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .input_box {
+      width: 18vw;
+    }
+  }
+  .nickname_valid {
+    font-family: NANUMBOLD;
+    font-size: 0.83vw;
     color: #613a2e;
-    background: #ffe812;
+    text-align: initial;
+    margin: 0.3vw;
+    color: #03dd19;
   }
-  .google {
+  .nickname_unvalid {
+    font-family: NANUMBOLD;
+    font-size: 0.83vw;
     color: #613a2e;
-    background: white;
+    text-align: initial;
+    margin: 0.3vw;
+    color: #ec2929;
   }
-  .naver {
-    color: white;
-    background: #1ec800;
-  }
-  .guest {
-    color: white;
-    background: #613a2e;
+  .join_button_wrapper {
+    width: 100%;
+    height: 23%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
