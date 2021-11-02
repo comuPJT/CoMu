@@ -177,6 +177,7 @@ cmake-build-*/
 *.iws
 
 # IntelliJ
+out/
 src/main/resources/application.yml
 
 
