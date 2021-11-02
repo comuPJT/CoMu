@@ -25,4 +25,13 @@ public class UserController {
         return ApiResponse.success("user", user);
     }
 
+    @PutMapping
+    public ResponseEntity modifyUserInfo(String userId, String username,  String character) {
+        boolean response = userService.modifyUserInfo(userId, username, character);
+        if (!response) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
