@@ -178,8 +178,6 @@ cmake-build-*/
 
 # IntelliJ
 out/
-src/main/resources/application.yml
-
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
