@@ -28,7 +28,7 @@ public class Myplaylist {
 
     private int quantity;
 
-    @Column(name = "user_id")
-    private long userId;
+    @Column(name = "user_seq")
+    private long userSeq;
 
 }
