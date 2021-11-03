@@ -20,6 +20,6 @@ public class CameraFollow : MonoBehaviour
     void Update()
     {
         // 카메라의 위치를 목표 트랜스폼의 위치에 일치
-        transform.position = new Vector3(target.position.x, target.position.y+3, -10);
+        transform.position = new Vector3(target.position.x, target.position.y + 3, -10);
     }
 }
