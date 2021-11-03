@@ -1,0 +1,156 @@
+.mainpage {
+  width: 100vw;
+  height: 100vh;
+  background-image: url("../../assets/images/mainpage_background.png");
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .logo {
+    width: 12vw;
+    position: absolute;
+    left: 2vw;
+    top: 2vw;
+    cursor: pointer;
+  }
+  div {
+    .box1 {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 27vw;
+      height: 27vw;
+      .lp {
+        width: 27vw;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+      }
+      .lp_text {
+        z-index: 1;
+        width: 8vw;
+      }
+    }
+    .box2 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .enter_button {
+        width: 14vw;
+        margin-bottom: 6vw;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.login_box1 {
+  width: 28vw;
+  height: 30vw;
+  text-align: center;
+
+  /* main/beige */
+
+  background: #eee3d7;
+  /* main/brown */
+
+  border: 2px solid #613a2e;
+  box-sizing: border-box;
+  box-shadow: 3px 3px 0px #613a2e;
+  border-radius: 20px;
+  .lp {
+    width: 15vw;
+    z-index: 0;
+  }
+  .login_button {
+    height: 3vw;
+    cursor: pointer;
+  }
+}
+
+.join_box1 {
+  width: 28vw;
+  height: 30vw;
+  text-align: center;
+  background: #eee3d7;
+  border: 2px solid #613a2e;
+  box-sizing: border-box;
+  box-shadow: 3px 3px 0px #613a2e;
+  border-radius: 20px;
+  .join_wrapper {
+    width: 100%;
+    height: 20%;
+    position: relative;
+    .join_wrapper_text {
+      position: absolute;
+      top: 1.5vw;
+      left: 1.5vw;
+      font-family: BMHANNA;
+      font-size: 1.56vw;
+      color: #613a2e;
+    }
+  }
+  .join_character_wrapper {
+    width: 100%;
+    height: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    .join_character_wrapper_text {
+      font-family: NANUMBOLD;
+      font-size: 0.83vw;
+      color: #613a2e;
+      position: absolute;
+      left: 5vw;
+      top: 0;
+    }
+    .join_carousel {
+      width: 14vw;
+      .join_carousel_inner {
+        .join_carousel_slide {
+          width: 100%;
+          img {
+            height: 10vw;
+          }
+        }
+      }
+    }
+  }
+  .join_nickname_wrapper {
+    width: 100%;
+    height: 17%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .input_box {
+      width: 18vw;
+    }
+  }
+  .nickname_valid {
+    font-family: NANUMBOLD;
+    font-size: 0.83vw;
+    color: #613a2e;
+    text-align: initial;
+    margin: 0.3vw;
+    color: #03dd19;
+  }
+  .nickname_unvalid {
+    font-family: NANUMBOLD;
+    font-size: 0.83vw;
+    color: #613a2e;
+    text-align: initial;
+    margin: 0.3vw;
+    color: #ec2929;
+  }
+  .join_button_wrapper {
+    width: 100%;
+    height: 23%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
