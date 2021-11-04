@@ -76,6 +76,38 @@
     color: #ffffff;
   }
 }
+
+.smallbuttonwhite {
+  height: 2.1vw;
+  width: 12.5vw;
+  position: static;
+  border-radius: 0.52vw;
+  flex: none;
+  order: 3;
+  flex-grow: 0;
+  margin: 35px 0px;
+  cursor:pointer;
+  .buttoncontent {
+    height: 2.1vw;
+    width: 12.5vw;
+    background: #ffffff;
+    border: 1px solid #613a2e;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 0px 2px #ffffff, 0px 0px 0px 4px #613a2e;
+    border-radius: 0.52vw;
+    font-family: BMHANNA;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 0.83vw;
+    line-height: 120%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    color: #613a2e
+  }
+}
+
 div::-webkit-scrollbar {
     display: none;
 }
