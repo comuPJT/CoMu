@@ -1,0 +1,63 @@
+.chat-wrapper {
+  width: 16vw;
+  margin-left: 1.5vw;
+  margin-right: 1.5vw;
+  display: flex;
+  font-family: NANUM;
+  margin-bottom: 1vw;
+}
+.profile-wrapper {
+  width: 4.2vw;
+  position: relative;
+}
+.profile-wrapper-box {
+  position: absolute;
+  bottom: 0px;
+  text-align: center;
+  width: 4.2vw;
+  img {
+    width: 2.7vw;
+    height: 2.7vw;
+    border-radius: 200px;
+  }
+}
+.profile-nickname {
+  font-size: 0.62vw;
+  margin-bottom: 0.2vw;
+}
+
+.message-wrapper {
+  min-height: 4vw;
+  width: 11.8vw;
+  font-size: 0.83vw;
+  padding: 0.5vw;
+  padding-bottom:1.4vw !important;
+  line-height: 120%;
+  background: #ffffff;
+  border: 1px solid #613a2e;
+  box-sizing: border-box;
+  position:relative;
+}
+.message-send {
+  border-radius: 0.78vw 0.78vw 0px 0.78vw;
+}
+.message-receive {
+  border-radius: 0.78vw 0.78vw 0.78vw 0px;
+}
+
+.time-wrapper-receive {
+  position:absolute;
+  bottom:0.4vw;
+  right:0.4vw;
+  font-size: 0.32vw;
+  color: #4f4f4f;
+  text-align: center;
+}
+.time-wrapper-send {
+  position:absolute;
+  bottom:0.4vw;
+  left:0.4vw;
+  font-size: 0.32vw;
+  color: #4f4f4f;
+  text-align: center;
+}

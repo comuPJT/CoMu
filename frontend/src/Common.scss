@@ -1,0 +1,78 @@
+@font-face {
+  font-family: "BMHANNA";
+  src: local("BMHANNA"), url("./assets/fonts/BMHANNA_11yrs_otf.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "NANUM";
+  src: local("NANUM"), url("./assets/fonts/NanumSquareR.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "NANUMBOLD";
+  src: local("NANUMBOLD"), url("./assets/fonts/NanumSquareB.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+.input_box {
+  .title {
+    font-family: NANUMBOLD;
+    font-size: 0.83vw;
+    color: #613a2e;
+    text-align: initial;
+    margin: 0.3vw;
+  }
+  input {
+    font-size: 0.83vw;
+    color: #613a2e;
+    width: 100%;
+    height: 2vw;
+    border: 1px solid #613a2e;
+    box-sizing: border-box;
+    border-radius: 5px;
+    font-family: NANUM;
+  }
+  input::placeholder {
+    font-size: 0.73vw;
+    color: #aa938c;
+  }
+  input:focus {
+    outline: none;
+  }
+}
+
+.smallbuttonbrown {
+  height: 2.1vw;
+  width: 12.5vw;
+  position: static;
+  border-radius: 0.52vw;
+  flex: none;
+  order: 3;
+  flex-grow: 0;
+  margin: 35px 0px;
+  cursor:pointer;
+  .buttoncontent {
+    height: 2.1vw;
+    width: 12.5vw;
+    background: #613a2e;
+    border: 1px solid #613a2e;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 0px 2px #ffffff, 0px 0px 0px 4px #613a2e;
+    border-radius: 0.52vw;
+    font-family: BMHANNA;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 0.83vw;
+    line-height: 120%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    color: #ffffff;
+  }
+}
+div::-webkit-scrollbar {
+    display: none;
+}
