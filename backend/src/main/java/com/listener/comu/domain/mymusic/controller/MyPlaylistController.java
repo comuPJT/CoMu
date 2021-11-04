@@ -34,6 +34,9 @@ public class MyPlaylistController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+//    @DeleteMapping("/{userSeq}/{myplaylistId}")
+
+
 
 
 

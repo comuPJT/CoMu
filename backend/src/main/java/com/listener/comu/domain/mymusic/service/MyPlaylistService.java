@@ -34,7 +34,7 @@ public class MyPlaylistService {
         mpl.setName(name);
         myplaylistRepository.save(mpl);
 
-//        myplaylistRepository.save(Myplaylist.builder().id(myplaylistId).name(name).build());
+        myplaylistRepository.save(Myplaylist.builder().id(myplaylistId).name(name).userSeq(userSeq).build());
         return true;
     }
 
@@ -46,7 +46,8 @@ public class MyPlaylistService {
 
     // 플레이리스트에 곡 추가
 
-    // 플레이리스트의 특정
+    // 플레이리스트의 특정 곡(들) 삭제
+
 
 
 
