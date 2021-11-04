@@ -119,7 +119,7 @@
   height: 3.75vw;
   border-bottom: 1px solid;
   position: relative;
-  margin-bottom:0.7vw;
+  margin-bottom: 0.7vw;
 }
 
 .user-list-title {
@@ -161,5 +161,21 @@
     float: left;
     font-family: NANUM;
     font-size: 0.94vw;
+  }
+}
+
+.chat-box {
+  overflow-y: scroll;
+  height: calc(100vh - (5.2vw + 8vw + 5.2vw));
+}
+
+.message-send-wrapper {
+  height: 5.2vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img {
+    width: 1.7vw;
+    margin-left: 1vw;
   }
 }

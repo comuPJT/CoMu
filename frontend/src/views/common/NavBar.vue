@@ -85,7 +85,6 @@
       <!--현재 재생중인 음악 끝-->
       <!--접속중인 유저 목록-->
       <div v-show="selectedMenu == 'online'">
-        
         <div class="user-list-box">
           <div class="user-list">
             <div class="user-list-title">&nbsp;ONLINE - 5</div>
@@ -149,10 +148,58 @@
 
       <!--채팅-->
       <div v-show="selectedMenu == 'chat'">
-        <receive-chat :message="'그래요'" :nickname="'가장긴닉네임'" :time="'11:00AM'"></receive-chat>
-        <send-chat :message="'채팅채팅'" :nickname="'dnguszz'" :time="'11:00AM'"></send-chat>
-        <send-chat :message="'반갑습니다안녕하세요오랜만이에요긴내용채우기123 하나둘셋반갑습니다안녕하세요오랜만이에요긴내용채우기123 하나둘셋반갑습니다안녕하세요오랜만이에요긴내용채우기123 하나둘셋'" :nickname="'dnguszz'" :time="'11:00AM'"></send-chat>
-        <receive-chat :message="'그래요'" :nickname="'가장긴닉네임'" :time="'11:00AM'"></receive-chat>
+        <div class="chat-box">
+          <!--채팅 UI테스트-->
+          <receive-chat
+            :message="'그래요'"
+            :nickname="'가장긴닉네임'"
+            :time="'11:00AM'"
+          ></receive-chat>
+          <send-chat
+            :message="'채팅채팅'"
+            :nickname="'dnguszz'"
+            :time="'11:00AM'"
+          ></send-chat>
+          <send-chat
+            :message="'반갑습니다안녕하세요오랜만이에요긴내용채우기123 하나둘셋반갑습니다안녕하세요오랜만이에요긴내용채우기123 하나둘셋반갑습니다안녕하세요오랜만이에요긴내용채우기123 하나둘셋'"
+            :nickname="'dnguszz'"
+            :time="'11:00AM'"
+          ></send-chat>
+          <receive-chat
+            :message="'그래요'"
+            :nickname="'가장긴닉네임'"
+            :time="'11:00AM'"
+          ></receive-chat>
+          <receive-chat
+            :message="'그래요'"
+            :nickname="'가장긴닉네임'"
+            :time="'11:00AM'"
+          ></receive-chat>
+          <receive-chat
+            :message="'그래요'"
+            :nickname="'가장긴닉네임'"
+            :time="'11:00AM'"
+          ></receive-chat>
+          <receive-chat
+            :message="'그래요'"
+            :nickname="'가장긴닉네임'"
+            :time="'11:00AM'"
+          ></receive-chat>
+          <receive-chat
+            :message="'그래요'"
+            :nickname="'가장긴닉네임'"
+            :time="'11:00AM'"
+          ></receive-chat>
+          <!--채팅 UI테스트 끝-->
+        </div>
+
+        <div class="message-send-wrapper">
+          <div class="input_box inputbox-none-title" style="width: 14vw">
+            <input placeholder="메시지를 입력해주세요!" />
+          </div>
+          <img src="@/assets/images/message_send_icon.svg">
+
+        </div>
       </div>
       <!--채팅끝-->
 
@@ -165,8 +212,8 @@
 
 <script>
 import MarqueeText from "vue-marquee-text-component";
-import SendChat from './components/SendChat.vue'
-import ReceiveChat from './components/ReceiveChat.vue'
+import SendChat from "./components/SendChat.vue";
+import ReceiveChat from "./components/ReceiveChat.vue";
 
 export default {
   name: "NavBar",
