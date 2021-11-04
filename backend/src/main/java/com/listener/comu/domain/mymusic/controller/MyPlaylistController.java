@@ -22,4 +22,15 @@ public class MyPlaylistController {
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
+    @DeleteMapping("/{userSeq}/{myplaylistId}")
+    public ResponseEntity deleteList(@PathVariable long userSeq, @PathVariable long myplaylistId){
+        myPlaylistService.deleteList(userSeq, myplaylistId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
+
+
+
 }
