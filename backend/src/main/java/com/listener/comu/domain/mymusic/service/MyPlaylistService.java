@@ -26,7 +26,7 @@ public class MyPlaylistService {
         return true;
     }
 
-    // 음악 리스트 이름 수정
+    // 플레이리스트 이름 수정
     public boolean renameList(long userSeq, long myplaylistId, String name) {
         if(myplaylistRepository.getMyplaylistByUserSeqAndName(userSeq, name).isPresent()) return false;
 
@@ -38,11 +38,15 @@ public class MyPlaylistService {
         return true;
     }
 
-    // 음악 리스트 삭제
+    // 플레이리스트 삭제
     public void deleteList(long userSeq, long myplaylistId) {
         myplaylistMusicRepository.deleteMyplaylistMusicByMyplaylistId(myplaylistId);
         myplaylistRepository.deleteMyplaylistByUserSeqAndId(userSeq, myplaylistId);
     }
+
+    // 플레이리스트에 곡 추가
+
+    // 플레이리스트의 특정
 
 
 
