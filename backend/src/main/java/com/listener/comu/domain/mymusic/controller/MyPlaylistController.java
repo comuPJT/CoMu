@@ -22,12 +22,17 @@ public class MyPlaylistController {
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
+    @PutMapping("/{userSeq}/{myplaylistId}")
+    public  ResponseEntity renameList(@PathVariable long userSeq, @PathVariable long myplaylistId, @RequestBody Map<String, String> request){
+        if(myPlaylistService.renameList(userSeq, myplaylistId, request.get("name"))) return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
+
     @DeleteMapping("/{userSeq}/{myplaylistId}")
     public ResponseEntity deleteList(@PathVariable long userSeq, @PathVariable long myplaylistId){
         myPlaylistService.deleteList(userSeq, myplaylistId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
 
 

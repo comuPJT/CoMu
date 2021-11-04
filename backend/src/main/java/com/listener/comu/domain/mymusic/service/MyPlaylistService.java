@@ -26,9 +26,24 @@ public class MyPlaylistService {
         return true;
     }
 
+    // 음악 리스트 이름 수정
+    public boolean renameList(long userSeq, long myplaylistId, String name) {
+        if(myplaylistRepository.getMyplaylistByUserSeqAndName(userSeq, name).isPresent()) return false;
+
+        Myplaylist mpl = myplaylistRepository.getById(myplaylistId);
+        mpl.setName(name);
+        myplaylistRepository.save(mpl);
+
+//        myplaylistRepository.save(Myplaylist.builder().id(myplaylistId).name(name).build());
+        return true;
+    }
+
+    // 음악 리스트 삭제
     public void deleteList(long userSeq, long myplaylistId) {
         myplaylistMusicRepository.deleteMyplaylistMusicByMyplaylistId(myplaylistId);
         myplaylistRepository.deleteMyplaylistByUserSeqAndId(userSeq, myplaylistId);
     }
+
+
 
 }
