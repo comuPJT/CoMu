@@ -16,12 +16,12 @@ public class UserService {
         return userRepository.findByUserId(userId);
     }
 
-    public boolean modifyUserInfo(String userId, String username, String character) {
+    public boolean modifyUserInfo(long userSeq, String username, String character) {
         Optional<User> user = userRepository.findByUsername(username);
 
         if (user.isPresent()) return false;
-        User inputUser = new User();
-        inputUser.setUserId(userId);
+        User inputUser = user.get();
+        inputUser.setUserSeq(userSeq);
         inputUser.setUsername(username);
         inputUser.setProfileImageUrl(character);
         inputUser.setFirstVisitYn("N");
