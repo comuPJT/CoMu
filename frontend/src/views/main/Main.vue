@@ -22,26 +22,41 @@
     <div class="login" v-if="order == 2">
       <div class="login_box1">
         <img class="lp" src="@/assets/images/mainpage_lp.gif" />
-        <img
-          class="login_button"
-          src="@/assets/images/kakao_login_button.png"
+        <div>
+        <div
+          class="login_button kakao"
           @click="[socialLoginUrl('kakao'), nextStep()]"
-        />
-        <img
-          class="login_button"
-          src="@/assets/images/google_login_button.png"
-          @click="socialLoginUrl('google')"
-        />
-        <img
-          class="login_button"
-          src="@/assets/images/naver_login_button.png"
-          @click="socialLoginUrl('naver')"
-        />
-        <img
-          class="login_button"
-          src="@/assets/images/guest_login_button.png"
-          @click="socialLoginUrl('guest')"
-        />
+        >
+          <img
+            src="@/assets/images/kakao.svg"
+          />
+          Kakao로 로그인
+        </div>
+        <div
+          class="login_button google"
+          @click="[socialLoginUrl('google'), nextStep()]"
+        >
+          <img
+            src="@/assets/images/google.svg"
+          />
+          Google로 로그인
+        </div>
+        <div
+          class="login_button naver"
+          @click="[socialLoginUrl('naver'), nextStep()]"
+        >
+          <img
+            src="@/assets/images/naver.svg"
+          />
+          Naver로 로그인
+        </div>
+        <div
+          class="login_button guest"
+          @click="[socialLoginUrl('guest'), nextStep()]"
+        >
+          비회원으로 시작
+        </div>
+        </div>
       </div>
     </div>
     <!--로그인화면 끝-->
@@ -56,7 +71,7 @@
           <div class="join_character_wrapper_text">캐릭터 선택</div>
           <div class="join_carousel">
             <carousel
-            class="join_carousel_inner"
+              class="join_carousel_inner"
               :navigation-enabled="true"
               :navigation-next-label="nextLabel"
               :navigation-prev-label="prevLabel"
@@ -83,12 +98,11 @@
             <div class="nickname_unvalid">유효한 닉네임을 입력해주세요.</div>
           </div>
         </div>
-
-        <div class="join_button_wrapper">
-          <div class="smallbuttonbrown">
-            <div class="buttoncontent">가입하기</div>
+          <div class="join_button_wrapper">
+            <div class="smallbuttonbrown" @click="$router.push({ name: 'UnityView'})">
+              <div class="buttoncontent">가입하기</div>
+            </div>
           </div>
-        </div>
       </div>
     </div>
     <!--첫 소셜 로그인시 회원가입 끝-->

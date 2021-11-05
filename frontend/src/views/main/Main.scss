@@ -66,8 +66,42 @@
     z-index: 0;
   }
   .login_button {
-    height: 3vw;
+    line-height: 2.2vw;
+    font-family: BMHANNA;
+    font-size: 0.83vw;
+    width: 13vw;
+    height: 2.2vw;
+    border: 1px solid #613a2e;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 0px 2px #ffffff, 0px 0px 0px 4px #613a2e;
+    border-radius: 0.52vw;
     cursor: pointer;
+    position: relative;
+    margin:0.8vw auto;
+    img {
+      position: absolute;
+      top: 50%;
+      left: 0.83vw;
+      transform: translate(-50%, -50%);
+      width: 1.25vw;
+      color: white;
+    }
+  }
+  .kakao {
+    background-color: #ffe812;
+    color: #613a2e;
+  }
+  .google {
+    background-color: white;
+    color: #613a2e;
+  }
+  .naver {
+    background-color: #1EC800;
+    color: white;
+  }
+  .guest {
+    background-color: #613a2e;
+    color: white;
   }
 }
 

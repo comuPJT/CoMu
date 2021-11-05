@@ -12,6 +12,7 @@
     "node-sass": "^5.0.0",
     "vue": "^2.6.11",
     "vue-carousel": "^0.18.0",
+    "vue-marquee-text-component": "^1.2.0",
     "vue-router": "^3.5.3"
   },
   "devDependencies": {
