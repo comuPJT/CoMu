@@ -32,9 +32,6 @@
           <div class="content-body">
             <table>
               <tr v-for="i in 40" :key="i">
-                <td class="content-body-td1">
-                  <img src="@/assets/images/like_button.svg" />
-                </td>
                 <td class="content-body-td2">
                   <img
                     src="https://t1.daumcdn.net/thumb/R720x0.fpng/?fname=http://t1.daumcdn.net/brunch/service/user/8fXh/image/0_JTh3JET7ZCHaT_IJhG4VbhEpI.png"
