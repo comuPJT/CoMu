@@ -13253,6 +13253,22 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 7891202649814613956, guid: 3a8d9c85fe8dc44e9a30d4ec4979c4bb, type: 3}
+    - target: {fileID: 6264067084000503585, guid: 374340de761ff46b19ed47d9491b3bac, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264067084000503585, guid: 374340de761ff46b19ed47d9491b3bac, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264067084000503585, guid: 374340de761ff46b19ed47d9491b3bac, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264067084000503585, guid: 374340de761ff46b19ed47d9491b3bac, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6459075198334928071, guid: 374340de761ff46b19ed47d9491b3bac, type: 3}
       propertyPath: m_Layer
       value: 7
