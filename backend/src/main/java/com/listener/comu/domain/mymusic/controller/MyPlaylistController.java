@@ -1,5 +1,6 @@
 package com.listener.comu.domain.mymusic.controller;
 
+import com.listener.comu.domain.mymusic.dto.MyPlaylistRequest;
 import com.listener.comu.domain.mymusic.service.MyPlaylistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,11 @@ public class MyPlaylistController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//    @DeleteMapping("/{userSeq}/{myplaylistId}")
+    @DeleteMapping("/{myplaylistId}")
+    public ResponseEntity deleteMusic(@PathVariable long myplaylistId, @RequestBody MyPlaylistRequest myPlaylistRequest){
+        myPlaylistService.deleteMusic(myplaylistId, myPlaylistRequest.getMusicIds());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 

@@ -6,6 +6,7 @@ import com.listener.comu.domain.mymusic.domain.MyplaylistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -44,11 +45,12 @@ public class MyPlaylistService {
         myplaylistRepository.deleteMyplaylistByUserSeqAndId(userSeq, myplaylistId);
     }
 
+
     // 플레이리스트에 곡 추가
 
     // 플레이리스트의 특정 곡(들) 삭제
-
-
-
+    public void deleteMusic(long myplaylistId, List<Long> musicIds) {
+        myplaylistMusicRepository.deleteMyplaylistMusicByMyplaylistIdAndMusicIdIn(myplaylistId, musicIds);
+    }
 
 }
