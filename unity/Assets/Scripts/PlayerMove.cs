@@ -81,12 +81,12 @@ public class PlayerMove : MonoBehaviour
             // 메인 씬으로 돌아오기
             SceneManager.LoadScene("Main", LoadSceneMode.Single);
         }
-        else if (collision.gameObject.CompareTag("MyRoom")
+        else if (move.y > 0 && (collision.gameObject.CompareTag("MyRoom")
             || collision.gameObject.CompareTag("Theme1")
             || collision.gameObject.CompareTag("Theme2")
             || collision.gameObject.CompareTag("Theme3")
             || collision.gameObject.CompareTag("Theme4")
-            || collision.gameObject.CompareTag("Theme5"))
+            || collision.gameObject.CompareTag("Theme5")))
         {
             // 문에 해당하는 씬으로 이동
             SceneManager.LoadScene(collision.gameObject.tag, LoadSceneMode.Single);
