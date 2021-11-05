@@ -1,4 +1,5 @@
 <template>
+<div>
   <transition name="modal" appear>
     <div class="modal-overlay" @click.self="$emit('close')">
       <div class="modal-window">
@@ -50,7 +51,7 @@
           <!--리스트에 저장 / 신청하기 버튼-->
           <div class="playlist-button-wrapper">
             <div class="smallbuttonbrown">
-              <div class="buttoncontent">내 음악리스트에 저장</div>
+              <div class="buttoncontent"  @click="showModal = true">내 음악리스트에 저장</div>
             </div>
             <div class="smallbuttonwhite">
               <div class="buttoncontent">새로운 곡 신청하기</div>
@@ -61,8 +62,28 @@
       </div>
     </div>
   </transition>
+  <add-to-my-list v-if="showModal" @close="showModal = false">
+        <h3 slot="header">custom header</h3>
+      </add-to-my-list>
+  </div>
 </template>
-<script></script>
+
+<script>
+import AddToMyList from "./AddToMyList.vue";
+  export default {
+  name: "PublicPlayList",
+
+  components: { AddToMyList },
+
+  props: {},
+  data() {
+    return {
+      showModal: false,
+    };
+  },
+  methods: {},
+};
+</script>
 
 <style lang="scss" scoped>
 @import "./PublicPlayList.scss";
