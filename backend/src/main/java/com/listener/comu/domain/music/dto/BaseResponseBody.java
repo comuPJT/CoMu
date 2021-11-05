@@ -1,6 +1,4 @@
-package com.listener.comu.domain.sharemusic.dto;
-
-import org.springframework.http.HttpStatus;
+package com.listener.comu.domain.music.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

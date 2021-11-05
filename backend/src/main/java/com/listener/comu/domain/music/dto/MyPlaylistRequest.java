@@ -1,4 +1,4 @@
-package com.listener.comu.domain.mymusic.dto;
+package com.listener.comu.domain.music.dto;
 
 import lombok.*;
 

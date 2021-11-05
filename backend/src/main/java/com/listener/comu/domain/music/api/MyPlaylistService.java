@@ -1,6 +1,6 @@
-package com.listener.comu.domain.mymusic.service;
+package com.listener.comu.domain.music.api;
 
-import com.listener.comu.domain.mymusic.domain.*;
+import com.listener.comu.domain.music.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +55,6 @@ public class MyPlaylistService {
         myplaylistMusicRepository.deleteMyplaylistMusicByMyplaylistId(myplaylistId);
         myplaylistRepository.deleteMyplaylistByUserSeqAndId(userSeq, myplaylistId);
     }
-
 
     // 플레이리스트에 곡 추가
 

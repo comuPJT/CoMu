@@ -1,4 +1,4 @@
-package com.listener.comu.domain.mymusic.domain;
+package com.listener.comu.domain.music.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

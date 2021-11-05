@@ -1,10 +1,10 @@
-package com.listener.comu.domain.sharemusic.presentation;
+package com.listener.comu.domain.music.presentation;
 
-import com.listener.comu.domain.sharemusic.api.ShareMusicService;
-import com.listener.comu.domain.sharemusic.dto.BaseResponseBody;
-import com.listener.comu.domain.sharemusic.dto.MusicPlayReq;
-import com.listener.comu.domain.sharemusic.dto.PlayedMusicRes;
-import com.listener.comu.domain.sharemusic.dto.SearchMusicRes;
+import com.listener.comu.domain.music.api.ShareMusicService;
+import com.listener.comu.domain.music.dto.BaseResponseBody;
+import com.listener.comu.domain.music.dto.MusicPlayReq;
+import com.listener.comu.domain.music.dto.PlayedMusicRes;
+import com.listener.comu.domain.music.dto.SearchMusicRes;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

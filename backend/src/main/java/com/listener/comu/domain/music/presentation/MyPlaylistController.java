@@ -1,9 +1,9 @@
-package com.listener.comu.domain.mymusic.controller;
+package com.listener.comu.domain.music.presentation;
 
-import com.listener.comu.domain.mymusic.domain.Music;
-import com.listener.comu.domain.mymusic.domain.Myplaylist;
-import com.listener.comu.domain.mymusic.dto.MyPlaylistRequest;
-import com.listener.comu.domain.mymusic.service.MyPlaylistService;
+import com.listener.comu.domain.music.domain.Music;
+import com.listener.comu.domain.music.domain.Myplaylist;
+import com.listener.comu.domain.music.dto.MyPlaylistRequest;
+import com.listener.comu.domain.music.api.MyPlaylistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

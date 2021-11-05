@@ -1,8 +1,8 @@
-package com.listener.comu.domain.sharemusic.api;
+package com.listener.comu.domain.music.api;
 
-import com.listener.comu.domain.sharemusic.dto.MusicPlayReq;
-import com.listener.comu.domain.sharemusic.dto.PlayedMusicRes;
-import com.listener.comu.domain.sharemusic.dto.SearchMusicRes;
+import com.listener.comu.domain.music.dto.MusicPlayReq;
+import com.listener.comu.domain.music.dto.PlayedMusicRes;
+import com.listener.comu.domain.music.dto.SearchMusicRes;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
