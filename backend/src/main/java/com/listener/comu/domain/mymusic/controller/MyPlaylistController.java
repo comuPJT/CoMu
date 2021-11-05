@@ -1,5 +1,6 @@
 package com.listener.comu.domain.mymusic.controller;
 
+import com.listener.comu.domain.mymusic.domain.Myplaylist;
 import com.listener.comu.domain.mymusic.dto.MyPlaylistRequest;
 import com.listener.comu.domain.mymusic.service.MyPlaylistService;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin("*")
@@ -17,7 +19,11 @@ public class MyPlaylistController {
 
     final private MyPlaylistService myPlaylistService;
 
-    
+    @GetMapping
+    public ResponseEntity<List<Myplaylist>> getList(@RequestBody Map<String, Long> request){
+        List<Myplaylist> myPlaylistList = myPlaylistService.getList(request.get("userSeq"));
+        return new ResponseEntity<>(myPlaylistList, HttpStatus.OK);
+    }
 
     @PostMapping
     public ResponseEntity makeList(@RequestBody MyPlaylistRequest myPlaylistRequest){

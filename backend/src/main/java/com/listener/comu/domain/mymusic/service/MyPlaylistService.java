@@ -16,6 +16,13 @@ public class MyPlaylistService {
     final private MyplaylistRepository myplaylistRepository;
     final private MyplaylistMusicRepository myplaylistMusicRepository;
 
+
+    // 전체 플레이리스트 가져오기
+    public List<Myplaylist> getList(long userSeq) {
+        return myplaylistRepository.getByUserSeq(userSeq);
+    }
+
+
     // 플레이리스트 생성
     public boolean makeList(long userSeq, String name){
 
@@ -52,5 +59,6 @@ public class MyPlaylistService {
     public void deleteMusic(long myplaylistId, List<Long> musicIds) {
         myplaylistMusicRepository.deleteMyplaylistMusicByMyplaylistIdAndMusicIdIn(myplaylistId, musicIds);
     }
+
 
 }
