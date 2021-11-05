@@ -1,5 +1,6 @@
 package com.listener.comu.domain.mymusic.controller;
 
+import com.listener.comu.domain.mymusic.domain.Music;
 import com.listener.comu.domain.mymusic.domain.Myplaylist;
 import com.listener.comu.domain.mymusic.dto.MyPlaylistRequest;
 import com.listener.comu.domain.mymusic.service.MyPlaylistService;
@@ -24,6 +25,13 @@ public class MyPlaylistController {
         List<Myplaylist> myPlaylistList = myPlaylistService.getList(request.get("userSeq"));
         return new ResponseEntity<>(myPlaylistList, HttpStatus.OK);
     }
+
+    @GetMapping("/{myplaylistId}")
+    public ResponseEntity<List<Music>> getMusics(@PathVariable long myplaylistId){
+        List<Music> musics = myPlaylistService.getMusics(myplaylistId);
+        return new ResponseEntity<>(musics, HttpStatus.OK);
+    }
+
 
     @PostMapping
     public ResponseEntity makeList(@RequestBody MyPlaylistRequest myPlaylistRequest){

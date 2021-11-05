@@ -1,8 +1,6 @@
 package com.listener.comu.domain.mymusic.service;
 
-import com.listener.comu.domain.mymusic.domain.Myplaylist;
-import com.listener.comu.domain.mymusic.domain.MyplaylistMusicRepository;
-import com.listener.comu.domain.mymusic.domain.MyplaylistRepository;
+import com.listener.comu.domain.mymusic.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +11,7 @@ import java.util.Optional;
 @Service
 public class MyPlaylistService {
 
+    final private MusicRepository musicRepository;
     final private MyplaylistRepository myplaylistRepository;
     final private MyplaylistMusicRepository myplaylistMusicRepository;
 
@@ -20,6 +19,11 @@ public class MyPlaylistService {
     // 전체 플레이리스트 가져오기
     public List<Myplaylist> getList(long userSeq) {
         return myplaylistRepository.getByUserSeq(userSeq);
+    }
+
+    // 특정 플레이리스트 안의 곡들 가져오기
+    public List<Music> getMusics(long myplaylistId) {
+        return musicRepository.getMusicByMyplaylistId(myplaylistId);
     }
 
 
