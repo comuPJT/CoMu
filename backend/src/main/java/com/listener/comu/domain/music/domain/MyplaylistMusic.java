@@ -1,10 +1,8 @@
-package com.listener.comu.domain.mymusic.domain;
+package com.listener.comu.domain.music.domain;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
