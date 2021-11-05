@@ -17,25 +17,27 @@ public class MyPlaylistController {
 
     final private MyPlaylistService myPlaylistService;
 
-    @PostMapping("/{userSeq}")
-    public ResponseEntity makeList(@PathVariable long userSeq, @RequestBody Map<String, String> request){
-        if (myPlaylistService.makeList(userSeq, request.get("name"))) return new ResponseEntity<>(HttpStatus.OK);
+    
+
+    @PostMapping
+    public ResponseEntity makeList(@RequestBody MyPlaylistRequest myPlaylistRequest){
+        if (myPlaylistService.makeList(myPlaylistRequest.getUserSeq(), myPlaylistRequest.getName())) return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
-    @PutMapping("/{userSeq}/{myplaylistId}")
-    public  ResponseEntity renameList(@PathVariable long userSeq, @PathVariable long myplaylistId, @RequestBody Map<String, String> request){
-        if(myPlaylistService.renameList(userSeq, myplaylistId, request.get("name"))) return new ResponseEntity<>(HttpStatus.OK);
+    @PutMapping("/{myplaylistId}")
+    public  ResponseEntity renameList(@PathVariable long myplaylistId, @RequestBody MyPlaylistRequest myPlaylistRequest){
+        if(myPlaylistService.renameList(myPlaylistRequest.getUserSeq(), myplaylistId, myPlaylistRequest.getName())) return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.CONFLICT);
-    }
-
-    @DeleteMapping("/{userSeq}/{myplaylistId}")
-    public ResponseEntity deleteList(@PathVariable long userSeq, @PathVariable long myplaylistId){
-        myPlaylistService.deleteList(userSeq, myplaylistId);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{myplaylistId}")
+    public ResponseEntity deleteList(@PathVariable long myplaylistId, @RequestBody MyPlaylistRequest myPlaylistRequest){
+        myPlaylistService.deleteList(myPlaylistRequest.getUserSeq(), myplaylistId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{myplaylistId}/music")
     public ResponseEntity deleteMusic(@PathVariable long myplaylistId, @RequestBody MyPlaylistRequest myPlaylistRequest){
         myPlaylistService.deleteMusic(myplaylistId, myPlaylistRequest.getMusicIds());
         return new ResponseEntity<>(HttpStatus.OK);
