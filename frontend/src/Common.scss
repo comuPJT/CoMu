@@ -41,6 +41,25 @@
   input:focus {
     outline: none;
   }
+  textarea {
+    font-size: 0.83vw;
+    color: #613a2e;
+    width: 100%;
+    height: 2vw;
+    border: 1px solid #613a2e;
+    box-sizing: border-box;
+    border-radius: 5px;
+    font-family: NANUM;
+    resize:none;
+    overflow: auto;
+  }
+  textarea::placeholder {
+    font-size: 0.73vw;
+    color: #aa938c;
+  }
+  textarea:focus {
+    outline: none;
+  }
 }
 .inputbox-none-title{
   height:2vw;
@@ -91,6 +110,37 @@
     height: 2.1vw;
     width: 12.5vw;
     background: #ffffff;
+    border: 1px solid #613a2e;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 0px 2px #ffffff, 0px 0px 0px 4px #613a2e;
+    border-radius: 0.52vw;
+    font-family: BMHANNA;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 0.83vw;
+    line-height: 120%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    color: #613a2e
+  }
+}
+
+.smallbuttonbeige {
+  height: 2.1vw;
+  width: 12.5vw;
+  position: static;
+  border-radius: 0.52vw;
+  flex: none;
+  order: 3;
+  flex-grow: 0;
+  margin: 35px 0px;
+  cursor:pointer;
+  .buttoncontent {
+    height: 2.1vw;
+    width: 12.5vw;
+    background: #EEE3D7;
     border: 1px solid #613a2e;
     box-sizing: border-box;
     box-shadow: 0px 0px 0px 2px #ffffff, 0px 0px 0px 4px #613a2e;
