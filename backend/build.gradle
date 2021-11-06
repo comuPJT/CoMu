@@ -48,6 +48,8 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     // MariaDB
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     annotationProcessor 'org.projectlombok:lombok'
 
