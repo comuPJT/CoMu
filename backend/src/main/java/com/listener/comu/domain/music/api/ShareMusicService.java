@@ -10,7 +10,7 @@ import java.util.List;
 public interface ShareMusicService {
     List<SearchMusicRes> findMusicByQuery(String query);
     void addMusicToPlayList(Long roomId, MusicPlayReq musicPlayReq);
-    void deleteMusicFromPlayList(Long roomId, Long playId);
+    void deleteMusicFromPlayList(Long roomId, String playId);
     List<PlayedMusicRes> getPlayedMusicAndContent(Long roomId);
     List<PlayedMusicRes> getHonoredMusicAndContent(Long roomId);
     void likeMusicRequest(Long playId, Long userId);

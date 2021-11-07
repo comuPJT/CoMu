@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 public class MusicPlayReq {
+    private String title;
     private String contents;
     private Long userId;
     private Long musicId;
