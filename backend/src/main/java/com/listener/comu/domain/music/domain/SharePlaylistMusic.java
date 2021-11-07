@@ -1,19 +1,21 @@
 package com.listener.comu.domain.music.domain;
 
-import lombok.Builder;
-import lombok.Getter;
+import com.listener.comu.domain.music.dto.MusicPlayReq;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SharePlaylistMusic {
 
     private String contents;
-    private String userId;
-    private String musicId;
+    private Long userId;
+    private Long musicId;
     @Builder.Default
     private LocalDateTime timestamp = LocalDateTime.now(); //접수 시간
     @Builder.Default
-    private String isPlayed = "N";
+    private boolean played = false;
 }
