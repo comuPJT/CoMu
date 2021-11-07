@@ -1,6 +1,5 @@
 package com.listener.comu.domain.music.domain;
 
-import com.listener.comu.domain.music.dto.MusicPlayReq;
 import lombok.*;
 
 import java.time.LocalDateTime;

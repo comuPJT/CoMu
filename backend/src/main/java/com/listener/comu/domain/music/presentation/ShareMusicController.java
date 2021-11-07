@@ -2,8 +2,8 @@ package com.listener.comu.domain.music.presentation;
 
 import com.listener.comu.domain.music.api.ShareMusicService;
 import com.listener.comu.domain.music.dto.BaseResponseBody;
-import com.listener.comu.domain.music.dto.MusicPlayReq;
-import com.listener.comu.domain.music.dto.PlayedMusicRes;
+import com.listener.comu.domain.music.dto.SharePlaylistMusicReq;
+import com.listener.comu.domain.music.dto.SharePlaylistMusicRes;
 import com.listener.comu.domain.music.dto.SearchMusicRes;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,7 +48,7 @@ public class ShareMusicController {
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> addMusicToPlayList(@PathVariable Long roomId, @RequestBody MusicPlayReq musicPlayReq) {
+    public ResponseEntity<? extends BaseResponseBody> addMusicToPlayList(@PathVariable Long roomId, @RequestBody SharePlaylistMusicReq musicPlayReq) {
         shareMusicService.addMusicToPlayList(roomId, musicPlayReq);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
@@ -69,30 +69,30 @@ public class ShareMusicController {
     @GetMapping("/{roomId}/story")
     @ApiOperation(value = "일반 사연 목록 조회", notes = "하루 내에 접수되어 재생된 신청곡과 사연을 조회한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = PlayedMusicRes.class),
+            @ApiResponse(code = 200, message = "성공", response = SharePlaylistMusicRes.class),
             @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<List<PlayedMusicRes>> getPlayedMusicAndContent (@PathVariable Long roomId) {
+    public ResponseEntity<List<SharePlaylistMusicRes>> getPlayedMusicAndContent (@PathVariable Long roomId) {
         return ResponseEntity.status(200).body(shareMusicService.getPlayedMusicAndContent(roomId));
     }
 
     @GetMapping("/{roomId}/honor")
     @ApiOperation(value = "명예의 전당 사연 목록 조회", notes = "그동안 재생된 신청곡, 사연들 중 일정 좋아요 갯수를 받은 명예의 전당 내역을 조회한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = PlayedMusicRes.class),
+            @ApiResponse(code = 200, message = "성공", response = SharePlaylistMusicRes.class),
             @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<List<PlayedMusicRes>> getHonoredMusicAndContent (@PathVariable Long roomId) {
+    public ResponseEntity<List<SharePlaylistMusicRes>> getHonoredMusicAndContent (@PathVariable Long roomId) {
         return ResponseEntity.status(200).body(shareMusicService.getHonoredMusicAndContent(roomId));
     }
 
     // TO DO - 좋아요 부분
     @GetMapping("/like/{playId}/user/{userId}")
-    @ApiOperation(value = "좋아요", notes = "유저가 '좋아요'를 누른 신청곡, 사연에 대해 처리한다.")
+    @ApiOperation(value = "좋아요", notes = "유저가 '좋아요' 아이콘이 누르면 상태가 토글된다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
             @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
@@ -100,20 +100,8 @@ public class ShareMusicController {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> likeMusicRequest (@PathVariable Long playId, @PathVariable Long userId) {
-        shareMusicService.likeMusicRequest(playId, userId);
+        shareMusicService.toggleLikeMusicRequest(playId, userId);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
-    @DeleteMapping("/like/{playId}/user/{userId}")
-    @ApiOperation(value = "좋아요 취소", notes = "유저가 '좋아요'를 누른 신청곡, 사연에 대해 '좋아요'를 취소한다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
-            @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
-            @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
-            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
-    })
-    public ResponseEntity<? extends BaseResponseBody> undoLikeMusicRequest (@PathVariable Long playId, @PathVariable Long userId) {
-        shareMusicService.undoLikeMusicRequest(playId, userId);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-    }
 }

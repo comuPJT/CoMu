@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +30,7 @@ public class SharePlaylistMusicTest {
 //    private StringRedisTemplate redisTemplate;
 
     @Autowired
-    private RedisTemplate<String,SharePlaylistMusic> redisTemplate;
+    private RedisTemplate<String,Object> redisTemplate;
 
 
     @Test
@@ -55,17 +56,36 @@ public class SharePlaylistMusicTest {
     @Test
     public void RedisTemplateRedisListTest() throws JsonProcessingException {
         final String key = "roomtest:1" ; //room
-        ListOperations<String, SharePlaylistMusic> operations = redisTemplate.opsForList();
+        ListOperations<String, Object> operations = redisTemplate.opsForList();
         SharePlaylistMusic play = SharePlaylistMusic.builder()
+                .title("처음입네다")
                 .contents("안녕하세용 처음 가입해봤어요")
                 .musicId(1L)
                 .userId(1L)
                 .build();
+        play.setId();
         operations.rightPush(key, play);
-        List<SharePlaylistMusic> playList = operations.range(key,0,-1);
-        SharePlaylistMusic play2 = objectMapper().convertValue(playList.get(0), SharePlaylistMusic.class);
+        List<Object> playList = operations.range(key,0,-1);
+
+        int size = playList.size() ;
+        SharePlaylistMusic play2 = objectMapper().convertValue(playList.get(size-1), SharePlaylistMusic.class);
 
         assertThat(play2.getMusicId()).isEqualTo(1L);
+    }
 
+    @Test
+    public void RedisTemplateSetTest() {
+        SetOperations<String,Object> setOperations = redisTemplate.opsForSet();
+        String key = "testsuite";
+        Long size = setOperations.size(key);
+
+        if( !setOperations.isMember(key, 1L)) {
+            setOperations.add(key, 1L);
+            assertThat(size + 1).isEqualTo(setOperations.size(key));
+        }
+        else {
+            setOperations.remove(key,1L);
+            assertThat(size - 1).isEqualTo(setOperations.size(key));
+        }
     }
 }

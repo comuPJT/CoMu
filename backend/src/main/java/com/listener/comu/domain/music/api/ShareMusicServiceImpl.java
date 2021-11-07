@@ -1,17 +1,12 @@
 package com.listener.comu.domain.music.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.listener.comu.domain.music.domain.SharePlaylistMusic;
-import com.listener.comu.domain.music.dto.MusicPlayReq;
-import com.listener.comu.domain.music.dto.PlayedMusicRes;
+import com.listener.comu.domain.music.dto.SharePlaylistMusicReq;
+import com.listener.comu.domain.music.dto.SharePlaylistMusicRes;
 import com.listener.comu.domain.music.dto.SearchMusicRes;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
-import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,9 +16,9 @@ import static com.listener.comu.config.RedisConfig.objectMapper;
 @Service
 class ShareMusicServiceImpl implements ShareMusicService {
 
-    private final RedisTemplate<String,SharePlaylistMusic> redisTemplate;
+    private final RedisTemplate<String,Object> redisTemplate;
 
-    ShareMusicServiceImpl(RedisTemplate<String, SharePlaylistMusic> redisTemplate) {
+    ShareMusicServiceImpl(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
@@ -33,23 +28,25 @@ class ShareMusicServiceImpl implements ShareMusicService {
     }
 
     @Override
-    public void addMusicToPlayList(Long roomId, MusicPlayReq musicPlayReq) {
+    public void addMusicToPlayList(Long roomId, SharePlaylistMusicReq musicPlayReq) {
         final String key = "room:" + roomId; //room
-        ListOperations<String, SharePlaylistMusic> operations = redisTemplate.opsForList();
+        ListOperations<String, Object> operations = redisTemplate.opsForList();
+
         SharePlaylistMusic play = SharePlaylistMusic.builder()
                 .contents(musicPlayReq.getContents())
                 .musicId(musicPlayReq.getMusicId())
                 .userId(musicPlayReq.getUserId())
                 .build();
         play.setId(); //unique Id
+
         operations.rightPush(key, play); // "room:[id]" 키에 저장하기
     }
 
     @Override
     public void deleteMusicFromPlayList(Long roomId, String playId) {
         final String key = "room:" + roomId; //room
-        ListOperations<String, SharePlaylistMusic> operations = redisTemplate.opsForList();
-        List<SharePlaylistMusic> roomPlaylist = operations.range(key, 0,-1);
+        ListOperations<String, Object> operations = redisTemplate.opsForList();
+        List<Object> roomPlaylist = operations.range(key, 0,-1);
         int size = roomPlaylist.size();
         for(int i = 0 ; i < size ; i++) {
             SharePlaylistMusic play = objectMapper().convertValue(roomPlaylist.get(i), SharePlaylistMusic.class);
@@ -61,22 +58,20 @@ class ShareMusicServiceImpl implements ShareMusicService {
     }
 
     @Override
-    public List<PlayedMusicRes> getPlayedMusicAndContent(Long roomId) {
+    public List<SharePlaylistMusicRes> getPlayedMusicAndContent(Long roomId) {
         return null;
     }
 
     @Override
-    public List<PlayedMusicRes> getHonoredMusicAndContent(Long roomId) {
+    public List<SharePlaylistMusicRes> getHonoredMusicAndContent(Long roomId) {
         return null;
     }
 
     @Override
-    public void likeMusicRequest(Long playId, Long userId) {
-
-    }
-
-    @Override
-    public void undoLikeMusicRequest(Long playId, Long userId) {
-
+    public void toggleLikeMusicRequest(Long playId, Long userId) {
+        SetOperations<String,Object> setOperations = redisTemplate.opsForSet();
+        final String key = "sharealike:" + playId;
+        if( !setOperations.isMember(key, userId)) setOperations.add(key, userId);
+        else setOperations.remove(key,userId);
     }
 }
