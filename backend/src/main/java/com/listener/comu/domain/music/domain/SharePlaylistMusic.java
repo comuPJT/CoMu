@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SharePlaylistMusic {
-
+    @Builder.Default
+    private String playId = "";
+    private String title;
     private String contents;
     private Long userId;
     private Long musicId;
@@ -18,4 +20,8 @@ public class SharePlaylistMusic {
     private LocalDateTime timestamp = LocalDateTime.now(); //접수 시간
     @Builder.Default
     private boolean played = false;
+
+    public void setId(){
+        this.playId = this.userId + this.title + this.timestamp;
+    }
 }

@@ -61,7 +61,7 @@ public class ShareMusicController {
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> deleteMusicFromPlayList(@PathVariable Long roomId, @PathVariable Long playId) {
+    public ResponseEntity<? extends BaseResponseBody> deleteMusicFromPlayList(@PathVariable Long roomId, @PathVariable String playId) {
         shareMusicService.deleteMusicFromPlayList(roomId, playId);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }

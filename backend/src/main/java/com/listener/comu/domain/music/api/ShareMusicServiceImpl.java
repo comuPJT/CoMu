@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.listener.comu.config.RedisConfig.objectMapper;
+
 @Service
 class ShareMusicServiceImpl implements ShareMusicService {
 
@@ -39,12 +41,23 @@ class ShareMusicServiceImpl implements ShareMusicService {
                 .musicId(musicPlayReq.getMusicId())
                 .userId(musicPlayReq.getUserId())
                 .build();
+        play.setId(); //unique Id
         operations.rightPush(key, play); // "room:[id]" 키에 저장하기
     }
 
     @Override
-    public void deleteMusicFromPlayList(Long roomId, Long playId) {
-
+    public void deleteMusicFromPlayList(Long roomId, String playId) {
+        final String key = "room:" + roomId; //room
+        ListOperations<String, SharePlaylistMusic> operations = redisTemplate.opsForList();
+        List<SharePlaylistMusic> roomPlaylist = operations.range(key, 0,-1);
+        int size = roomPlaylist.size();
+        for(int i = 0 ; i < size ; i++) {
+            SharePlaylistMusic play = objectMapper().convertValue(roomPlaylist.get(i), SharePlaylistMusic.class);
+            if (playId.equals(play.getPlayId())) {
+                operations.remove(key, 1, play);
+                return;
+            }
+        }
     }
 
     @Override
