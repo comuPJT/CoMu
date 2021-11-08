@@ -43,7 +43,7 @@
         </div>
         <div
           class="login_button naver"
-          @click="[socialLoginUrl('naver'), nextStep()]"
+          @click="[socialLoginUrl('naver')]"
         >
           <img
             src="@/assets/images/naver.svg"
