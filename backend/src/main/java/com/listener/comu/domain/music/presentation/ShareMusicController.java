@@ -54,7 +54,7 @@ public class ShareMusicController {
     }
 
     @DeleteMapping ("/{roomId}/music/{playId}")
-    @ApiOperation(value = "신청곡 삭제", notes = "특정방에 있는 user가 선택한 노래를 삭제한다.")
+    @ApiOperation(value = "신청곡 삭제", notes = "특정방에 있는 아직 Play되지 않은 user가 선택한 노래를 삭제한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
             @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
@@ -62,7 +62,7 @@ public class ShareMusicController {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> deleteMusicFromPlayList(@PathVariable Long roomId, @PathVariable String playId) {
-        shareMusicService.deleteMusicFromPlayList(roomId, playId);
+        shareMusicService.deleteMusicRequestFromPlayList(roomId, playId);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
     //명예의 전당과 사연 조회는 유저 인증 필요 없음
@@ -75,7 +75,7 @@ public class ShareMusicController {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<List<SharePlaylistMusicRes>> getPlayedMusicAndContent (@PathVariable Long roomId) {
-        return ResponseEntity.status(200).body(shareMusicService.getPlayedMusicAndContent(roomId));
+        return ResponseEntity.status(200).body(shareMusicService.getPlayedPlaylist(roomId));
     }
 
     @GetMapping("/{roomId}/honor")
