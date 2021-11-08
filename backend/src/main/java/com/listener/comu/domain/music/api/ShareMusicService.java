@@ -21,7 +21,6 @@ public interface ShareMusicService {
     /* TD DO - 명예의 전당 사연 삭제*/
     void deleteMusicFromHonorList(Long roomId, String playId);
     void toggleLikeMusicRequest(Long playId, Long userId);
-
     /* EVENT DRIVEN */
     /* TO DO - 재생하기 위해 다음곡 가져오기 */
     /* TO DO - 재생 후 list 조정 */
