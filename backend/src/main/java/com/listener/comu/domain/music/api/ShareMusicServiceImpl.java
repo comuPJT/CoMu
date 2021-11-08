@@ -13,12 +13,18 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.listener.comu.config.RedisConfig.objectMapper;
 
 @Service
 class ShareMusicServiceImpl implements ShareMusicService {
+
+    private final String musicReqPrefix = "room";
+    private final String playedPrefix = "roomPlayed";
+    private final String musicLikePrefix = "shareLike";
+    private final long limit = 15L;
 
     private final RedisTemplate<String,Object> redisTemplate;
     private final MusicRepository musicRepository;
@@ -37,43 +43,88 @@ class ShareMusicServiceImpl implements ShareMusicService {
 
     @Override
     public void addMusicToPlayList(Long roomId, SharePlaylistMusicReq musicPlayReq) {
-        final String key = "room:" + roomId; //room
+        String key = musicReqPrefix + roomId; //room
         ListOperations<String, Object> operations = redisTemplate.opsForList();
+        Long size = operations.size(key);
+        if( size != null && size < limit ) { //15개 미만일때만!
+            // TO DO - MariaDB에 음악정보 넣거나 불러오기
 
-        // TO DO - MariaDB에 음악정보 넣거나 불러오기
+            SharePlaylistMusic play = SharePlaylistMusic.builder()
+                    .contents(musicPlayReq.getContents())
+                    .musicId(musicPlayReq.getMusicId())
+                    .userId(musicPlayReq.getUserId())
+                    .build();
+            play.setId(); //unique Id
 
-        SharePlaylistMusic play = SharePlaylistMusic.builder()
-                .contents(musicPlayReq.getContents())
-                .musicId(musicPlayReq.getMusicId())
-                .userId(musicPlayReq.getUserId())
-                .build();
-        play.setId(); //unique Id
-
-        operations.rightPush(key, play); // "room:[id]" 키에 저장하기
+            operations.rightPush(key, play); // "room:[id]" 키에 저장하기
+        }
     }
 
     @Override
     public List<SharePlaylistMusicRes> getPlayedPlaylist(Long roomId) {
-        final String key = "roomplayed:" + roomId; //room
+        final String key = playedPrefix + roomId; //room
         ListOperations<String, Object> operations = redisTemplate.opsForList();
         List<Object> roomPlaylist = operations.range(key, 0,-1);
-        return null;
+        List<SharePlaylistMusicRes> response = new ArrayList<>();
+        if(roomPlaylist != null) {
+            convertObjectListToDtoList(roomPlaylist, response);
+        }
+        return response;
+    }
+
+    @Override
+    public List<SharePlaylistMusicRes> getPlaylistUpAndDown(Long roomId) {
+        List<Object> resObjectList = new ArrayList<>();
+        String playedKey = playedPrefix + roomId;
+        String reqKey = musicReqPrefix + roomId;
+        ListOperations<String, Object> operations = redisTemplate.opsForList();
+        List<Object> playedList = operations.range(playedKey, 0,-1);
+        List<Object> requestList = operations.range(reqKey, 0 ,-1);
+        List<SharePlaylistMusicRes> response = new ArrayList<>();
+        if( playedList != null ) {
+            if( playedList.size() <= limit)
+                resObjectList.addAll(playedList);
+            else resObjectList.addAll(playedList.subList(0, (int)limit));
+        }
+        if( requestList != null ) resObjectList.addAll(requestList);
+        convertObjectListToDtoList(resObjectList, response);
+        return response;
+    }
+
+    private void convertObjectListToDtoList(List<Object> resObjectList, List<SharePlaylistMusicRes> response) {
+        for (Object o : resObjectList) {
+            SharePlaylistMusic play = objectMapper().convertValue(o, SharePlaylistMusic.class);
+            Long likeCount = redisTemplate.opsForSet().size( musicLikePrefix + play.getPlayId());
+            Music reqMusic = musicRepository.getMusicById(play.getMusicId());
+            User user = userRepository.getById(play.getUserId());
+            if (likeCount != null && reqMusic != null) {
+                response.add(SharePlaylistMusicRes.builder()
+                        .playId(play.getPlayId())
+                        .title(play.getTitle())
+                        .contents(play.getContents())
+                        .timestamp(play.getTimestamp())
+                        .name(reqMusic.getName())
+                        .singer(reqMusic.getSinger())
+                        .username(user.getUsername())
+                        .likes(likeCount)
+                        .build());
+            }
+        }
     }
 
     @Override
     public SharePlaylistMusicRes getPlayedMusicFromPlayList(Long roomId, String playId) {
-        final String key = "roomplayed:" + roomId; //room
+        final String key = playedPrefix + roomId; //room
         ListOperations<String, Object> operations = redisTemplate.opsForList();
         List<Object> roomPlaylist = operations.range(key, 0,-1);
         if( roomPlaylist !=null ){
-            int size = roomPlaylist.size();
-            for(int i = 0 ; i < size ; i++) {
-                SharePlaylistMusic play = objectMapper().convertValue(roomPlaylist.get(i), SharePlaylistMusic.class);
+            for (Object o : roomPlaylist) {
+                SharePlaylistMusic play = objectMapper().convertValue(o, SharePlaylistMusic.class);
                 if (playId.equals(play.getPlayId())) {
                     Long likeCount = redisTemplate.opsForSet().size("sharelike:" + playId);
                     Music reqMusic = musicRepository.getMusicById(play.getMusicId());
                     User user = userRepository.getById(play.getUserId());
-                    if (likeCount!=null && reqMusic != null ) {
+                    if (likeCount != null && reqMusic != null) {
                         return SharePlaylistMusicRes.builder()
                                 .playId(play.getPlayId())
                                 .title(play.getTitle())
@@ -93,13 +144,13 @@ class ShareMusicServiceImpl implements ShareMusicService {
 
     @Override
     public void deletePlayedMusicFromPlayList(Long roomId, String playId) {
-        final String key = "roomplayed:" + roomId; //room
+        final String key = playedPrefix + roomId; //room
         deleteMusicFromPlaylist(playId, key);
     }
 
     @Override
     public void deleteMusicRequestFromPlayList(Long roomId, String playId) {
-        String key = "room:" + roomId; //room
+        String key = musicReqPrefix + roomId; //room
         deleteMusicFromPlaylist(playId, key);
     }
 
@@ -107,9 +158,8 @@ class ShareMusicServiceImpl implements ShareMusicService {
         ListOperations<String, Object> operations = redisTemplate.opsForList();
         List<Object> roomPlaylist = operations.range(key, 0,-1);
         if( roomPlaylist !=null ) {
-            int size = roomPlaylist.size();
-            for(int i = 0 ; i < size ; i++) {
-                SharePlaylistMusic play = objectMapper().convertValue(roomPlaylist.get(i), SharePlaylistMusic.class);
+            for (Object o : roomPlaylist) {
+                SharePlaylistMusic play = objectMapper().convertValue(o, SharePlaylistMusic.class);
                 if (playId.equals(play.getPlayId())) {
                     operations.remove(key, 1, play);
                     return;
@@ -133,16 +183,11 @@ class ShareMusicServiceImpl implements ShareMusicService {
 
     }
 
-    @Override
-    public List<SharePlaylistMusicRes> getPlaylistUpAndDown() {
-        return null;
-    }
-
 
     @Override
     public void toggleLikeMusicRequest(Long playId, Long userId) {
         SetOperations<String,Object> setOperations = redisTemplate.opsForSet();
-        final String key = "sharelike:" + playId;
+        final String key = musicLikePrefix + playId;
         if (Boolean.TRUE.equals(setOperations.isMember(key, userId))) setOperations.add(key, userId);
         else setOperations.remove(key, userId);
     }
