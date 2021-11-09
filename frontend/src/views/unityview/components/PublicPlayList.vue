@@ -132,7 +132,12 @@
                       v-bind:class="{
                         'selected-table': titleResult.isselected,
                       }"
-                      @click="selectOnSearhResult(titleResult.id)"
+                      @click="
+                        [
+                          selectOnSearhResult(titleResult.id),
+                          (titleResult.isselected = !titleResult.isselected),
+                        ]
+                      "
                     >
                       <td class="content-body-td2">
                         <img :src="titleResult.album.images[2].url" />
@@ -140,8 +145,6 @@
                       <td class="content-body-td3">
                         {{ titleResult.name }}
                       </td>
-                      <td v-show="titleResult.isselected">트루</td>
-                      <td v-show="!titleResult.isselected">폴즈</td>
                       <td class="content-body-td4">
                         {{ titleResult.artists[0].name }}
                       </td>
@@ -293,17 +296,13 @@ export default {
       this.selectedMusicOnPlayList.push(musicId);
     },
 
-    selectMusic(isselected) {
-      console.log(isselected);
-      isselected = !isselected;
-    },
-
     getSpotifyToken() {
       //스포티파이 api키를 발급합니다. 현재는 검색창 띄울때마다 요청하는데 추후에 로그인시 한번만 요청하도록 위치변경할 예정
       Spotify.spotifyAccess();
     },
+
     async searchMusic(keyword) {
-      //검색어로 음악을 검색합니다. 아래 반복문은 더미데이터 넣기용이라 추후 수정예정
+      //검색어로 음악을 검색합니다.
       if (keyword.length < 2) {
         alert("2글자 이상의 검색어를 입력해주세요!");
       } else {
@@ -316,44 +315,42 @@ export default {
           },
         };
 
-        await axios
+        await axios //awiat가 모듈화시키면 생각한대로 작동이 안되서 우선은 내부에 넣어놨습니다. 추후에 에러 해결하면 모듈화 할 예정입니다.
           .get(
             "https://api.spotify.com/v1/search?q=" + keyword + "&type=track",
             headers
           )
           .then((res) => {
-            this.searchResultTitle = res.data.tracks.items;
+            this.searchResultTitle=[]; //검색하기 전 검색결과를 초기화
+            this.selectedMusicOnSearch={}; //선택된 노래또한 초기화
+            //searchResultTitle에 바로 집어넣지않고 반복문으로 push한 이유는
+            // 1. 필요한 데이터만 필터링하기 위해서 
+            //2.(중요) searchResultTitle=res.data 이렇게 바로 할당하면 신청할 노래를 선택하는과정에서 오류가 생깁니다... 이유는 모르겠지만 우선 이렇게 하는 방식으로 해결!
+            for (var i = 0; i < res.data.tracks.items.length; i++) {
+              this.searchResultTitle.push({
+                isselected: false,
+                artists: res.data.tracks.items[i].artists,
+                name: res.data.tracks.items[i].name,
+                album: res.data.tracks.items[i].album,
+                id: res.data.tracks.items[i].id,
+              });
+            }
+            //this.searchResultTitle = res.data.tracks.items;
           })
           .catch((err) => {
             console.log(err);
           });
-
-        for (var i = 0; i < this.searchResultTitle.length; i++) {
-          this.$delete(this.searchResultTitle[i], "explicit");
-          this.$delete(this.searchResultTitle[i], "available_markets");
-          this.$delete(this.searchResultTitle[i], "disc_number");
-          this.$delete(this.searchResultTitle[i], "duration_ms");
-          this.$delete(this.searchResultTitle[i], "external_ids");
-          this.$delete(this.searchResultTitle[i], "external_urls");
-          this.$delete(this.searchResultTitle[i], "href");
-          this.$delete(this.searchResultTitle[i], "is_local");
-          this.$delete(this.searchResultTitle[i], "popularity");
-          this.$delete(this.searchResultTitle[i], "preview_url");
-          this.$delete(this.searchResultTitle[i], "track_number");
-          this.$delete(this.searchResultTitle[i], "type");
-          this.$delete(this.searchResultTitle[i], "uri");
-          this.searchResultTitle[i].isselected = false;
-        }
       }
     },
 
     selectOnSearhResult(id) {
       for (var i = 0; i < this.searchResultTitle.length; i++) {
-        if (this.searchResultTitle[i].id != id) {
-          this.searchResultTitle[i].isselected = false;
-        } else {
-          this.searchResultTitle[i].isselected = true;
+        if (this.searchResultTitle[i].id == id) {
           this.selectedMusicOnSearch = this.searchResultTitle[i];
+          this.searchResultTitle[i].isselected;
+          console.log(this.searchResultTitle[i].isselected);
+        } else {
+          this.searchResultTitle[i].isselected = false;
         }
       }
     },
@@ -361,7 +358,7 @@ export default {
     moveToPostCard() {
       Object.keys(this.selectedMusicOnSearch).length;
       if (Object.keys(this.selectedMusicOnSearch).length === 0) {
-        alert("곡을 선택해");
+        alert("곡을 선택해주세요.");
       } else {
         this.shareMusicView = "postcard";
       }
