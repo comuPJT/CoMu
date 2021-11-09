@@ -10,7 +10,7 @@ export default {
     token: state => state.token
   },
   actions: {
-    fetchUser ({state, commit}, callback) {
+    fetchUser({ state, commit }, callback) {
       state.user
         ? callback && callback()
         : accountApi.getUser(
@@ -22,10 +22,10 @@ export default {
     }
   },
   mutations: {
-    setToken (state, token) {
+    setToken(state, token) {
       state.token = token
     },
-    setUser (state, user) {
+    setUser(state, user) {
       state.user = user
     }
   }

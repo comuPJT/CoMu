@@ -4,7 +4,7 @@
 //const REDIRECT_URI = `${location.protocol}//${location.hostname}${FRONTEND_PORT}/oauth/redirect`
 
 export default {
-  getSocialLoginUrl (socialType) {
+  getSocialLoginUrl(socialType) {
     //return `http://${BACKEND_URL}/oauth2/authorization/${socialType}?redirect_uri=${REDIRECT_URI}`
     return `localhost:8080/oauth2/authorization/${socialType}?redirect_uri=localhost:8081`;
   },

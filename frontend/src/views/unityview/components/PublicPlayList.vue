@@ -36,7 +36,7 @@
                 <tr
                   v-for="music in sharePlayListMusic"
                   :key="music.id"
-                  v-bind:class="{ 'selected-table': music.isselected }"
+                  v-bind:class="{'selected-table': music.isselected}"
                   @click="
                     [
                       selectOnPlayList('id'),
@@ -63,7 +63,10 @@
                 </div>
               </div>
               <div class="smallbuttonwhite">
-                <div class="buttoncontent" @click="shareMusicView = 'search'">
+                <div
+                  class="buttoncontent"
+                  @click="[(shareMusicView = 'search'), getSpotifyToken()]"
+                >
                   새로운 곡 신청하기
                 </div>
               </div>
@@ -132,61 +135,19 @@
                       @click="selectOnSearhResult(titleResult.id)"
                     >
                       <td class="content-body-td2">
-                        <img :src="titleResult.cover" />
+                        <img :src="titleResult.album.images[2].url" />
                       </td>
                       <td class="content-body-td3">
-                        {{ titleResult.title }}
+                        {{ titleResult.name }}
                       </td>
-                      <td class="content-body-td4">{{ titleResult.artist }}</td>
-                      <td class="content-body-td5">{{ titleResult.album }}</td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <div class="search-result-wrapper">
-              <div class="search-result-title">
-                아티스트({{ searchResultArtist.length }})
-              </div>
-              <div v-show="searchResultArtist.length == 0" class="none-result">
-                검색 결과가 없습니다.
-              </div>
-              <div
-                class="search-result-exist"
-                v-if="searchResultArtist.length != 0"
-              >
-                <div class="content-header">
-                  <div class="content-header-1">
-                    <div class="header-text">곡 제목</div>
-                  </div>
-                  <div class="content-header-2">
-                    <div class="header-text">아티스트</div>
-                  </div>
-                  <div class="content-header-3">
-                    <div class="header-text">앨범</div>
-                  </div>
-                </div>
-                <div class="content-body">
-                  <table>
-                    <tr
-                      v-for="artistResult in searchResultArtist"
-                      :key="artistResult.id"
-                      v-bind:class="{
-                        'selected-table': artistResult.isselected,
-                      }"
-                      @click="selectOnSearhResult(artistResult.id)"
-                    >
-                      <td class="content-body-td2">
-                        <img :src="artistResult.cover" />
-                      </td>
-                      <td class="content-body-td3">
-                        {{ artistResult.title }}
-                      </td>
+                      <td v-show="titleResult.isselected">트루</td>
+                      <td v-show="!titleResult.isselected">폴즈</td>
                       <td class="content-body-td4">
-                        {{ artistResult.artist }}
+                        {{ titleResult.artists[0].name }}
                       </td>
-                      <td class="content-body-td5">{{ artistResult.album }}</td>
+                      <td class="content-body-td5">
+                        {{ titleResult.album.name }}
+                      </td>
                     </tr>
                   </table>
                 </div>
@@ -211,7 +172,7 @@
         <!-- 곡 검색화면 끝-->
 
         <!--사연과 함께 음악 신청화면-->
-        <div class="modal-window" v-show="shareMusicView == 'postcard'">
+        <div class="modal-window" v-if="shareMusicView == 'postcard'">
           <!--현재 방 이름 / 모달 닫기 버튼-->
           <div class="modal-top">
             <p>곡 신청하기</p>
@@ -230,25 +191,31 @@
                 <div class="smallbuttonbeige">
                   <div class="buttoncontent">POST CARD</div>
                 </div>
-                <img :src="selectedMusicOnSearch.cover" />
+                <img :src="selectedMusicOnSearch.album.images[0].url" />
                 <div class="postcard-text-wrapper">
                   <div class="postcard-text-left">
                     <div class="input_box postcard-title">
                       <div class="title">제목</div>
-                      <input v-model="postcardTitle" placeholder="제목을 입력해주세요." />
+                      <input
+                        v-model="postcardTitle"
+                        placeholder="제목을 입력해주세요."
+                      />
                     </div>
 
                     <div class="input_box postcard-content">
                       <div class="title">내용</div>
-                      <textarea v-model="postcardContent" placeholder="내용을 입력해주세요." />
+                      <textarea
+                        v-model="postcardContent"
+                        placeholder="내용을 입력해주세요."
+                      />
                     </div>
                   </div>
                   <div class="postcard-text-right">
                     <div class="postcard-line">
-                      {{ selectedMusicOnSearch.artist }}
+                      {{ selectedMusicOnSearch.artists[0].name }}
                     </div>
                     <div class="postcard-line">
-                      {{ selectedMusicOnSearch.title }}
+                      {{ selectedMusicOnSearch.name }}
                     </div>
                     <div class="postcard-line">usernickname</div>
                     <div class="postcard-line">&nbsp;</div>
@@ -259,7 +226,9 @@
             </div>
             <div class="playlist-button-wrapper">
               <div class="smallbuttonbrown">
-                <div class="buttoncontent" @click="shareMusicView='search'">이전</div>
+                <div class="buttoncontent" @click="shareMusicView = 'search'">
+                  이전
+                </div>
               </div>
               <div class="smallbuttonwhite">
                 <div class="buttoncontent">신청</div>
@@ -279,10 +248,12 @@
 
 <script>
 import AddToMyList from "./AddToMyList.vue";
+import Spotify from "@/api/spotify.js";
+import axios from "axios";
 export default {
   name: "PublicPlayList",
 
-  components: { AddToMyList },
+  components: {AddToMyList},
 
   props: {},
   data() {
@@ -294,12 +265,11 @@ export default {
       selectedMusicOnPlayList: [], //공용플레이리스트에서 내 리스트로 옮기기 위해 선택한 곡"들"
       //음악검색
       searchKeyword: "", //검색어
-      searchResultTitle: [],
-      searchResultArtist: [], //노래제목, 아티스트별 검색결과 배열
+      searchResultTitle: [], //노래 검색결과 배열
       selectedMusicOnSearch: {}, //검색결과에서 선택된 음악
       //사연과 신청
-      postcardTitle:"",
-      postcardContent:"",
+      postcardTitle: "",
+      postcardContent: "",
     };
   },
 
@@ -322,35 +292,57 @@ export default {
       //공용뮤직리스트에서 클릭된 음악들을 배열(selectedMusicOnPlaylist)에 담기
       this.selectedMusicOnPlayList.push(musicId);
     },
+
     selectMusic(isselected) {
       console.log(isselected);
       isselected = !isselected;
     },
-    searchMusic(keyword) {
+
+    getSpotifyToken() {
+      //스포티파이 api키를 발급합니다. 현재는 검색창 띄울때마다 요청하는데 추후에 로그인시 한번만 요청하도록 위치변경할 예정
+      Spotify.spotifyAccess();
+    },
+    async searchMusic(keyword) {
       //검색어로 음악을 검색합니다. 아래 반복문은 더미데이터 넣기용이라 추후 수정예정
       if (keyword.length < 2) {
         alert("2글자 이상의 검색어를 입력해주세요!");
       } else {
-        for (var i = 0; i < 5; i++) {
-          this.searchResultTitle.push({
-            isselected: false,
-            id: i, //고유한 값 만들기위해 임시로 넣어놨습니다. 실제로 음악이 들어오면 거기에 존재하는 고유값 이용할거에요
-            cover:
-              "https://t1.daumcdn.net/thumb/R720x0.fpng/?fname=http://t1.daumcdn.net/brunch/service/user/8fXh/image/0_JTh3JET7ZCHaT_IJhG4VbhEpI.png",
-            title: "Insecure (Feat. Pink Sweat$)",
-            artist: "Bren Joy",
-            album: "Nothing Feels Better",
+        //this.searchResultTitle=await Spotify.searchMusic(keyword);
+        const headers = {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("SPOTIFY_TOKEN"),
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        };
+
+        await axios
+          .get(
+            "https://api.spotify.com/v1/search?q=" + keyword + "&type=track",
+            headers
+          )
+          .then((res) => {
+            this.searchResultTitle = res.data.tracks.items;
+          })
+          .catch((err) => {
+            console.log(err);
           });
 
-          this.searchResultArtist.push({
-            isselected: false,
-            id: i + 10,
-            cover:
-              "https://t1.daumcdn.net/thumb/R720x0.fpng/?fname=http://t1.daumcdn.net/brunch/service/user/8fXh/image/0_JTh3JET7ZCHaT_IJhG4VbhEpI.png",
-            title: "Insecure (Feat. Pink Sweat$)",
-            artist: "Bren Joy",
-            album: "Nothing Feels Better",
-          });
+        for (var i = 0; i < this.searchResultTitle.length; i++) {
+          this.$delete(this.searchResultTitle[i], "explicit");
+          this.$delete(this.searchResultTitle[i], "available_markets");
+          this.$delete(this.searchResultTitle[i], "disc_number");
+          this.$delete(this.searchResultTitle[i], "duration_ms");
+          this.$delete(this.searchResultTitle[i], "external_ids");
+          this.$delete(this.searchResultTitle[i], "external_urls");
+          this.$delete(this.searchResultTitle[i], "href");
+          this.$delete(this.searchResultTitle[i], "is_local");
+          this.$delete(this.searchResultTitle[i], "popularity");
+          this.$delete(this.searchResultTitle[i], "preview_url");
+          this.$delete(this.searchResultTitle[i], "track_number");
+          this.$delete(this.searchResultTitle[i], "type");
+          this.$delete(this.searchResultTitle[i], "uri");
+          this.searchResultTitle[i].isselected = false;
         }
       }
     },
@@ -362,15 +354,6 @@ export default {
         } else {
           this.searchResultTitle[i].isselected = true;
           this.selectedMusicOnSearch = this.searchResultTitle[i];
-        }
-      }
-      i = 0;
-      for (i; i < this.searchResultArtist.length; i++) {
-        if (this.searchResultArtist[i].id != id) {
-          this.searchResultArtist[i].isselected = false;
-        } else {
-          this.searchResultArtist[i].isselected = true;
-          this.selectedMusicOnSearch = this.searchResultArtist[i];
         }
       }
     },

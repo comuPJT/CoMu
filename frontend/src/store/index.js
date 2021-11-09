@@ -8,7 +8,7 @@ Vue.use(Vuex)
 const debug = process.env.NODE_ENV !== 'production'
 
 export default new Vuex.Store({
-  plugins: [ createPersistedState({ storage: window.sessionStorage }) ],
+  plugins: [createPersistedState({ storage: window.sessionStorage })],
   modules: { account },
   strict: debug
 })

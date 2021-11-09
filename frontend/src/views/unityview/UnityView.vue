@@ -28,7 +28,7 @@ import PublicPlayList from "./components/PublicPlayList.vue";
 export default {
   name: "UnityView",
 
-  components: { PublicPlayList },
+  components: {PublicPlayList},
 
   props: {},
   data() {
