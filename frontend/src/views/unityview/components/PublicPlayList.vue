@@ -146,7 +146,7 @@
                         {{ titleResult.name }}
                       </td>
                       <td class="content-body-td4">
-                        {{ titleResult.artists[0].name }}
+                        {{ titleResult.artists }}
                       </td>
                       <td class="content-body-td5">
                         {{ titleResult.album.name }}
@@ -321,15 +321,27 @@ export default {
             headers
           )
           .then((res) => {
-            this.searchResultTitle=[]; //검색하기 전 검색결과를 초기화
-            this.selectedMusicOnSearch={}; //선택된 노래또한 초기화
+            this.searchResultTitle = []; //검색하기 전 검색결과를 초기화
+            this.selectedMusicOnSearch = {}; //선택된 노래또한 초기화
             //searchResultTitle에 바로 집어넣지않고 반복문으로 push한 이유는
-            // 1. 필요한 데이터만 필터링하기 위해서 
+            // 1. 필요한 데이터만 필터링하기 위해서
             //2.(중요) searchResultTitle=res.data 이렇게 바로 할당하면 신청할 노래를 선택하는과정에서 오류가 생깁니다... 이유는 모르겠지만 우선 이렇게 하는 방식으로 해결!
+
             for (var i = 0; i < res.data.tracks.items.length; i++) {
+              var artistString = ""; //아티스트가 여러명일때 한 문자열로 합치기 위해 사용된 변수입니다.
+              for (
+                var j = 0;
+                j < res.data.tracks.items[i].artists.length;
+                j++
+              ) {
+                artistString = artistString.concat(
+                  res.data.tracks.items[i].artists[j].name + ", "
+                );
+              }
+              artistString = artistString.slice(0, -2);
               this.searchResultTitle.push({
                 isselected: false,
-                artists: res.data.tracks.items[i].artists,
+                artists: artistString,
                 name: res.data.tracks.items[i].name,
                 album: res.data.tracks.items[i].album,
                 id: res.data.tracks.items[i].id,
