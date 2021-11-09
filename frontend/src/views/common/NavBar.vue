@@ -7,25 +7,25 @@
         <img
           src="@/assets/images/online_icon.svg"
           class="menu_icon"
-          :class="{ 'menu-selected': selectedMenu === 'online' }"
+          :class="{'menu-selected': selectedMenu === 'online'}"
           @click="changeMenu('online')"
         />
         <img
           src="@/assets/images/chat_icon.svg"
           class="menu_icon"
-          :class="{ 'menu-selected': selectedMenu === 'chat' }"
+          :class="{'menu-selected': selectedMenu === 'chat'}"
           @click="changeMenu('chat')"
         />
         <img
           src="@/assets/images/setting_icon.svg"
           class="menu_icon"
-          :class="{ 'menu-selected': selectedMenu === 'setting' }"
+          :class="{'menu-selected': selectedMenu === 'setting'}"
           @click="changeMenu('setting')"
         />
         <img
           src="@/assets/images/mypage_icon.svg"
           class="menu_icon"
-          :class="{ 'menu-selected': selectedMenu === 'mypage' }"
+          :class="{'menu-selected': selectedMenu === 'mypage'}"
           @click="[changeMenu('mypage'), $router.push('/mypage')]"
         />
       </div>
@@ -197,8 +197,7 @@
           <div class="input_box inputbox-none-title" style="width: 14vw">
             <input placeholder="메시지를 입력해주세요!" />
           </div>
-          <img src="@/assets/images/message_send_icon.svg">
-
+          <img src="@/assets/images/message_send_icon.svg" />
         </div>
       </div>
       <!--채팅끝-->

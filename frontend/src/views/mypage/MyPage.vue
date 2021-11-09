@@ -1,24 +1,20 @@
 <template>
   <div class="mypage-wrapper">
-      <h1>여기는 마이페이지@@@</h1>
+    <h1>여기는 마이페이지@@@</h1>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "MyPage",
 
-  components: {
-  },
+  components: {},
 
   props: {},
   data() {
-    return {
-    };
+    return {};
   },
-  methods: {
-  },
+  methods: {},
 };
 </script>
 

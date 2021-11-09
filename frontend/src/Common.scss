@@ -50,7 +50,7 @@
     box-sizing: border-box;
     border-radius: 5px;
     font-family: NANUM;
-    resize:none;
+    resize: none;
     overflow: auto;
   }
   textarea::placeholder {
@@ -61,8 +61,8 @@
     outline: none;
   }
 }
-.inputbox-none-title{
-  height:2vw;
+.inputbox-none-title {
+  height: 2vw;
 }
 
 .smallbuttonbrown {
@@ -74,7 +74,7 @@
   order: 3;
   flex-grow: 0;
   margin: 35px 0px;
-  cursor:pointer;
+  cursor: pointer;
   .buttoncontent {
     height: 2.1vw;
     width: 12.5vw;
@@ -105,7 +105,7 @@
   order: 3;
   flex-grow: 0;
   margin: 35px 0px;
-  cursor:pointer;
+  cursor: pointer;
   .buttoncontent {
     height: 2.1vw;
     width: 12.5vw;
@@ -123,7 +123,7 @@
     align-items: center;
     text-align: center;
     justify-content: center;
-    color: #613a2e
+    color: #613a2e;
   }
 }
 
@@ -136,11 +136,11 @@
   order: 3;
   flex-grow: 0;
   margin: 35px 0px;
-  cursor:pointer;
+  cursor: pointer;
   .buttoncontent {
     height: 2.1vw;
     width: 12.5vw;
-    background: #EEE3D7;
+    background: #eee3d7;
     border: 1px solid #613a2e;
     box-sizing: border-box;
     box-shadow: 0px 0px 0px 2px #ffffff, 0px 0px 0px 4px #613a2e;
@@ -154,10 +154,10 @@
     align-items: center;
     text-align: center;
     justify-content: center;
-    color: #613a2e
+    color: #613a2e;
   }
 }
 
 div::-webkit-scrollbar {
-    display: none;
+  display: none;
 }

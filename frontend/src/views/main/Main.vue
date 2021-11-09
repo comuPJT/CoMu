@@ -23,41 +23,31 @@
       <div class="login_box1">
         <img class="lp" src="@/assets/images/mainpage_lp.gif" />
         <div>
-        <div
-          class="login_button kakao"
-          @click="[socialLoginUrl('kakao'), nextStep()]"
-        >
-          <img
-            src="@/assets/images/kakao.svg"
-          />
-          Kakao로 로그인
-        </div>
-        <!-- <a :href="socialLoginUrl('google')"> -->
-          <a href="http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:8081/oauth/redirect">
-        <div
-          class="login_button google"
-        >
-          <img
-            src="@/assets/images/google.svg"
-          />
-          Google로 로그인
-        </div>
-        </a>
-        <div
-          class="login_button naver"
-          @click="[socialLoginUrl('naver')]"
-        >
-          <img
-            src="@/assets/images/naver.svg"
-          />
-          Naver로 로그인
-        </div>
-        <div
-          class="login_button guest"
-          @click="[socialLoginUrl('guest'), nextStep()]"
-        >
-          비회원으로 시작
-        </div>
+          <div
+            class="login_button kakao"
+            @click="[socialLoginUrl('kakao'), nextStep()]"
+          >
+            <img src="@/assets/images/kakao.svg" />
+            Kakao로 로그인
+          </div>
+          <a
+            href="http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:8081/oauth/redirect"
+          >
+            <div class="login_button google">
+              <img src="@/assets/images/google.svg" />
+              Google로 로그인
+            </div>
+          </a>
+          <div class="login_button naver" @click="[socialLoginUrl('naver')]">
+            <img src="@/assets/images/naver.svg" />
+            Naver로 로그인
+          </div>
+          <div
+            class="login_button guest"
+            @click="[socialLoginUrl('guest'), nextStep()]"
+          >
+            비회원으로 시작
+          </div>
         </div>
       </div>
     </div>
@@ -100,11 +90,14 @@
             <div class="nickname_unvalid">유효한 닉네임을 입력해주세요.</div>
           </div>
         </div>
-          <div class="join_button_wrapper">
-            <div class="smallbuttonbrown" @click="$router.push({ name: 'UnityView'})">
-              <div class="buttoncontent">가입하기</div>
-            </div>
+        <div class="join_button_wrapper">
+          <div
+            class="smallbuttonbrown"
+            @click="$router.push({name: 'UnityView'})"
+          >
+            <div class="buttoncontent">가입하기</div>
           </div>
+        </div>
       </div>
     </div>
     <!--첫 소셜 로그인시 회원가입 끝-->
@@ -113,7 +106,7 @@
 
 <script>
 import $ from "@/util/utils";
-import { Carousel, Slide } from "vue-carousel";
+import {Carousel, Slide} from "vue-carousel";
 
 export default {
   name: "Main",
