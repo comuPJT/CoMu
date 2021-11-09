@@ -121,11 +121,11 @@
           width: 19.1vw;
           height: 3.3vw;
         }
-        tr{
-            cursor:pointer;
+        tr {
+          cursor: pointer;
         }
-        tr:hover{
-            background: #E0D3C8;
+        tr:hover {
+          background: #e0d3c8;
         }
       }
     }
@@ -140,7 +140,162 @@
         margin-right: 1.5vw;
       }
     }
+    .playlist-button-wrapper-left {
+      width: 90%;
+      height: 17%;
+      margin: 0 5%;
+      display: flex;
+      align-items: center;
+      justify-content: initial;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 50%;
+    }
   }
+}
+
+.modal-content-search {
+  position: relative;
+  .search-input {
+    background: #ffffff;
+    border: 2px solid #613a2e;
+    box-sizing: border-box;
+    border-radius: 2.6vw;
+    font-family: NANUM;
+    font-size: 0.94vw;
+    width: 42vw;
+    height: 2.8vw;
+    color: #613a2e;
+    padding-left: 1.5vw;
+  }
+  .search-input:focus {
+    outline: none;
+  }
+  .search-input-buttom {
+    height: 1.5vw;
+    position: absolute;
+    right: 21.2%;
+    cursor: pointer;
+  }
+}
+
+.search-result-wrapper {
+  height: 35%;
+  .search-result-title {
+    font-family: BMHANNA;
+    color: #613a2e;
+    font-size: 1.04vw;
+    text-align: initial;
+    margin-left: 5%;
+    margin-bottom: 0.5vw;
+  }
+  .none-result {
+    font-size: 0.83vw;
+    color: #aa938c;
+    text-align: initial;
+    margin-left: 5%;
+  }
+  table {
+    text-align: initial;
+  }
+}
+
+.search-input-wrapper {
+  width: 100%;
+  height: 13%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.search-result-exist {
+  height: 100%;
+}
+.music-applicate {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+.selected-table {
+  background: #e0d3c8;
+}
+
+.postcard-margin {
+  height: 13%;
+}
+
+.postcard-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70% !important;
+}
+
+.postcard-body {
+  filter: drop-shadow(0px 0.2vw 0.2vw rgba(0, 0, 0, 0.25));
+  width: 80%;
+  height: 80%;
+  background: #e0d3c8;
+  padding: 2.6vw;
+  .smallbuttonbeige {
+    margin: 0;
+    cursor:auto;
+    .buttoncontent{
+      background: transparent !important;
+    }
+  }
+  img {
+    width: 10vw;
+    height: 10vw;
+    position: absolute;
+    top: 2.6vw;
+    right: 2.6vw;
+    margin-right: 1vw;
+  }
+}
+
+.postcard-text-wrapper {
+  margin-top: 2vw;
+  box-sizing: border-box;
+  height: 18vw;
+}
+.postcard-text-left {
+  width: 50%;
+  height: 100%;
+  float: left;
+  border-right: 1px solid #613a2e;
+  box-sizing: border-box;
+}
+.postcard-text-right {
+  width: 50%;
+  height: 100%;
+  float: left;
+  border-left: 1px solid #613a2e;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1vw;
+}
+.postcard-title {
+  width: 90%;
+  height: 27%;
+}
+
+.postcard-content {
+  width: 90%;
+  height: 73%;
+  textarea {
+    height: calc(95% - 1.43vw);
+  }
+}
+
+.postcard-line {
+  border-bottom: 1px solid #613a2e;
+  font-family: BMHANNA;
+  font-size: 1.25vw;
+  padding-top: 1vw;
 }
 
 // 오버레이 트랜지션

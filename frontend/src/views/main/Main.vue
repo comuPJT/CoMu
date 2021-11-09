@@ -32,18 +32,20 @@
           />
           Kakao로 로그인
         </div>
+        <!-- <a :href="socialLoginUrl('google')"> -->
+          <a href="http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:8081/oauth/redirect">
         <div
           class="login_button google"
-          @click="[socialLoginUrl('google'), nextStep()]"
         >
           <img
             src="@/assets/images/google.svg"
           />
           Google로 로그인
         </div>
+        </a>
         <div
           class="login_button naver"
-          @click="[socialLoginUrl('naver'), nextStep()]"
+          @click="[socialLoginUrl('naver')]"
         >
           <img
             src="@/assets/images/naver.svg"
