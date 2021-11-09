@@ -23,10 +23,7 @@ public class PlayerMove : MonoBehaviour
     void Start()
     {
         player = GetComponent<Rigidbody2D>();
-        if (_prefabs == null)
-        {
-            _prefabs = transform.GetChild(0).GetComponent<SPUM_Prefabs>();
-        }
+        _prefabs = transform.GetChild(PlayerPrefab.characterNum).GetComponent<SPUM_Prefabs>();
     }
 
     // Update is called once per frame
