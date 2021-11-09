@@ -46,6 +46,40 @@ public class MyMainPlaylistService {
     }
 
     // 재생 목록에 곡(한 개 또는 여러 개) 추가
+    public void addMusic(List<Music> musicList, long userSeq) {
+
+        // spotify_id(음악 식별자)로 music table에 있는 노래인지 확인
+        List<String> spotifyIds = new ArrayList<>();
+
+        for (Music music: musicList){
+            spotifyIds.add(music.getSpotifyId());
+        }
+
+        List<String> presentSpotifyIds = musicRepository.getPresentSpotifyIds(spotifyIds);
+
+        // ★★★ 재생 목록에 있는 노래면 삭제하고 맨 아래에다가 넣어놓기 ★★★
+
+        for(int i=0, size=musicList.size(); i<size; i++){
+
+            Music music = musicList.get(i);
+
+            long musicId; // 음악 번호
+
+            // DB에 존재하지 않는 음악이면 music 테이블에 추가
+            String currentId = music.getSpotifyId();
+            if(!presentSpotifyIds.contains(currentId)){
+                musicId = musicRepository.save(music).getId();
+            } else {
+                musicId = musicRepository.getMusicIdBySpotifyId(currentId);
+            }
+            int playOrder = (int)myMainPlaylistRepository.count();
+
+            // my_main_playlist에 연결 관계 추가
+            myMainPlaylistRepository.save(MyMainPlaylist.builder().musicId(musicId).userSeq(userSeq).playOrder(playOrder).build());
+
+        }
+
+    }
 
     // 재생 목록 전체 곡 삭제
 
