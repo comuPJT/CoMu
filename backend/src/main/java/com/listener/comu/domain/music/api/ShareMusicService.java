@@ -17,9 +17,9 @@ public interface ShareMusicService {
     List<SharePlaylistMusicRes> getPlaylistUpAndDown (Long roomId);
     List<SharePlaylistMusicRes> getHonoredMusicAndContent(Long roomId);
     /* TO DO - 명예의 전당 사연 상세보기 */
-    SharePlaylistMusicRes getPlayedMusicFromHonorList(Long roomId, String playId);
+    SharePlaylistMusicRes getPlayedMusicFromHonorList(Long playId);
     /* TD DO - 명예의 전당 사연 삭제*/
-    void deleteMusicFromHonorList(Long roomId, String playId);
+    void deleteMusicFromHonorList(Long playId);
     void toggleLikeMusicRequest(Long playId, Long userId);
     /* EVENT DRIVEN */
     /* TO DO - 재생하기 위해 다음곡 가져오기 */

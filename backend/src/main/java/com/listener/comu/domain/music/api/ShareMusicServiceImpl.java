@@ -1,8 +1,7 @@
 package com.listener.comu.domain.music.api;
 
-import com.listener.comu.domain.music.domain.Music;
-import com.listener.comu.domain.music.domain.MusicRepository;
-import com.listener.comu.domain.music.domain.SharePlaylistMusic;
+import com.listener.comu.domain.music.domain.*;
+import com.listener.comu.domain.music.dto.HonoredPlaylistMusicRes;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicReq;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicRes;
 import com.listener.comu.domain.music.dto.SearchMusicRes;
@@ -29,11 +28,13 @@ class ShareMusicServiceImpl implements ShareMusicService {
     private final RedisTemplate<String,Object> redisTemplate;
     private final MusicRepository musicRepository;
     private final UserRepository userRepository;
+    private final HistoryRepository historyRepository;
 
-    ShareMusicServiceImpl(RedisTemplate<String, Object> redisTemplate, MusicRepository musicRepository, UserRepository userRepository) {
+    ShareMusicServiceImpl(RedisTemplate<String, Object> redisTemplate, MusicRepository musicRepository, UserRepository userRepository, HistoryRepository historyRepository) {
         this.redisTemplate = redisTemplate;
         this.musicRepository = musicRepository;
         this.userRepository = userRepository;
+        this.historyRepository = historyRepository;
     }
 
     @Override
@@ -170,17 +171,17 @@ class ShareMusicServiceImpl implements ShareMusicService {
 
     @Override
     public List<SharePlaylistMusicRes> getHonoredMusicAndContent(Long roomId) {
-        return null;
+        return historyRepository.getHistoryMusicsByRoomId(roomId);
     }
 
     @Override
-    public SharePlaylistMusicRes getPlayedMusicFromHonorList(Long roomId, String playId) {
-        return null;
+    public SharePlaylistMusicRes getPlayedMusicFromHonorList(Long playId) {
+        return historyRepository.getHistoryMusicById(playId);
     }
 
     @Override
-    public void deleteMusicFromHonorList(Long roomId, String playId) {
-
+    public void deleteMusicFromHonorList(Long playId) {
+        historyRepository.deleteById(playId);
     }
 
 
