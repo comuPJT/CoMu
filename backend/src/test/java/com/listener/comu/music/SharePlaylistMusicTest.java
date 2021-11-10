@@ -5,9 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.listener.comu.domain.music.domain.Room;
-import com.listener.comu.domain.music.domain.RoomRedisRepository;
-import com.listener.comu.domain.music.domain.SharePlaylistMusic;
+import com.listener.comu.domain.music.domain.*;
+import com.listener.comu.domain.music.dto.SharePlaylistMusicRes;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +14,8 @@ import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ import static com.listener.comu.config.RedisConfig.objectMapper;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Transactional
 public class SharePlaylistMusicTest {
     @Autowired
     private RoomRedisRepository repo;
@@ -32,6 +34,8 @@ public class SharePlaylistMusicTest {
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
 
+    @Autowired
+    private HistoryRepository historyRepository;
 
     @Test
     public void RedisRepositoryRoomCreateTest(){
@@ -87,5 +91,36 @@ public class SharePlaylistMusicTest {
             setOperations.remove(key,1L);
             assertThat(size - 1).isEqualTo(setOperations.size(key));
         }
+    }
+
+    @Test
+    public void deleteHonoredPlayTest() {
+        assertThat(historyRepository.getHistoryById(1L).getLikes()).isEqualTo(20);
+        historyRepository.deleteById(1L);
+        assertThat(historyRepository.getHistoryById(1L)).isEqualTo(null);
+    }
+    @Test
+    public void getHonoredPlayListTest() {
+        History history = historyRepository.getHistoryById(1L);
+        assertThat(history.getMusic().getSinger()).isEqualTo("조성모");
+    }
+
+    @Test
+    public void getAllHonoredPlayListInRoom() {
+        List<History> history = historyRepository.getHistoriesByRoomId(1L);
+        List<SharePlaylistMusicRes> response = new ArrayList<>();
+        for(History h : history){
+            response.add(SharePlaylistMusicRes.builder()
+                    .playId(h.getId().toString())
+                    .title(h.getTitle())
+                    .contents(h.getContents())
+                    .timestamp(h.getTimestamp())
+                    .name(h.getMusic().getName())
+                    .singer(h.getMusic().getSinger())
+                    .username(h.getUser().getUsername())
+                    .likes(h.getLikes())
+                    .build());
+        }
+        assertThat(response.size()).isEqualTo(2);
     }
 }

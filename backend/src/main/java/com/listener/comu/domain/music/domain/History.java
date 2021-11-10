@@ -9,45 +9,31 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity(name = "history")
+@Table(name="history")
 @Getter
 @Setter
-@SqlResultSetMapping(
-        name="HistoryResponseMapping",
-        classes = @ConstructorResult(
-                targetClass = SharePlaylistMusicRes.class,
-                columns = {
-                        @ColumnResult(name="id", type = String.class),
-                        @ColumnResult(name="title", type = String.class),
-                        @ColumnResult(name="contents", type = String.class),
-                        @ColumnResult(name="timestamp", type = LocalDateTime.class),
-                        @ColumnResult(name="name", type = String.class),
-                        @ColumnResult(name="singer", type = String.class),
-                        @ColumnResult(name="username", type = String.class),
-                        @ColumnResult(name="likes", type = String.class),
-                }
-        )
-)
-@NamedNativeQueries(
-        @NamedNativeQuery(
-                name="getHistoryMusicsByRoomId",
-                query="SELECT history.id, title, contents, timestamp, name,likes FROM history WHERE history.id = :roomId",
-                resultSetMapping = "HistoryResponseMapping"
-        ),
-        @NamedNativeQuery(
-                name="getHistoryMusicById",
-                query="SELECT history.id, title, contents, timestamp, name, singer,username,likes FROM history, user, music WHERE history.id = :id",
-                resultSetMapping = "HistoryResponseMapping"
-        )
-)
 public class History {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long roomId;
-    private Long musicId;
-    private Long userId;
+    @Column(name = "room_id")
+    private Long roomId; //애도 포린키이긴한데...
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(
+            name= "music_id",
+            nullable = false
+    )
+    private Music music;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(
+            name= "user_seq",
+            nullable = false
+    )
+    private User user;
 
     @Column(name = "title")
     private String title;

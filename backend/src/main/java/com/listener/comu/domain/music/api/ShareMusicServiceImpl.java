@@ -1,7 +1,6 @@
 package com.listener.comu.domain.music.api;
 
 import com.listener.comu.domain.music.domain.*;
-import com.listener.comu.domain.music.dto.HonoredPlaylistMusicRes;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicReq;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicRes;
 import com.listener.comu.domain.music.dto.SearchMusicRes;
@@ -171,12 +170,39 @@ class ShareMusicServiceImpl implements ShareMusicService {
 
     @Override
     public List<SharePlaylistMusicRes> getHonoredMusicAndContent(Long roomId) {
-        return historyRepository.getHistoryMusicsByRoomId(roomId);
+        List<History> history = historyRepository.getHistoriesByRoomId(roomId);
+        List<SharePlaylistMusicRes> response = new ArrayList<>();
+        for(History h : history){
+            response.add(SharePlaylistMusicRes.builder()
+                    .playId(h.getId().toString())
+                    .title(h.getTitle())
+                    .contents(h.getContents())
+                    .timestamp(h.getTimestamp())
+                    .name(h.getMusic().getName())
+                    .singer(h.getMusic().getSinger())
+                    .username(h.getUser().getUsername())
+                    .likes(h.getLikes())
+                    .build());
+        }
+        return response;
     }
 
     @Override
     public SharePlaylistMusicRes getPlayedMusicFromHonorList(Long playId) {
-        return historyRepository.getHistoryMusicById(playId);
+        History history = historyRepository.getHistoryById(playId);
+        if( history != null) {
+            return SharePlaylistMusicRes.builder()
+                    .playId(history.getId().toString())
+                    .title(history.getTitle())
+                    .contents(history.getContents())
+                    .timestamp(history.getTimestamp())
+                    .name(history.getMusic().getName())
+                    .singer(history.getMusic().getSinger())
+                    .username(history.getUser().getUsername())
+                    .likes(history.getLikes())
+                    .build();
+        }
+        return null;
     }
 
     @Override
