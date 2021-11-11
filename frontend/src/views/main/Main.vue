@@ -31,7 +31,7 @@
             Kakao로 로그인
           </div>
           <a
-            href="https://k5a304.p.ssafy.io/api/oauth2/authorization/google?redirect_uri=http:https://k5a304.p.ssafy.io/oauth/redirect"
+            href="https://k5a304.p.ssafy.io/api/oauth2/authorization/google?redirect_uri=https://k5a304.p.ssafy.io/oauth/redirect"
           >
             <div class="login_button google">
               <img src="@/assets/images/google.svg" />
