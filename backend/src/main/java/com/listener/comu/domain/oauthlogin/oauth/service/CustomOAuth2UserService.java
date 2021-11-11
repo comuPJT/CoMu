@@ -29,7 +29,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User user = super.loadUser(userRequest);
 
-        System.out.println("첫 번째");
         try {
             return this.process(userRequest, user);
         } catch (AuthenticationException ex) {
@@ -45,7 +44,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
         User savedUser = userRepository.findByUserId(userInfo.getId());
-        System.out.println("두 번째");
 
         if (savedUser != null) {
             if (providerType != savedUser.getProviderType()) {
@@ -54,10 +52,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                                 " account. Please use your " + savedUser.getProviderType() + " account to login."
                 );
             }
-            System.out.println("사용자 존재");
             updateUser(savedUser, userInfo);
         } else {
-            System.out.println("사용자 없음");
             savedUser = createUser(userInfo, providerType);
         }
 
@@ -71,7 +67,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 userInfo.getName(),
                 userInfo.getEmail(),
                 "Y",
-                userInfo.getImageUrl(),
+//                userInfo.getImageUrl(),
                 providerType,
                 RoleType.USER,
                 now,
@@ -85,10 +81,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private User updateUser(User user, OAuth2UserInfo userInfo) {
         if (userInfo.getName() != null && !user.getUsername().equals(userInfo.getName())) {
             user.setUsername(userInfo.getName());
-        }
-
-        if (userInfo.getImageUrl() != null && !user.getProfileImageUrl().equals(userInfo.getImageUrl())) {
-            user.setProfileImageUrl(userInfo.getImageUrl());
         }
 
         return user;

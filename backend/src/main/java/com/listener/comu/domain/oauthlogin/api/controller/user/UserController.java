@@ -26,8 +26,8 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity modifyUserInfo(long userSeq, String username,  String character) {
-        boolean response = userService.modifyUserInfo(userSeq, username, character);
+    public ResponseEntity modifyUserInfo(long userSeq, String username, int characterNum) {
+        boolean response = userService.modifyUserInfo(userSeq, username, characterNum);
         if (!response) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
