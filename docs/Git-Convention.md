@@ -44,8 +44,18 @@ feat: [BE] 대표 부캐 설정 api 구현
 - [https://udacity.github.io/git-styleguide/](https://udacity.github.io/git-styleguide/)
 - [https://medium.com/@steveamaza/how-to-write-a-proper-git-commit-message-e028865e5791](https://medium.com/@steveamaza/how-to-write-a-proper-git-commit-message-e028865e5791)
 
-[type 종류](https://www.notion.so/d2bf4a8ad62344ff855b551ee3ca8d56)
-
+### type 종류
+| type     | 설명                             | 비고                       |
+| -------- | -------------------------------- | -------------------------- |
+| feat     | 새로운 기능 추가                 |                            |
+| fix      | 버그 수정                        |                            |
+| docs     | 문서 수정                        |                            |
+| style    | 코드 포맷팅, 세미콜론 누락 등    | 코드 변경 없음             |
+| refactor | 코드 리팩토링                    |                            |
+| test     | 테스트 관련 코드 수정            | 프로덕션 코드 변경 없음    |
+| chore    | 빌드 작업, 패키지 관리자 구성 등 | 프로덕션 코드 변경 없음    |
+| merge    | 머지할 때                        | ex) merge: [BE] Login 기능 |
+| design   | css, 디자인 수정                 |                            |
 
 
 # **Git 사용법**
