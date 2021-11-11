@@ -16,7 +16,6 @@
         공용플레이리스트 띄우기
       </button>
       <public-play-list v-if="showModal" @close="showModal = false">
-        <h3 slot="header">custom header</h3>
       </public-play-list>
     </div>
   </div>
@@ -28,7 +27,7 @@ import PublicPlayList from "./components/PublicPlayList.vue";
 export default {
   name: "UnityView",
 
-  components: { PublicPlayList },
+  components: {PublicPlayList},
 
   props: {},
   data() {
