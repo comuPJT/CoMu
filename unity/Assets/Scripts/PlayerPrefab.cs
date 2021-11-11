@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.InteropServices;
 
 public class PlayerPrefab : MonoBehaviour
 {
-    public static int characterNum = 2;
+    // 플레이어의 캐릭터 번호 받아오기
+    [DllImport("__Internal")]
+    private static extern int GetMyCharacterNum();
+
+    public static int characterNum = GetMyCharacterNum();
 
     // Start is called before the first frame update
     void Start()
