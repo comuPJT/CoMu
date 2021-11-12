@@ -42,10 +42,20 @@ class ShareMusicServiceImpl implements ShareMusicService {
         Long size = operations.size(key);
         if( size != null && size < limit ) { //15개 미만일때만!
             // TO DO - MariaDB에 음악정보 넣거나 불러오기
+            Music music = musicRepository.getMusicBySpotify_id(musicPlayReq.getSpotifyId());
+            if( music == null) {
+                // 음악 테이블에 데이터 추가
+                music = Music.builder().spotify_id(musicPlayReq.getSpotifyId())
+                                    .thumbnail(musicPlayReq.getThumbnail())
+                                    .name(musicPlayReq.getName())
+                                    .singer(musicPlayReq.getSinger())
+                                    .source(musicPlayReq.getSource()).build();
+                musicRepository.save(music);
+            }
 
             SharePlaylistMusic play = SharePlaylistMusic.builder()
                     .contents(musicPlayReq.getContents())
-                    .musicId(musicPlayReq.getMusicId())
+                    .musicId(music.getId())
                     .userId(musicPlayReq.getUserId())
                     .build();
             play.setId(); //unique Id
