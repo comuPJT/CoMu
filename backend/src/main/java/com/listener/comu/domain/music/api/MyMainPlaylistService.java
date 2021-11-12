@@ -8,14 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
-public class MyMainPlaylistServicePrev {
+public class MyMainPlaylistService {
 
     final private MyMainPlaylistRepository myMainPlaylistRepository;
     final private MusicRepository musicRepository;
@@ -41,9 +38,7 @@ public class MyMainPlaylistServicePrev {
             return new ArrayList<Music>();
         }
 
-        System.out.println("여기까지는 들어옵니다");
-        List<Music> response = musicRepository.getSortedMusicsById(musicIds);
-        return response;
+        return musicRepository.getSortedMusicsById(musicIds);
     }
 
     // 재생 목록에 곡(한 개 또는 여러 개) 추가
@@ -58,20 +53,21 @@ public class MyMainPlaylistServicePrev {
 
         List<String> presentSpotifyIds = musicRepository.getPresentSpotifyIds(spotifyIds);
 
-        // ★★★ 재생 목록에 있는 노래면 삭제하고 맨 아래에다가 넣어놓기 ★★★
-
         for(int i=0, size=musicList.size(); i<size; i++){
 
             Music music = musicList.get(i);
 
             long musicId; // 음악 번호
 
-            // DB에 존재하지 않는 음악이면 music 테이블에 추가
+
             String currentId = music.getSpotifyId();
-            if(!presentSpotifyIds.contains(currentId)){
+            if(!presentSpotifyIds.contains(currentId)){ // DB에 존재하지 않는 음악이면 music 테이블에 추가
                 musicId = musicRepository.save(music).getId();
             } else {
                 musicId = musicRepository.getMusicIdBySpotifyId(currentId);
+                
+                // 재생 목록에 이미 존재하면 삭제(재생 목록에 동일한 노래가 들어가지 않도록, 같은 곡을 넣을 경우 맨 아래에 추가됨)
+                removeMusic(userSeq, Arrays.asList(musicId));
             }
             int playOrder = (int)myMainPlaylistRepository.count();
 
@@ -82,9 +78,12 @@ public class MyMainPlaylistServicePrev {
 
     }
 
+
     // 재생 목록 전체 곡 삭제
 
     // 재생 목록 곡(한 개 또는 여러 개) 삭제
-
+    public void removeMusic(long userSeq, List<Long> musicIds) {
+        myMainPlaylistRepository.deleteMyMainPlaylistByUserSeqAndMusicIdIn(userSeq, musicIds);
+    }
 
 }
