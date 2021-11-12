@@ -31,6 +31,12 @@ public class MyMainPlaylistController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PostMapping("/playlist/{playlistId}")
+    public ResponseEntity addPlaylist(@PathVariable long playlistId, @RequestBody Map<String, Long> request){
+        myMainPlaylistService.addPlaylist(playlistId, request.get("userSeq"));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @DeleteMapping("/all")
     public ResponseEntity removeAllMusic(@RequestBody Map<String, Long> request){
         myMainPlaylistService.removeAllMusic(request.get("userSeq"));

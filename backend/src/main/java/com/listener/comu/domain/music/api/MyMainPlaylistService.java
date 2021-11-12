@@ -1,9 +1,6 @@
 package com.listener.comu.domain.music.api;
 
-import com.listener.comu.domain.music.domain.Music;
-import com.listener.comu.domain.music.domain.MusicRepository;
-import com.listener.comu.domain.music.domain.MyMainPlaylist;
-import com.listener.comu.domain.music.domain.MyMainPlaylistRepository;
+import com.listener.comu.domain.music.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -16,6 +13,8 @@ public class MyMainPlaylistService {
 
     final private MyMainPlaylistRepository myMainPlaylistRepository;
     final private MusicRepository musicRepository;
+
+    final private MyPlaylistService myPlaylistService;
 
     // 재생 목록 가져오기
     public List<Music> getMyMainPlaylist(long userSeq){
@@ -76,6 +75,11 @@ public class MyMainPlaylistService {
 
     }
 
+    // 플레이 리스트를 메인 재생 목록에 추가
+    public void addPlaylist(long myPlaylistId, long userSeq) {
+        List<Music> musicList = myPlaylistService.getMusics(myPlaylistId); // 플레이 리스트에 담긴 곡들 가져오기
+        addMusic(musicList, userSeq);
+    }
 
     // 재생 목록 전체 곡 삭제
     public void removeAllMusic(long userSeq){
