@@ -67,7 +67,8 @@ public class MyMainPlaylistService {
                 // 재생 목록에 이미 존재하면 삭제(재생 목록에 동일한 노래가 들어가지 않도록, 같은 곡을 넣을 경우 맨 아래에 추가됨)
                 removeMusic(userSeq, Arrays.asList(musicId));
             }
-            int playOrder = myMainPlaylistRepository.getMaxPlayOrder();
+
+            int playOrder = myMainPlaylistRepository.getMaxPlayOrder(userSeq);
 
             // my_main_playlist에 연결 관계 추가
             myMainPlaylistRepository.save(MyMainPlaylist.builder().musicId(musicId).userSeq(userSeq).playOrder(playOrder+1).build());

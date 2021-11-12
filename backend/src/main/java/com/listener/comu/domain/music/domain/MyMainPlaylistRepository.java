@@ -13,8 +13,8 @@ public interface MyMainPlaylistRepository extends JpaRepository<MyMainPlaylist, 
     @Transactional
     void deleteMyMainPlaylistByUserSeqAndMusicIdIn(long userSeq, List<Long> musicIds);
 
-    @Query(value = "SELECT MAX(play_order) FROM my_main_playlist", nativeQuery = true)
-    int getMaxPlayOrder();
+    @Query(value = "SELECT IFNULL((SELECT MAX(play_order) FROM my_main_playlist WHERE user_seq = :userSeq), 0)", nativeQuery = true)
+    int getMaxPlayOrder(long userSeq);
 
     @Transactional
     void deleteMyMainPlaylistByUserSeq(long userSeq);
