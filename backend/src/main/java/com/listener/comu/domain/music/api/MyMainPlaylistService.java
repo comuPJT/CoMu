@@ -72,13 +72,15 @@ public class MyMainPlaylistService {
 
             // my_main_playlist에 연결 관계 추가
             myMainPlaylistRepository.save(MyMainPlaylist.builder().musicId(musicId).userSeq(userSeq).playOrder(playOrder+1).build());
-
         }
 
     }
 
 
     // 재생 목록 전체 곡 삭제
+    public void removeAllMusic(long userSeq){
+        myMainPlaylistRepository.deleteMyMainPlaylistByUserSeq(userSeq);
+    }
 
     // 재생 목록 곡(한 개 또는 여러 개) 삭제
     public void removeMusic(long userSeq, List<Long> musicIds) {
