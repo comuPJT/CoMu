@@ -6,6 +6,7 @@
       <unity
         src="unity/Build/unity.json"
         unityLoader="unity/Build/UnityLoader.js"
+        :width="unityWidth"
         :height="unityHeight"
         :hideFooter="true"
       ></unity>
@@ -37,6 +38,7 @@ export default {
   data() {
     return {
       showModal: false,
+      unityWidth: 0,
       unityHeight: 0,
     };
   },
@@ -46,12 +48,14 @@ export default {
     localStorage.setItem("characterNum", 1);
 
     // 창 크기에 맞춰서 유니티 화면 크기 변경
+    this.unityWidth = document.getElementById("unity").offsetWidth;
     this.unityHeight = document.getElementById("unity").offsetHeight;
     window.addEventListener("resize", this.handleResize);
   },
 
   methods: {
     handleResize() {
+      this.unityWidth = document.getElementById("unity").offsetWidth;
       this.unityHeight = document.getElementById("unity").offsetHeight;
     },
   },
