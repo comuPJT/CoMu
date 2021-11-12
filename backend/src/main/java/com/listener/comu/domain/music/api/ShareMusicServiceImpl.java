@@ -36,7 +36,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
     }
 
     @Override
-    public void addMusicToPlayList(Long roomId, SharePlaylistMusicReq musicPlayReq) {
+    public boolean addMusicToPlayList(Long roomId, SharePlaylistMusicReq musicPlayReq) {
         String key = musicReqPrefix + roomId; //room
         ListOperations<String, Object> operations = redisTemplate.opsForList();
         Long size = operations.size(key);
@@ -51,7 +51,9 @@ class ShareMusicServiceImpl implements ShareMusicService {
             play.setId(); //unique Id
 
             operations.rightPush(key, play); // "room:[id]" 키에 저장하기
+            return true;
         }
+        return false;
     }
 
     @Override

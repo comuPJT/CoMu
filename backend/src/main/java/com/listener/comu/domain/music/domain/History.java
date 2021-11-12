@@ -1,6 +1,5 @@
 package com.listener.comu.domain.music.domain;
 
-import com.listener.comu.domain.music.dto.SharePlaylistMusicRes;
 import com.listener.comu.domain.oauthlogin.api.entity.user.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +8,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity(name = "history")
-@Table(name="history")
 @Getter
 @Setter
 public class History {

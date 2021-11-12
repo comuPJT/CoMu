@@ -49,8 +49,9 @@ public class ShareMusicController {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> addMusicToPlayList(@PathVariable Long roomId, @RequestBody SharePlaylistMusicReq musicPlayReq) {
-        shareMusicService.addMusicToPlayList(roomId, musicPlayReq);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        if( shareMusicService.addMusicToPlayList(roomId, musicPlayReq))
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Failed : 15개를 초과했거나 DB접근에 실패했습니다."));
     }
 
     @DeleteMapping ("/{roomId}/music/{playId}")
