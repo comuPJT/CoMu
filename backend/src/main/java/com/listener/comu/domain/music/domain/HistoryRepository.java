@@ -10,7 +10,6 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
 //    @Query(name= "getHistoryMusicsByRoomId", nativeQuery = true)
 //    List<SharePlaylistMusicRes> getHistoryMusicsByRoomId(Long roomId);
     List<History> getHistoriesByRoomId(Long roomId);
-
 //    @Query(value= "getHistoryMusicById", nativeQuery = true)
 //    SharePlaylistMusicRes getHistoryMusicById(Long id);
     History getHistoryById(Long id);

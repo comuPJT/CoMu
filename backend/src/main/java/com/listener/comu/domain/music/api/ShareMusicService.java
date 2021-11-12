@@ -8,17 +8,14 @@ import java.util.List;
 
 
 public interface ShareMusicService {
-    List<SearchMusicRes> findMusicByQuery(String query);
+    List<SharePlaylistMusicRes> getPlaylistUpAndDown (Long roomId);
     void addMusicToPlayList(Long roomId, SharePlaylistMusicReq musicPlayReq);
     List<SharePlaylistMusicRes> getPlayedPlaylist(Long roomId);
     SharePlaylistMusicRes getPlayedMusicFromPlayList(Long roomId, String playId);
-    void  deletePlayedMusicFromPlayList(Long roomId, String playId);
+    void deletePlayedMusicFromPlayList(Long roomId, String playId);
     void deleteMusicRequestFromPlayList(Long roomId, String playId);
-    List<SharePlaylistMusicRes> getPlaylistUpAndDown (Long roomId);
-    List<SharePlaylistMusicRes> getHonoredMusicAndContent(Long roomId);
-    /* TO DO - 명예의 전당 사연 상세보기 */
-    SharePlaylistMusicRes getPlayedMusicFromHonorList(Long playId);
-    /* TD DO - 명예의 전당 사연 삭제*/
+    List<SharePlaylistMusicRes> getHonoredPlayList();
+    SharePlaylistMusicRes HonoredMusicAndContents(Long playId);
     void deleteMusicFromHonorList(Long playId);
     void toggleLikeMusicRequest(Long playId, Long userId);
     /* EVENT DRIVEN */
