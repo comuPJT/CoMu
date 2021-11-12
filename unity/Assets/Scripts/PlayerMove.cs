@@ -76,6 +76,7 @@ public class PlayerMove : MonoBehaviour
         if (collision.gameObject.CompareTag("Main"))
         {
             // 메인 씬으로 돌아오기
+            CameraFollow.isMain = true;
             SceneManager.LoadScene("Main", LoadSceneMode.Single);
         }
         else if (move.y > 0 && (collision.gameObject.CompareTag("MyRoom")
@@ -85,6 +86,10 @@ public class PlayerMove : MonoBehaviour
             || collision.gameObject.CompareTag("Theme4")
             || collision.gameObject.CompareTag("Theme5")))
         {
+            // 현재 씬에 맞게 변수 값 설정
+            CameraFollow.isMain = false;
+            CameraFollow.isFirst = true;
+
             // 문에 해당하는 씬으로 이동
             SceneManager.LoadScene(collision.gameObject.tag, LoadSceneMode.Single);
         }
