@@ -5,6 +5,7 @@ import com.listener.comu.domain.music.domain.MusicRepository;
 import com.listener.comu.domain.music.domain.MyMainPlaylist;
 import com.listener.comu.domain.music.domain.MyMainPlaylistRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class MyMainPlaylistService {
+public class MyMainPlaylistServicePrev {
 
     final private MyMainPlaylistRepository myMainPlaylistRepository;
     final private MusicRepository musicRepository;
