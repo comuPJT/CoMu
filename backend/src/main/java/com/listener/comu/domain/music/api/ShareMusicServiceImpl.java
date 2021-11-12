@@ -3,7 +3,6 @@ package com.listener.comu.domain.music.api;
 import com.listener.comu.domain.music.domain.*;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicReq;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicRes;
-import com.listener.comu.domain.music.dto.SearchMusicRes;
 import com.listener.comu.domain.oauthlogin.api.entity.user.User;
 import com.listener.comu.domain.oauthlogin.api.repository.user.UserRepository;
 import org.springframework.data.redis.core.ListOperations;
@@ -34,11 +33,6 @@ class ShareMusicServiceImpl implements ShareMusicService {
         this.musicRepository = musicRepository;
         this.userRepository = userRepository;
         this.historyRepository = historyRepository;
-    }
-
-    @Override
-    public List<SearchMusicRes> findMusicByQuery(String query) {
-        return null;
     }
 
     @Override
@@ -169,8 +163,8 @@ class ShareMusicServiceImpl implements ShareMusicService {
     }
 
     @Override
-    public List<SharePlaylistMusicRes> getHonoredMusicAndContent(Long roomId) {
-        List<History> history = historyRepository.getHistoriesByRoomId(roomId);
+    public List<SharePlaylistMusicRes> getHonoredPlayList() {
+        List<History> history = historyRepository.findAll();
         List<SharePlaylistMusicRes> response = new ArrayList<>();
         for(History h : history){
             response.add(SharePlaylistMusicRes.builder()
@@ -188,7 +182,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
     }
 
     @Override
-    public SharePlaylistMusicRes getPlayedMusicFromHonorList(Long playId) {
+    public SharePlaylistMusicRes HonoredMusicAndContents(Long playId) {
         History history = historyRepository.getHistoryById(playId);
         if( history != null) {
             return SharePlaylistMusicRes.builder()

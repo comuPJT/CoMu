@@ -107,7 +107,7 @@ public class SharePlaylistMusicTest {
 
     @Test
     public void getAllHonoredPlayListInRoom() {
-        List<History> history = historyRepository.getHistoriesByRoomId(1L);
+        List<History> history = historyRepository.findAll();
         List<SharePlaylistMusicRes> response = new ArrayList<>();
         for(History h : history){
             response.add(SharePlaylistMusicRes.builder()

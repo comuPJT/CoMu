@@ -19,7 +19,7 @@ public class History {
     private Long id;
 
     @Column(name = "room_id")
-    private Long roomId; //애도 포린키이긴한데...
+    private Long roomId; //애도 MariaDB에서 FK이긴 한데
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
