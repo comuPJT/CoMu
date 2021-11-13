@@ -65,7 +65,7 @@
               <div class="smallbuttonwhite">
                 <div
                   class="buttoncontent"
-                  @click="[(shareMusicView = 'search'), getSpotifyToken()]"
+                  @click="[(shareMusicView = 'search')]"
                 >
                   새로운 곡 신청하기
                 </div>
@@ -251,7 +251,6 @@
 
 <script>
 import AddToMyList from "./AddToMyList.vue";
-import Spotify from "@/api/spotify.js";
 import axios from "axios";
 export default {
   name: "PublicPlayList",
@@ -296,17 +295,11 @@ export default {
       this.selectedMusicOnPlayList.push(musicId);
     },
 
-    getSpotifyToken() {
-      //스포티파이 api키를 발급합니다. 현재는 검색창 띄울때마다 요청하는데 추후에 로그인시 한번만 요청하도록 위치변경할 예정
-      Spotify.spotifyAccess();
-    },
-
     async searchMusic(keyword) {
       //검색어로 음악을 검색합니다.
       if (keyword.length < 2) {
         alert("2글자 이상의 검색어를 입력해주세요!");
       } else {
-        //this.searchResultTitle=await Spotify.searchMusic(keyword);
         const headers = {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("SPOTIFY_TOKEN"),

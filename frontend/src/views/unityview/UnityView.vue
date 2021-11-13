@@ -4,13 +4,15 @@
     <!-- 유니티 화면 -->
     <div id="unity">
       <unity
+      v-if="false"
+      tabindex="1"
         src="unity/Build/unity.json"
         unityLoader="unity/Build/UnityLoader.js"
         :height="unityHeight"
         :hideFooter="true"
       ></unity>
       <!-- 버튼 숨기기 (임시) -->
-      <div v-if="false">
+      <div style="position:absolute ; bottom:0 ; right:0;">
         <button id="show-modal" @click="showModal = true">
           공용플레이리스트 띄우기
         </button>

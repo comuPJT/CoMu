@@ -107,6 +107,7 @@
 <script>
 import $ from "@/util/utils";
 import {Carousel, Slide} from "vue-carousel";
+import Spotify from "@/api/spotify.js";
 
 export default {
   name: "Main",
@@ -129,6 +130,9 @@ export default {
       inputNickname: "",
     };
   },
+  mounted() {
+    this.getSpotifyToken();
+  },
   methods: {
     nextStep() {
       //다음 화면으로 이동하는 메소드
@@ -140,6 +144,10 @@ export default {
     },
     socialLoginUrl(socialType) {
       return $.getSocialLoginUrl(socialType);
+    },
+    getSpotifyToken() {
+      //스포티파이 api키를 발급합니다. 현재는 검색창 띄울때마다 요청하는데 추후에 로그인시 한번만 요청하도록 위치변경할 예정
+      Spotify.spotifyAccess();
     },
   },
 };
