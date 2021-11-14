@@ -3,7 +3,7 @@
     <div class="user-info-text">회원 정보</div>
     <div class="user-info-character">
       useremail
-      <img src="@/assets/images/tempchar1.png" />
+      <img src="@/assets/images/character01.png" />
     </div>
     <div class="user-info-input">
       <div class="input_box" style="width: 18vw">

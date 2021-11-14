@@ -31,7 +31,7 @@
             Kakao로 로그인
           </div>
           <a
-            href="https://k5a304.p.ssafy.io/api/oauth2/authorization/google?redirect_uri=https://k5a304.p.ssafy.io/oauth/redirect"
+            href="http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/oauth/redirect"
           >
             <div class="login_button google">
               <img src="@/assets/images/google.svg" />
@@ -70,11 +70,8 @@
               :per-page="1"
               :pagination-enabled="false"
             >
-              <slide class="join_carousel_slide">
-                <img src="@/assets/images/tempchar1.png" />
-              </slide>
-              <slide class="join_carousel_slide">
-                <img src="@/assets/images/tempchar2.png" />
+              <slide v-for="t in 10" :key="t.num" class="join_carousel_slide">
+                <img :src="require(`@/assets/images/character0${t}.png`)" />
               </slide>
             </carousel>
           </div>
@@ -83,11 +80,16 @@
         <div class="join_nickname_wrapper">
           <div class="input_box" style="width: 18vw">
             <div class="title">닉네임</div>
-            <input placeholder="2~8자 이내의 닉네임을 입력해주세요." />
-            <div class="nickname_valid" v-if="false">
+            <input
+              v-model="inputNickname"
+              placeholder="2~8자 이내의 닉네임을 입력해주세요."
+            />
+            <div class="nickname_valid" v-if="inputNicknameValid">
               사용 가능한 닉네임입니다.
             </div>
-            <div class="nickname_unvalid">유효한 닉네임을 입력해주세요.</div>
+            <div class="nickname_unvalid" v-if="!inputNicknameValid">
+              유효한 닉네임을 입력해주세요.
+            </div>
           </div>
         </div>
         <div class="join_button_wrapper">
@@ -95,7 +97,7 @@
             class="smallbuttonbrown"
             @click="$router.push({name: 'UnityView'})"
           >
-            <div class="buttoncontent">가입하기</div>
+            <div class="buttoncontent" @click="joinRequest()">가입하기</div>
           </div>
         </div>
       </div>
@@ -107,7 +109,6 @@
 <script>
 import $ from "@/util/utils";
 import {Carousel, Slide} from "vue-carousel";
-import Spotify from "@/api/spotify.js";
 
 export default {
   name: "Main",
@@ -120,18 +121,22 @@ export default {
   props: {},
   data() {
     return {
-      order: 1,
-      //1=시작화면, 2=로그인, 3=회원가입
+      order: 1, //1=시작화면, 2=로그인, 3=회원가입
       nextLabel:
         "<img src='https://i.ibb.co/SsQz0vB/next-1.png' style='width:1.2vw'/>",
       prevLabel:
-        "<img src='https://i.ibb.co/0GW9F05/prev-1.png' style='width:1.2vw'/>",
-      //캐릭터선택 좌/우 버튼
+        "<img src='https://i.ibb.co/0GW9F05/prev-1.png' style='width:1.2vw'/>", //캐릭터선택 좌/우 버튼
       inputNickname: "",
+      inputNicknameValid: false, // 닉네임 적합성 판단
     };
   },
   mounted() {
-    this.getSpotifyToken();
+    // sns 로그인시 첫 방문이면 닉네임, 캐릭터 설정으로 넘어갑니다.
+    if (this.$route.params.order == 3) {
+      this.order = 3;
+    } else {
+      this.order = 1;
+    }
   },
   methods: {
     nextStep() {
@@ -145,9 +150,19 @@ export default {
     socialLoginUrl(socialType) {
       return $.getSocialLoginUrl(socialType);
     },
-    getSpotifyToken() {
-      //스포티파이 api키를 발급합니다. 현재는 검색창 띄울때마다 요청하는데 추후에 로그인시 한번만 요청하도록 위치변경할 예정
-      Spotify.spotifyAccess();
+    joinRequest(){ //입력한 정보로 회원가입 요청을 보냅니다.
+      
+    }
+  },
+
+  watch: {
+    inputNickname: function () {
+      //닉네임길이 적합성 판단
+      if (this.inputNickname.length < 2 || this.inputNickname.length > 8) {
+        this.inputNicknameValid = false;
+      } else {
+        this.inputNicknameValid = true;
+      }
     },
   },
 };

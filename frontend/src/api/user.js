@@ -1,12 +1,15 @@
 import http from "@/util/http-common.js";
 
+
 const login = (callback, errorCallback) => {
   http
-    .post("/user/login", {})
+    .get("/v1/users")
     .then((res) => {
+      console.log(res);
       callback(res);
     })
     .catch((err) => {
+      console.log(err);
       errorCallback(err);
     });
 };

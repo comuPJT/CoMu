@@ -1,4 +1,4 @@
-import accountApi from '@/api/account'
+import userApi from '@/api/user'
 
 export default {
   state: {
@@ -13,9 +13,10 @@ export default {
     fetchUser({ state, commit }, callback) {
       state.user
         ? callback && callback()
-        : accountApi.getUser(
+        : userApi.login(
           res => {
-            commit('setUser', res.user)
+            console.log(res)
+            commit('setUser', res.data.body.user)
             callback && callback()
           }
         )

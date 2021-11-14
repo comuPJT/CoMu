@@ -12,11 +12,8 @@
           :per-page="1"
           :pagination-enabled="false"
         >
-          <slide class="user-custom-carousel-slide">
-            <img src="@/assets/images/tempchar1.png" />
-          </slide>
-          <slide class="user-custom-carousel-slide">
-            <img src="@/assets/images/tempchar2.png" />
+          <slide v-for="t in 10" :key="t.num" class="join_carousel_slide">
+            <img :src="'@/assets/images/character0' + t + '.png'" />
           </slide>
         </carousel>
       </div>
