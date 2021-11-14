@@ -44,7 +44,8 @@ class ShareMusicServiceImpl implements ShareMusicService {
             // TO DO - MariaDB에 음악정보 넣거나 불러오기
             Music music = musicRepository.getMusicBySpotify_id(musicPlayReq.getSpotifyId());
             if( music == null) {
-                // 음악 테이블에 데이터 추가
+                // 음악 다운로드 및 테이블에 데이터 추가
+                Runtime runtime = Runtime.getRuntime();
                 music = Music.builder().spotify_id(musicPlayReq.getSpotifyId())
                                     .thumbnail(musicPlayReq.getThumbnail())
                                     .name(musicPlayReq.getName())

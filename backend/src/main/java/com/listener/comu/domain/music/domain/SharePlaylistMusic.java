@@ -17,6 +17,8 @@ public class SharePlaylistMusic {
     private Long musicId;
     @Builder.Default
     private LocalDateTime timestamp = LocalDateTime.now(); //접수 시간
+    @Builder.Default
+    private String status = "todo";
 
     public void setId(){
         this.playId = this.userId + this.title + this.timestamp;
