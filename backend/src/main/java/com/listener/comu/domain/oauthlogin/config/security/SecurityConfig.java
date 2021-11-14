@@ -32,6 +32,7 @@ import java.util.Arrays;
 
 @Configuration
 @RequiredArgsConstructor
+// Spring Security에 관련된 설정
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsProperties corsProperties;
@@ -51,6 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(passwordEncoder());
     }
 
+    // http 관련 인증 설정이 가능합니다.
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -66,33 +68,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .accessDeniedHandler(tokenAccessDeniedHandler)
                 .and()
+                
+                // 접근에 대한 권한 설정이 가능합니다.(요청에 대한 권한 지정)
                 .authorizeRequests()
 
                 // 여기서부터
-                .anyRequest().permitAll();
-//        .and()
-//        .apply(new JwtConfig(tokenProvider));
+//                .anyRequest().permitAll();
                 // 여기까지
-//                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-//                .antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
-//                .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
-//                .anyRequest().authenticated()
-//                .and()
-//                .oauth2Login()
-//                .authorizationEndpoint()
-//                .baseUri("/oauth2/authorization")
-//                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
-//                .and()
-//                .redirectionEndpoint()
-//                .baseUri("/*/oauth2/code/*")
-//                .and()
-//                .userInfoEndpoint()
-//                .userService(oAuth2UserService)
-//                .and()
-//                .successHandler(oAuth2AuthenticationSuccessHandler())
-//                .failureHandler(oAuth2AuthenticationFailureHandler());
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 
-//        http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .antMatchers("/api/v1/**").hasAnyAuthority(RoleType.USER.getCode())
+                .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
+
+                // anyMatchers에서 설정하지 않은 나머지 경로를 의미합니다.
+                .anyRequest().permitAll()
+                .and()
+                .oauth2Login()
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorization")
+                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+                .and()
+                .redirectionEndpoint()
+                .baseUri("/*/oauth2/code/*")
+                .and()
+                .userInfoEndpoint()
+                .userService(oAuth2UserService)
+                .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler())
+                .failureHandler(oAuth2AuthenticationFailureHandler());
+
+        http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     /*

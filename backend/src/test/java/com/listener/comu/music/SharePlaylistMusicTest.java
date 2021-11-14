@@ -15,6 +15,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -122,5 +123,23 @@ public class SharePlaylistMusicTest {
                     .build());
         }
         assertThat(response.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void getMusicRequestAndDownload(){
+        Music music = Music.builder().singer("박재범")
+                .name("Me Like Yuh")
+                .thumbnail("https://i.scdn.co/image/ab67616d0000b27382ecc5ea89bf34479a71a297")
+                .source("https://www.youtube.com/watch?v=9dIVOtRtBb8&list=RDLvmbLw7qfI0&index=2")
+                .spotifyId("3SWju8HQ6II7QXkWtFSDE1")
+                .build();
+        String cmd = "youtube-dl -f 18 -o " + music.getId() + ".%(ext)s " + music.getSource();
+        Runtime rt = Runtime.getRuntime();
+        try {
+            Process pr = rt.exec(cmd);
+            pr.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
