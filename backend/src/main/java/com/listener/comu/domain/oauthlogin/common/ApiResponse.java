@@ -1,5 +1,6 @@
 package com.listener.comu.domain.oauthlogin.common;
 
+import com.listener.comu.domain.oauthlogin.api.entity.user.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +27,15 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> success(String name, T body) {
         Map<String, T> map = new HashMap<>();
         map.put(name, body);
+
+        return new ApiResponse(new ApiResponseHeader(SUCCESS, SUCCESS_MESSAGE), map);
+    }
+
+    // for getUser
+    public static ApiResponse getUserSuccess(String name, User body, String key, long userSeq) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(name, body);
+        map.put(key, userSeq);
 
         return new ApiResponse(new ApiResponseHeader(SUCCESS, SUCCESS_MESSAGE), map);
     }
