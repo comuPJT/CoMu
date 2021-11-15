@@ -20,7 +20,7 @@ public class UserService {
         Optional<User> user = userRepository.findByUsername(username);
 
         if (user.isPresent()) return false;
-        User inputUser = user.get();
+        User inputUser = userRepository.getById(userSeq);
         inputUser.setUserSeq(userSeq);
         inputUser.setUsername(username);
         inputUser.setCharacterNum(characterNum);

@@ -6,23 +6,20 @@ import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "Music")
+@Entity(name = "MyMainPlaylist")
 @Builder
 @Getter
 @Setter
 @ToString
-@Table(name = "music")
-public class Music {
+@Table(name = "my_main_playlist")
+public class MyMainPlaylist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String spotifyId;
-    private String thumbnail;
-    private String name;
-    private String singer;
-    private String source;
+    private long musicId;
+    private int playOrder;
+    private long userSeq;
 
 }
-
