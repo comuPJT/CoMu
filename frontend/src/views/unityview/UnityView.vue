@@ -11,16 +11,28 @@
         :hideFooter="true"
       ></unity>
       <!-- 버튼 숨기기 (임시) -->
-      <div>
-        <button id="show-modal" @click="showModalPlayList = true">
-          공용플레이리스트 띄우기
-        </button>
-        <button id="show-modal" @click="showModalStory = true">사연함 띄우기</button>
-        <public-play-list v-if="showModalPlayList" @close="showModalPlayList = false">
-        </public-play-list>
-        <normal-story v-if="showModalStory" @close="showModalStory = false">
-        </normal-story>
-      </div>
+      <div></div>
+      <button id="show-modal" @click="showModalPlayList = true">
+        공용플레이리스트 띄우기
+      </button>
+      <button id="show-modal" @click="showModalPlayListAdd = true">
+        곡 신청 띄우기
+      </button>
+      <button id="show-modal" @click="showModalStory = true">
+        사연함 띄우기
+      </button>
+      <public-play-list
+        v-if="showModalPlayList"
+        @close="showModalPlayList = false"
+      >
+      </public-play-list>
+      <public-play-list-add
+        v-if="showModalPlayListAdd"
+        @close="showModalPlayListAdd = false"
+      >
+      </public-play-list-add>
+      <normal-story v-if="showModalStory" @close="showModalStory = false">
+      </normal-story>
     </div>
   </div>
 </template>
@@ -28,7 +40,8 @@
 <script>
 import Unity from "vue-unity-webgl";
 import PublicPlayList from "./components/PublicPlayList.vue";
-import NormalStory from "./components/NormalStory.vue"
+import PublicPlayListAdd from "./components/PublicPlayListAdd.vue";
+import NormalStory from "./components/NormalStory.vue";
 
 export default {
   name: "UnityView",
@@ -36,6 +49,7 @@ export default {
   components: {
     Unity,
     PublicPlayList,
+    PublicPlayListAdd,
     NormalStory,
   },
 
@@ -43,6 +57,7 @@ export default {
   data() {
     return {
       showModalPlayList: false,
+      showModalPlayListAdd: false,
       showModalStory: false,
       unityWidth: 0,
       unityHeight: 0,

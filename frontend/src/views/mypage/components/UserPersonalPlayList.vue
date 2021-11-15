@@ -79,7 +79,7 @@
           <input
             v-model="searchKeyword"
             class="search-input"
-            placeholder="검색어를 입력하세요."
+            placeholder="검색어를 입력해주세요!"
             @keyup.enter="searchMusic(searchKeyword)"
           />
           <img
@@ -129,7 +129,7 @@
                     {{ titleResult.album.name }}
                   </td>
                   <td class="content-body-td6">
-                    <img src="@/assets/images/add_icon.svg">
+                    <img src="@/assets/images/add_icon.svg" />
                   </td>
                 </tr>
               </table>
@@ -190,8 +190,8 @@ export default {
   methods: {
     async searchMusic(keyword) {
       //검색어로 음악을 검색합니다.
-      if (keyword.length < 2) {
-        alert("2글자 이상의 검색어를 입력해주세요!");
+      if (keyword.length < 1) {
+        alert("1글자 이상의 검색어를 입력해주세요!");
       } else {
         const headers = {
           headers: {
