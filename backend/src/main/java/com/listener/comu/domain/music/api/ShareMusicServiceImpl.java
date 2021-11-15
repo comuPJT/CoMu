@@ -56,13 +56,14 @@ class ShareMusicServiceImpl implements ShareMusicService {
                                     .source(musicPlayReq.getSource()).build();
                 musicRepository.save(music);
                 // 음악 다운로드 -> s3 업로딩
-                String cmd = "youtube-dl -f 18 -o src/main/resources/static/" + music.getId() + ".%(ext)s " + music.getSource();
+                String cmd = "youtube-dl -f 160+140 -o src/main/resources/static/" + music.getId() + ".%(ext)s " + music.getSource();
                 Runtime rt = Runtime.getRuntime();
                 try {
                     Process pr = rt.exec(cmd);
                     pr.waitFor();
                     String sourceFilepath = "src/main/resources/static/" + music.getId() + ".mp4";
                     s3Uploader.dirUpload(new File(sourceFilepath),"static");
+                    pr.destroy();
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }

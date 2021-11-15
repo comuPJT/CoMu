@@ -4,6 +4,8 @@ import com.listener.comu.domain.music.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,6 +59,41 @@ public class MyPlaylistService {
     }
 
     // 플레이리스트에 곡 추가
+    public void addMusics(long myplaylistId, List<Music> musicList) {
+
+        // spotify_id(음악 식별자)로 music table에 있는 노래인지 확인
+        List<String> spotifyIds = new ArrayList<>();
+
+        for (Music music: musicList){
+            spotifyIds.add(music.getSpotifyId());
+        }
+
+        List<String> presentSpotifyIds = musicRepository.getPresentSpotifyIds(spotifyIds);
+
+        for(int i=0, size=musicList.size(); i<size; i++){
+
+            Music music = musicList.get(i);
+
+            long musicId; // 음악 번호
+
+            String currentId = music.getSpotifyId();
+            if(!presentSpotifyIds.contains(currentId)){ // DB에 존재하지 않는 음악이면 music 테이블에 추가
+                musicId = musicRepository.save(music).getId();
+            } else {
+                musicId = musicRepository.getMusicIdBySpotifyId(currentId);
+
+                // 플레이 리스트에 이미 존재하면 삭제(재생 목록에 동일한 노래가 들어가지 않도록, 같은 곡을 넣을 경우 맨 아래에 추가됨). 삭제할 곡 id들 담아주기
+                if(Optional.of(myplaylistMusicRepository.getById(musicId)).isPresent()){
+                    myplaylistMusicRepository.deleteMyplaylistMusicByMyplaylistIdAndMusicId(myplaylistId, musicId);
+                }
+            }
+
+            // myplaylist_music에 곡 추가
+            myplaylistMusicRepository.save(MyplaylistMusic.builder().musicId(musicId).myplaylistId(myplaylistId).build());
+        }
+
+    }
+
 
     // 플레이리스트의 특정 곡(들) 삭제
     public void deleteMusic(long myplaylistId, List<Long> musicIds) {

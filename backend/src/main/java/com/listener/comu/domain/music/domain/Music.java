@@ -23,6 +23,7 @@ public class Music {
     private String name;
     private String singer;
     private String source;
+    private String album;
 
 }
 

@@ -2,6 +2,7 @@ package com.listener.comu.domain.music.presentation;
 
 import com.listener.comu.domain.music.domain.Music;
 import com.listener.comu.domain.music.domain.Myplaylist;
+import com.listener.comu.domain.music.dto.AddMyMusicReq;
 import com.listener.comu.domain.music.dto.MyPlaylistRequest;
 import com.listener.comu.domain.music.api.MyPlaylistService;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,9 @@ public class MyPlaylistController {
 
     final private MyPlaylistService myPlaylistService;
 
-    @GetMapping
-    public ResponseEntity<List<Myplaylist>> getList(@RequestBody Map<String, Long> request){
-        List<Myplaylist> myPlaylistList = myPlaylistService.getList(request.get("userSeq"));
+    @GetMapping("/all/{userSeq}")
+    public ResponseEntity<List<Myplaylist>> getList(@PathVariable long userSeq){
+        List<Myplaylist> myPlaylistList = myPlaylistService.getList(userSeq);
         return new ResponseEntity<>(myPlaylistList, HttpStatus.OK);
     }
 
@@ -39,19 +40,27 @@ public class MyPlaylistController {
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
+    @PostMapping("/music")
+    public ResponseEntity addMusics(@RequestBody AddMyMusicReq addMyMusicReq){
+        myPlaylistService.addMusics(addMyMusicReq.getMyplaylistId(), addMyMusicReq.getMusicList());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PutMapping("/{myplaylistId}")
     public  ResponseEntity renameList(@PathVariable long myplaylistId, @RequestBody MyPlaylistRequest myPlaylistRequest){
         if(myPlaylistService.renameList(myPlaylistRequest.getUserSeq(), myplaylistId, myPlaylistRequest.getName())) return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
-    @DeleteMapping("/{myplaylistId}")
+    // 플레이리스트 삭제
+    @PutMapping("/{myplaylistId}")
     public ResponseEntity deleteList(@PathVariable long myplaylistId, @RequestBody MyPlaylistRequest myPlaylistRequest){
         myPlaylistService.deleteList(myPlaylistRequest.getUserSeq(), myplaylistId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{myplaylistId}/music")
+    // 플레이리스트 안의 곡 한 개 또는 여러 개 삭제
+    @PutMapping("/{myplaylistId}/music")
     public ResponseEntity deleteMusic(@PathVariable long myplaylistId, @RequestBody MyPlaylistRequest myPlaylistRequest){
         myPlaylistService.deleteMusic(myplaylistId, myPlaylistRequest.getMusicIds());
         return new ResponseEntity<>(HttpStatus.OK);
