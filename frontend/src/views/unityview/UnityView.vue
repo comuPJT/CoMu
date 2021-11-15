@@ -11,27 +11,16 @@
         :hideFooter="true"
       ></unity>
       <!-- 공용 플레이리스트 -->
-      <div></div>
-      <button id="show-modal" @click="showModalPlayList = true">
-        공용플레이리스트 띄우기
-      </button>
-      <button id="show-modal" @click="showModalPlayListAdd = true">
-        곡 신청 띄우기
-      </button>
-      <button id="show-modal" @click="showModalStory = true">
-        사연함 띄우기
-      </button>
-      <public-play-list
-        v-if="showModalPlayList"
-        @close="showModalPlayList = false"
-      >
+      <public-play-list v-if="showModalPlayList" @close="closePlayListModal">
       </public-play-list>
+      <!-- 새로운 곡 신청 -->
       <public-play-list-add
         v-if="showModalPlayListAdd"
-        @close="showModalPlayListAdd = false"
+        @close="closePlayListAddModal"
       >
       </public-play-list-add>
-      <normal-story v-if="showModalStory" @close="showModalStory = false">
+      <!-- 오늘의 사연 보기 -->
+      <normal-story v-if="showModalTodayStory" @close="closeTodayStoryModal">
       </normal-story>
     </div>
   </div>
@@ -58,21 +47,27 @@ export default {
     return {
       showModalPlayList: false,
       showModalPlayListAdd: false,
-      showModalStory: false,
+      showModalTodayStory: false,
       unityWidth: 0,
       unityHeight: 0,
     };
   },
 
   mounted() {
-    // 테스트용 캐릭터 번호 값 설정
-    localStorage.setItem("characterNum", 1);
-
     // 창 크기에 맞춰서 유니티 화면 크기 변경
     this.unityWidth = document.getElementById("unity").offsetWidth;
     this.unityHeight = document.getElementById("unity").offsetHeight;
     window.addEventListener("resize", this.handleResize);
 
+    // 유니티 키보드 입력 활성화
+    localStorage.setItem("isUnityInputActive", "TRUE");
+
+    // 모달창 모두 닫힌 상태로 시작
+    localStorage.setItem("showPlayList", "FALSE");
+    localStorage.setItem("showPlayListAdd", "FALSE");
+    localStorage.setItem("showTodayStory", "FALSE");
+
+    // localStorage 값 변경 여부 확인할 인터벌함수
     setInterval(this.fetchShowModal, 100);
   },
 
@@ -82,12 +77,30 @@ export default {
       this.unityHeight = document.getElementById("unity").offsetHeight;
     },
     fetchShowModal() {
-      this.showModal =
+      this.showModalPlayList =
         localStorage.getItem("showPlayList") == "TRUE" ? true : false;
+      this.showModalPlayListAdd =
+        localStorage.getItem("showPlayListAdd") == "TRUE" ? true : false;
+      this.showModalTodayStory =
+        localStorage.getItem("showTodayStory") == "TRUE" ? true : false;
     },
-    closeModal() {
-      this.showModal = false;
+    // 공용 플레이리스트 닫기
+    closePlayListModal() {
+      this.showModalPlayList = false;
       localStorage.setItem("showPlayList", "FALSE");
+      localStorage.setItem("isUnityInputActive", "TRUE");
+    },
+    // 곡 신청 페이지 닫기
+    closePlayListAddModal() {
+      this.showModalPlayListAdd = false;
+      localStorage.setItem("showPlayListAdd", "FALSE");
+      localStorage.setItem("isUnityInputActive", "TRUE");
+    },
+    // 오늘의 사연 페이지 닫기
+    closeTodayStoryModal() {
+      this.showModalTodayStory = false;
+      localStorage.setItem("showTodayStory", "FALSE");
+      localStorage.setItem("isUnityInputActive", "TRUE");
     },
   },
 };
