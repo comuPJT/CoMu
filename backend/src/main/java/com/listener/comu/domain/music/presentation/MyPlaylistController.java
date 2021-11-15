@@ -20,9 +20,9 @@ public class MyPlaylistController {
 
     final private MyPlaylistService myPlaylistService;
 
-    @GetMapping
-    public ResponseEntity<List<Myplaylist>> getList(@RequestBody Map<String, Long> request){
-        List<Myplaylist> myPlaylistList = myPlaylistService.getList(request.get("userSeq"));
+    @GetMapping("/all/{userSeq}")
+    public ResponseEntity<List<Myplaylist>> getList(@PathVariable long userSeq){
+        List<Myplaylist> myPlaylistList = myPlaylistService.getList(userSeq);
         return new ResponseEntity<>(myPlaylistList, HttpStatus.OK);
     }
 
