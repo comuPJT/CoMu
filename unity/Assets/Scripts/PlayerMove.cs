@@ -17,21 +17,20 @@ public class PlayerMove : MonoBehaviour
     }
     public PlayerState _playerState = PlayerState.idle;
 
-    // Start is called before the first frame update
     void Start()
     {
         player = GetComponent<Rigidbody2D>();
         _prefabs = transform.GetChild(PlayerPrefab.characterNum).GetComponent<SPUM_Prefabs>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        UpdateState();
+
     }
 
     private void FixedUpdate()
     {
+        UpdateState();
         MoveCharacter();
     }
 
@@ -49,8 +48,10 @@ public class PlayerMove : MonoBehaviour
 
     private void UpdateState()
     {
+        // 이동하고 있을 때 애니메이션 활성화
         if (move.x > 0)
         {
+            // 오른쪽으로 가고 있을 때 캐릭터 방향 뒤집기
             _prefabs.transform.localScale = new Vector3(-1, 1, 1);
             _prefabs.PlayAnimation(1);
         }
