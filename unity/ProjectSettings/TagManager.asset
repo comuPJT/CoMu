@@ -12,8 +12,8 @@ TagManager:
   - Theme4
   - Theme5
   - Record
-  - Playlist
-  - ApplyMusic
+  - PlayList
+  - PlayListAdd
   - TodayStory
   - BestStory
   - Character

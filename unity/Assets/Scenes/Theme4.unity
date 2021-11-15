@@ -3248,8 +3248,8 @@ GameObject:
   - component: {fileID: 906088397}
   - component: {fileID: 906088398}
   m_Layer: 0
-  m_Name: textbox-apply
-  m_TagString: ApplyMusic
+  m_Name: textbox-add
+  m_TagString: PlayListAdd
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7530,7 +7530,7 @@ GameObject:
   - component: {fileID: 1621254902}
   m_Layer: 0
   m_Name: textbox-playlist
-  m_TagString: Playlist
+  m_TagString: PlayList
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

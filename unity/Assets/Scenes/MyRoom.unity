@@ -4522,7 +4522,7 @@ GameObject:
   - component: {fileID: 2080609631}
   m_Layer: 0
   m_Name: textbox-playlist
-  m_TagString: Playlist
+  m_TagString: PlayList
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

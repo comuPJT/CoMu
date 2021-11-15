@@ -566,7 +566,7 @@ GameObject:
   - component: {fileID: 342096004}
   m_Layer: 0
   m_Name: textbox-playlist
-  m_TagString: Playlist
+  m_TagString: PlayList
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -648,7 +648,7 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -2}
+  m_Offset: {x: 0, y: -2.5}
   m_Size: {x: 7, y: 7}
   m_Direction: 0
 --- !u!114 &342096004
@@ -910,8 +910,8 @@ GameObject:
   - component: {fileID: 808096822}
   - component: {fileID: 808096823}
   m_Layer: 0
-  m_Name: textbox-apply
-  m_TagString: ApplyMusic
+  m_Name: textbox-add
+  m_TagString: PlayListAdd
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -993,7 +993,7 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -3}
+  m_Offset: {x: 0, y: -3.5}
   m_Size: {x: 7, y: 7}
   m_Direction: 0
 --- !u!114 &808096823
