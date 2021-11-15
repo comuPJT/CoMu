@@ -52,13 +52,15 @@ public class MyPlaylistController {
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
-    @DeleteMapping("/{myplaylistId}")
+    // 플레이리스트 삭제
+    @PutMapping("/{myplaylistId}")
     public ResponseEntity deleteList(@PathVariable long myplaylistId, @RequestBody MyPlaylistRequest myPlaylistRequest){
         myPlaylistService.deleteList(myPlaylistRequest.getUserSeq(), myplaylistId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{myplaylistId}/music")
+    // 플레이리스트 안의 곡 한 개 또는 여러 개 삭제
+    @PutMapping("/{myplaylistId}/music")
     public ResponseEntity deleteMusic(@PathVariable long myplaylistId, @RequestBody MyPlaylistRequest myPlaylistRequest){
         myPlaylistService.deleteMusic(myplaylistId, myPlaylistRequest.getMusicIds());
         return new ResponseEntity<>(HttpStatus.OK);

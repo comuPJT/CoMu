@@ -37,13 +37,15 @@ public class MyMainPlaylistController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/all")
+    // 메인 재생 목록 전체 곡 삭제
+    @PutMapping("/all")
     public ResponseEntity removeAllMusic(@RequestBody Map<String, Long> request){
         myMainPlaylistService.removeAllMusic(request.get("userSeq"));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping
+    // 메인 재생 목록에서 곡 한 개 또는 여러 개 삭제
+    @PutMapping
     public ResponseEntity removeMusic(@RequestBody MyMainPlaylistRemoveMusicReq request){
         myMainPlaylistService.removeMusic(request.getUserSeq(), request.getMusicIds());
         return new ResponseEntity<>(HttpStatus.OK);
