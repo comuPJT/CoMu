@@ -27,28 +27,23 @@ public class User {
     private long userSeq;
 
     @Column(name = "USER_ID", length = 64, unique = true)
-//    @NotNull
     @Size(max = 64)
     private String userId;
 
     @Column(name = "USERNAME", length = 100)
-//    @NotNull
     @Size(max = 100)
     private String username;
 
     @JsonIgnore
     @Column(name = "PASSWORD", length = 128)
-//    @NotNull
     @Size(max = 128)
     private String password;
 
     @Column(name = "EMAIL", length = 512, unique = true)
-//    @NotNull
     @Size(max = 512)
     private String email;
 
     @Column(name = "EMAIL_VERIFIED_YN", length = 1)
-//    @NotNull
     @Size(min = 1, max = 1)
     private String emailVerifiedYn;
 
@@ -58,7 +53,6 @@ public class User {
 
     @Column(name = "PROVIDER_TYPE", length = 20)
     @Enumerated(EnumType.STRING)
-//    @NotNull
     private ProviderType providerType;
 
     @Column(name = "ROLE_TYPE", length = 20)
