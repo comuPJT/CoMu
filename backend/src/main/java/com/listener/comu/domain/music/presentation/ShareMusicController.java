@@ -19,6 +19,7 @@ import java.util.List;
  */
 @Api(value = "공용 음악 API", tags = {"ShareMusic"})
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/share")
 public class ShareMusicController {
 

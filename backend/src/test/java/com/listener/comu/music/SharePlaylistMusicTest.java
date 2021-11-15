@@ -133,6 +133,7 @@ public class SharePlaylistMusicTest {
                 .source("https://www.youtube.com/watch?v=9dIVOtRtBb8&list=RDLvmbLw7qfI0&index=2")
                 .spotifyId("3SWju8HQ6II7QXkWtFSDE1")
                 .build();
+//        String cmd = "youtube-dl -f bestaudio -x --audio-format mp3 --audio-quality 0 -o " + music.getId() + ".%(ext)s " + music.getSource();
         String cmd = "youtube-dl -f 18 -o " + music.getId() + ".%(ext)s " + music.getSource();
         Runtime rt = Runtime.getRuntime();
         try {
