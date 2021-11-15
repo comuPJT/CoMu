@@ -42,7 +42,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
 
     @Override
     public boolean addMusicToPlayList(Long roomId, SharePlaylistMusicReq musicPlayReq) {
-        String key = musicReqPrefix + roomId; //room
+        String key = musicReqPrefix + ":" + roomId; //room
         ListOperations<String, Object> operations = redisTemplate.opsForList();
         Long size = operations.size(key);
         if( size != null && size < limit ) { //15개 미만일때만!
@@ -73,6 +73,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
                     .contents(musicPlayReq.getContents())
                     .musicId(music.getId())
                     .userId(musicPlayReq.getUserId())
+                    .title(musicPlayReq.getTitle())
                     .build();
             play.setId(); //unique Id
 
@@ -84,7 +85,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
 
     @Override
     public List<SharePlaylistMusicRes> getPlayedPlaylist(Long roomId) {
-        final String key = playedPrefix + roomId; //room
+        final String key = playedPrefix + ":" + roomId; //room
         ListOperations<String, Object> operations = redisTemplate.opsForList();
         List<Object> roomPlaylist = operations.range(key, 0,-1);
         List<SharePlaylistMusicRes> response = new ArrayList<>();
@@ -97,8 +98,8 @@ class ShareMusicServiceImpl implements ShareMusicService {
     @Override
     public List<SharePlaylistMusicRes> getPlaylistUpAndDown(Long roomId) {
         List<Object> resObjectList = new ArrayList<>();
-        String playedKey = playedPrefix + roomId;
-        String reqKey = musicReqPrefix + roomId;
+        String playedKey = playedPrefix + ":" + roomId;
+        String reqKey = musicReqPrefix + ":" + roomId;
         ListOperations<String, Object> operations = redisTemplate.opsForList();
         List<Object> playedList = operations.range(playedKey, 0,-1);
         List<Object> requestList = operations.range(reqKey, 0 ,-1);
@@ -116,7 +117,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
     private void convertObjectListToDtoList(List<Object> resObjectList, List<SharePlaylistMusicRes> response) {
         for (Object o : resObjectList) {
             SharePlaylistMusic play = objectMapper().convertValue(o, SharePlaylistMusic.class);
-            Long likeCount = redisTemplate.opsForSet().size( musicLikePrefix + play.getPlayId());
+            Long likeCount = redisTemplate.opsForSet().size( musicLikePrefix + ":" + play.getPlayId());
             Music reqMusic = musicRepository.getMusicById(play.getMusicId());
             User user = userRepository.getById(play.getUserId());
             if (likeCount != null && reqMusic != null) {
@@ -136,7 +137,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
 
     @Override
     public SharePlaylistMusicRes getPlayedMusicFromPlayList(Long roomId, String playId) {
-        final String key = playedPrefix + roomId; //room
+        final String key = playedPrefix + ":" + roomId; //room
         ListOperations<String, Object> operations = redisTemplate.opsForList();
         List<Object> roomPlaylist = operations.range(key, 0,-1);
         if( roomPlaylist !=null ){
@@ -166,13 +167,13 @@ class ShareMusicServiceImpl implements ShareMusicService {
 
     @Override
     public void deletePlayedMusicFromPlayList(Long roomId, String playId) {
-        final String key = playedPrefix + roomId; //room
+        final String key = playedPrefix + ":" + roomId; //room
         deleteMusicFromPlaylist(playId, key);
     }
 
     @Override
     public void deleteMusicRequestFromPlayList(Long roomId, String playId) {
-        String key = musicReqPrefix + roomId; //room
+        String key = musicReqPrefix + ":"+ roomId; //room
         deleteMusicFromPlaylist(playId, key);
     }
 
@@ -236,7 +237,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
     @Override
     public void toggleLikeMusicRequest(Long playId, Long userId) {
         SetOperations<String,Object> setOperations = redisTemplate.opsForSet();
-        final String key = musicLikePrefix + playId;
+        final String key = musicLikePrefix + ":" + playId;
         if (Boolean.TRUE.equals(setOperations.isMember(key, userId))) setOperations.add(key, userId);
         else setOperations.remove(key, userId);
     }
