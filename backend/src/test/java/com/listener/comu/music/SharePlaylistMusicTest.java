@@ -127,17 +127,18 @@ public class SharePlaylistMusicTest {
         Music music = Music.builder().singer("박재범")
                 .name("Me Like Yuh")
                 .thumbnail("https://i.scdn.co/image/ab67616d0000b27382ecc5ea89bf34479a71a297")
-                .source("https://www.youtube.com/watch?v=9dIVOtRtBb8&list=RDLvmbLw7qfI0&index=2")
+                .source("https://www.youtube.com/watch?v=9dIVOtRtBb8")
                 .spotifyId("3SWju8HQ6II7QXkWtFSDE1")
                 .build();
 //        String cmd = "youtube-dl -f bestaudio -x --audio-format mp3 --audio-quality 0 -o " + music.getId() + ".%(ext)s " + music.getSource();
-        String cmd = "youtube-dl -f 18 -o src/main/resources/static/" + music.getId() + ".%(ext)s " + music.getSource();
+        String cmd = "youtube-dl -f 160+140 -o src/main/resources/static/" + music.getId() + ".%(ext)s " + music.getSource();
         Runtime rt = Runtime.getRuntime();
         try {
             Process pr = rt.exec(cmd);
             pr.waitFor();
             String sourceFilepath = "src/main/resources/static/" + music.getId() + ".mp4";
             s3Uploader.dirUpload(new File(sourceFilepath),"static");
+            pr.destroy();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
