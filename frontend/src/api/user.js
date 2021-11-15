@@ -14,6 +14,21 @@ const login = (callback, errorCallback) => {
     });
 };
 
+const join = (data, callback, errorCallback) => {
+  http
+    .put("/v1/users", {
+      userSeq: data[0],
+      username: data[1],
+      characterNum: data[2],
+    })
+    .then((res) => {
+      callback(res);
+    })
+    .catch((err) => {
+      errorCallback(err);
+    });
+};
+
 const logout = (callback, errorCallback) => {
   http
     .get("/user/logout")
@@ -61,6 +76,7 @@ const updateCharacter = (data, callback, errorCallback) => {
 
 export default {
   login,
+  join,
   logout,
   withdrawal,
   updateNickname,

@@ -63,15 +63,17 @@
           <div class="join_character_wrapper_text">캐릭터 선택</div>
           <div class="join_carousel">
             <carousel
+              ref="my-carousel"
               class="join_carousel_inner"
               :navigation-enabled="true"
               :navigation-next-label="nextLabel"
               :navigation-prev-label="prevLabel"
               :per-page="1"
+              :loop="true"
               :pagination-enabled="false"
             >
-              <slide v-for="t in 10" :key="t.num" class="join_carousel_slide">
-                <img :src="require(`@/assets/images/character0${t}.png`)" />
+              <slide v-for="t in 11" :key="t.num" class="join_carousel_slide">
+                <img :src="require(`@/assets/images/character0${t-1}.png`)" />
               </slide>
             </carousel>
           </div>
@@ -93,11 +95,8 @@
           </div>
         </div>
         <div class="join_button_wrapper">
-          <div
-            class="smallbuttonbrown"
-            @click="$router.push({name: 'UnityView'})"
-          >
-            <div class="buttoncontent" @click="joinRequest()">가입하기</div>
+          <div class="smallbuttonbrown" @click="joinRequest()">
+            <div class="buttoncontent">가입하기</div>
           </div>
         </div>
       </div>
@@ -109,6 +108,7 @@
 <script>
 import $ from "@/util/utils";
 import {Carousel, Slide} from "vue-carousel";
+import userApi from "@/api/user";
 
 export default {
   name: "Main",
@@ -150,9 +150,30 @@ export default {
     socialLoginUrl(socialType) {
       return $.getSocialLoginUrl(socialType);
     },
-    joinRequest(){ //입력한 정보로 회원가입 요청을 보냅니다.
-      
-    }
+    joinRequest() {
+      if (!this.inputNicknameValid) {
+        alert("2~8글자 사이의 닉네임을 입력해주세요!");
+      } else {
+        const data = [
+          parseInt(this.$store.getters.user.userId),
+          this.inputNickname,
+          this.$refs["my-carousel"].currentPage,
+        ];
+        //입력한 정보로 회원가입 요청을 보냅니다.
+        userApi.join(
+          data,
+          (res) => {//성공하면 회원정보 저장시키고 유니티화면으로 이동
+            console.log(res);
+            this.$router.push({name: 'UnityView'})
+          },
+          (err) => {//실패(닉네임 중복)하면 중복된닉네임이라고 메시지 띄워줌
+            console.log(err);
+            alert("중복된 닉네임입니다")
+            this.$router.push({name: 'UnityView'}) //지울예정
+          }
+        );
+      }
+    },
   },
 
   watch: {

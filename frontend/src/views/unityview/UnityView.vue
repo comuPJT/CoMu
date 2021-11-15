@@ -4,20 +4,22 @@
     <!-- 유니티 화면 -->
     <div id="unity">
       <unity
-      v-if="false"
-      tabindex="1"
         src="unity/Build/unity.json"
         unityLoader="unity/Build/UnityLoader.js"
+        :width="unityWidth"
         :height="unityHeight"
         :hideFooter="true"
       ></unity>
       <!-- 버튼 숨기기 (임시) -->
-      <div style="position:absolute ; bottom:0 ; right:0;">
-        <button id="show-modal" @click="showModal = true">
+      <div>
+        <button id="show-modal" @click="showModalPlayList = true">
           공용플레이리스트 띄우기
         </button>
-        <public-play-list v-if="showModal" @close="showModal = false">
+        <button id="show-modal" @click="showModalStory = true">사연함 띄우기</button>
+        <public-play-list v-if="showModalPlayList" @close="showModalPlayList = false">
         </public-play-list>
+        <normal-story v-if="showModalStory" @close="showModalStory = false">
+        </normal-story>
       </div>
     </div>
   </div>
@@ -26,6 +28,7 @@
 <script>
 import Unity from "vue-unity-webgl";
 import PublicPlayList from "./components/PublicPlayList.vue";
+import NormalStory from "./components/NormalStory.vue"
 
 export default {
   name: "UnityView",
@@ -33,12 +36,15 @@ export default {
   components: {
     Unity,
     PublicPlayList,
+    NormalStory,
   },
 
   props: {},
   data() {
     return {
-      showModal: false,
+      showModalPlayList: false,
+      showModalStory: false,
+      unityWidth: 0,
       unityHeight: 0,
     };
   },
@@ -48,12 +54,14 @@ export default {
     localStorage.setItem("characterNum", 1);
 
     // 창 크기에 맞춰서 유니티 화면 크기 변경
+    this.unityWidth = document.getElementById("unity").offsetWidth;
     this.unityHeight = document.getElementById("unity").offsetHeight;
     window.addEventListener("resize", this.handleResize);
   },
 
   methods: {
     handleResize() {
+      this.unityWidth = document.getElementById("unity").offsetWidth;
       this.unityHeight = document.getElementById("unity").offsetHeight;
     },
   },
