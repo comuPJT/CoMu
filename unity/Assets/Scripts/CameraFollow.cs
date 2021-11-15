@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
@@ -26,13 +24,13 @@ public class CameraFollow : MonoBehaviour
             float y = target.position.y + 4;
 
             // 카메라의 위치 제한 범위 내로 한정
-            if (x < 6)
+            if (x < 3)
             {
-                x = 6;
+                x = 3;
             }
-            else if (x > 18)
+            else if (x > 21)
             {
-                x = 18;
+                x = 21;
             }
             if (y < 6)
             {
