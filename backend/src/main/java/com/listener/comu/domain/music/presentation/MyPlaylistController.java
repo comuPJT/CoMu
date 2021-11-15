@@ -14,7 +14,7 @@ import java.util.Map;
 
 @CrossOrigin("*")
 @RequiredArgsConstructor
-@RequestMapping("/myplaylist")
+@RequestMapping("/api/myplaylist")
 @RestController
 public class MyPlaylistController {
 

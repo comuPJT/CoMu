@@ -24,12 +24,12 @@
 
             <div v-for="i in 5" :key="i" class="modal-mylist">
               <div class="modal-mylist-img">
-                <img src="https://t1.daumcdn.net/thumb/R720x0.fpng/?fname=http://t1.daumcdn.net/brunch/service/user/8fXh/image/0_JTh3JET7ZCHaT_IJhG4VbhEpI.png" />
+                <img
+                  src="https://t1.daumcdn.net/thumb/R720x0.fpng/?fname=http://t1.daumcdn.net/brunch/service/user/8fXh/image/0_JTh3JET7ZCHaT_IJhG4VbhEpI.png"
+                />
               </div>
-              <div class="modal-mylist-title">플레이리스트 {{i}}</div>
+              <div class="modal-mylist-title">플레이리스트 {{ i }}</div>
             </div>
-
-                
           </div>
         </div>
 

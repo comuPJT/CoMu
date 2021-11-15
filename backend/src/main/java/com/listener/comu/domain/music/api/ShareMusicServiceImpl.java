@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,17 +42,24 @@ class ShareMusicServiceImpl implements ShareMusicService {
         ListOperations<String, Object> operations = redisTemplate.opsForList();
         Long size = operations.size(key);
         if( size != null && size < limit ) { //15개 미만일때만!
-            // TO DO - MariaDB에 음악정보 넣거나 불러오기
-            Music music = musicRepository.getMusicBySpotify_id(musicPlayReq.getSpotifyId());
+            Music music = musicRepository.getMusicBySpotifyId(musicPlayReq.getSpotifyId());
             if( music == null) {
                 // 음악 다운로드 및 테이블에 데이터 추가
-                Runtime runtime = Runtime.getRuntime();
-                music = Music.builder().spotify_id(musicPlayReq.getSpotifyId())
+                music = Music.builder().spotifyId(musicPlayReq.getSpotifyId())
                                     .thumbnail(musicPlayReq.getThumbnail())
                                     .name(musicPlayReq.getName())
                                     .singer(musicPlayReq.getSinger())
                                     .source(musicPlayReq.getSource()).build();
                 musicRepository.save(music);
+                // 음악 다운로드
+                String cmd = "youtube-dl -f 18 -o " + music.getId() + ".%(ext)s " + music.getSource();
+                Runtime rt = Runtime.getRuntime();
+                try {
+                    Process pr = rt.exec(cmd);
+                    pr.waitFor();
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
             SharePlaylistMusic play = SharePlaylistMusic.builder()

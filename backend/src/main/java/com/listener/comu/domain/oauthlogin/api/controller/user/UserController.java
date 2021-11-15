@@ -1,5 +1,6 @@
 package com.listener.comu.domain.oauthlogin.api.controller.user;
 
+import com.listener.comu.domain.oauthlogin.api.entity.user.ComuUserInfo;
 import com.listener.comu.domain.oauthlogin.api.entity.user.User;
 import com.listener.comu.domain.oauthlogin.api.service.UserService;
 import com.listener.comu.domain.oauthlogin.common.ApiResponse;
@@ -26,8 +27,8 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity modifyUserInfo(long userSeq, String username,  String character) {
-        boolean response = userService.modifyUserInfo(userSeq, username, character);
+    public ResponseEntity modifyUserInfo(@RequestBody ComuUserInfo comuUserInfo) {
+        boolean response = userService.modifyUserInfo(comuUserInfo.getUserSeq(), comuUserInfo.getUsername(), comuUserInfo.getCharacterNum());
         if (!response) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
