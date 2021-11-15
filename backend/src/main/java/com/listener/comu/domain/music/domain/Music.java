@@ -18,7 +18,7 @@ public class Music {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String spotify_id;
+    private String spotifyId;
     private String thumbnail;
     private String name;
     private String singer;

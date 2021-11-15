@@ -1,5 +1,6 @@
 package com.listener.comu.domain.oauthlogin.api.controller.user;
 
+import com.listener.comu.domain.oauthlogin.api.entity.user.ComuUserInfo;
 import com.listener.comu.domain.oauthlogin.api.entity.user.User;
 import com.listener.comu.domain.oauthlogin.api.service.UserService;
 import com.listener.comu.domain.oauthlogin.common.ApiResponse;
@@ -21,13 +22,13 @@ public class UserController {
         org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         User user = userService.getUser(principal.getUsername());
-
-        return ApiResponse.success("user", user);
+        
+        return ApiResponse.getUserSuccess("user", user, "userSeq", user.getUserSeq());
     }
 
     @PutMapping
-    public ResponseEntity modifyUserInfo(long userSeq, String username, int characterNum) {
-        boolean response = userService.modifyUserInfo(userSeq, username, characterNum);
+    public ResponseEntity modifyUserInfo(@RequestBody ComuUserInfo comuUserInfo) {
+        boolean response = userService.modifyUserInfo(comuUserInfo.getUserSeq(), comuUserInfo.getUsername(), comuUserInfo.getCharacterNum());
         if (!response) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }

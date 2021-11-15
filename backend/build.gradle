@@ -31,6 +31,9 @@ dependencies {
     implementation("io.springfox:springfox-bean-validators:3.0.0")
     implementation("io.springfox:springfox-boot-starter:3.0.0")
 
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
     implementation("com.google.guava:guava:29.0-jre")
     annotationProcessor("com.google.guava:guava:29.0-jre")
 
@@ -48,11 +51,16 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     // MariaDB
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    // AWS s3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
 }
 
 test {

@@ -77,8 +77,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 여기까지
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 
-                .antMatchers("/v1/**").hasAnyAuthority(RoleType.USER.getCode())
-                .antMatchers("/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
+                .antMatchers("/api/v1/**").hasAnyAuthority(RoleType.USER.getCode())
+                .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
 
                 // anyMatchers에서 설정하지 않은 나머지 경로를 의미합니다.
                 .anyRequest().permitAll()

@@ -1,18 +1,24 @@
 package com.listener.comu.domain.music.api;
 
-import com.listener.comu.domain.music.dto.MusicPlayReq;
-import com.listener.comu.domain.music.dto.PlayedMusicRes;
-import com.listener.comu.domain.music.dto.SearchMusicRes;
+import com.listener.comu.domain.music.dto.SharePlaylistMusicReq;
+import com.listener.comu.domain.music.dto.SharePlaylistMusicRes;
 
 import java.util.List;
 
 
 public interface ShareMusicService {
-    List<SearchMusicRes> findMusicByQuery(String query);
-    void addMusicToPlayList(Long roomId, MusicPlayReq musicPlayReq);
-    void deleteMusicFromPlayList(Long roomId, Long playId);
-    List<PlayedMusicRes> getPlayedMusicAndContent(Long roomId);
-    List<PlayedMusicRes> getHonoredMusicAndContent(Long roomId);
-    void likeMusicRequest(Long playId, Long userId);
-    void undoLikeMusicRequest(Long playId, Long userId);
+    List<SharePlaylistMusicRes> getPlaylistUpAndDown (Long roomId);
+    boolean addMusicToPlayList(Long roomId, SharePlaylistMusicReq musicPlayReq);
+    List<SharePlaylistMusicRes> getPlayedPlaylist(Long roomId);
+    SharePlaylistMusicRes getPlayedMusicFromPlayList(Long roomId, String playId);
+    void deletePlayedMusicFromPlayList(Long roomId, String playId);
+    void deleteMusicRequestFromPlayList(Long roomId, String playId);
+    List<SharePlaylistMusicRes> getHonoredPlayList();
+    SharePlaylistMusicRes HonoredMusicAndContents(Long playId);
+    void deleteMusicFromHonorList(Long playId);
+    void toggleLikeMusicRequest(Long playId, Long userId);
+    /* EVENT DRIVEN */
+    /* TO DO - 재생하기 위해 다음곡 가져오기 */
+    long getNextMusic(String playSeq);
+    /* TO DO - 재생 후 list 조정 */
 }

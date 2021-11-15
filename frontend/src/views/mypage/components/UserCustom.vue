@@ -10,13 +10,11 @@
           :navigation-next-label="nextLabel"
           :navigation-prev-label="prevLabel"
           :per-page="1"
+          :loop="true"
           :pagination-enabled="false"
         >
-          <slide class="user-custom-carousel-slide">
-            <img src="@/assets/images/tempchar1.png" />
-          </slide>
-          <slide class="user-custom-carousel-slide">
-            <img src="@/assets/images/tempchar2.png" />
+          <slide v-for="t in 11" :key="t.num" class="join_carousel_slide">
+            <img :src="require(`@/assets/images/character0${t-1}.png`)" />
           </slide>
         </carousel>
       </div>
