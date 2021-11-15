@@ -1,12 +1,8 @@
 package com.listener.comu.music;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.listener.comu.domain.music.domain.*;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicRes;
+import com.listener.comu.util.S3Uploader;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +11,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +26,14 @@ public class SharePlaylistMusicTest {
     @Autowired
     private RoomRedisRepository repo;
 
-//    @Autowired
-//    private StringRedisTemplate redisTemplate;
-
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
 
     @Autowired
     private HistoryRepository historyRepository;
+
+    @Autowired
+    private S3Uploader s3Uploader;
 
     @Test
     public void RedisRepositoryRoomCreateTest(){
@@ -59,7 +56,7 @@ public class SharePlaylistMusicTest {
     }
 
     @Test
-    public void RedisTemplateRedisListTest() throws JsonProcessingException {
+    public void RedisTemplateRedisListTest() {
         final String key = "roomtest:1" ; //room
         ListOperations<String, Object> operations = redisTemplate.opsForList();
         SharePlaylistMusic play = SharePlaylistMusic.builder()
@@ -134,11 +131,13 @@ public class SharePlaylistMusicTest {
                 .spotifyId("3SWju8HQ6II7QXkWtFSDE1")
                 .build();
 //        String cmd = "youtube-dl -f bestaudio -x --audio-format mp3 --audio-quality 0 -o " + music.getId() + ".%(ext)s " + music.getSource();
-        String cmd = "youtube-dl -f 18 -o " + music.getId() + ".%(ext)s " + music.getSource();
+        String cmd = "youtube-dl -f 18 -o src/main/resources/static/" + music.getId() + ".%(ext)s " + music.getSource();
         Runtime rt = Runtime.getRuntime();
         try {
             Process pr = rt.exec(cmd);
             pr.waitFor();
+            String sourceFilepath = "src/main/resources/static/" + music.getId() + ".mp4";
+            s3Uploader.dirUpload(new File(sourceFilepath),"static");
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

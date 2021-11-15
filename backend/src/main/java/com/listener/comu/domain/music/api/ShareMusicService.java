@@ -19,5 +19,6 @@ public interface ShareMusicService {
     void toggleLikeMusicRequest(Long playId, Long userId);
     /* EVENT DRIVEN */
     /* TO DO - 재생하기 위해 다음곡 가져오기 */
+    long getNextMusic(String playSeq);
     /* TO DO - 재생 후 list 조정 */
 }

@@ -40,6 +40,14 @@ public class S3Uploader {
         return uploadImageUrl;
     }
 
+    // S3로 파일 업로드하기
+    public String dirUpload(File uploadFile, String dirName) {
+        // String fileName = dirName + "/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
+        String uploadImageUrl = putS3(uploadFile, dirName + "/" +uploadFile.getName()); // s3로 업로드
+        removeNewFile(uploadFile);
+        return uploadImageUrl;
+    }
+
     // S3로 업로드
     private String putS3(File uploadFile, String fileName) {
         amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));

@@ -5,11 +5,13 @@ import com.listener.comu.domain.music.dto.SharePlaylistMusicReq;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicRes;
 import com.listener.comu.domain.oauthlogin.api.entity.user.User;
 import com.listener.comu.domain.oauthlogin.api.repository.user.UserRepository;
+import com.listener.comu.util.S3Uploader;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +30,14 @@ class ShareMusicServiceImpl implements ShareMusicService {
     private final MusicRepository musicRepository;
     private final UserRepository userRepository;
     private final HistoryRepository historyRepository;
+    private final S3Uploader s3Uploader;
 
-    ShareMusicServiceImpl(RedisTemplate<String, Object> redisTemplate, MusicRepository musicRepository, UserRepository userRepository, HistoryRepository historyRepository) {
+    ShareMusicServiceImpl(RedisTemplate<String, Object> redisTemplate, MusicRepository musicRepository, UserRepository userRepository, HistoryRepository historyRepository, S3Uploader s3Uploader) {
         this.redisTemplate = redisTemplate;
         this.musicRepository = musicRepository;
         this.userRepository = userRepository;
         this.historyRepository = historyRepository;
+        this.s3Uploader = s3Uploader;
     }
 
     @Override
@@ -44,24 +48,27 @@ class ShareMusicServiceImpl implements ShareMusicService {
         if( size != null && size < limit ) { //15개 미만일때만!
             Music music = musicRepository.getMusicBySpotifyId(musicPlayReq.getSpotifyId());
             if( music == null) {
-                // 음악 다운로드 및 테이블에 데이터 추가
+                // 음악 테이블에 데이터 추가
                 music = Music.builder().spotifyId(musicPlayReq.getSpotifyId())
                                     .thumbnail(musicPlayReq.getThumbnail())
                                     .name(musicPlayReq.getName())
                                     .singer(musicPlayReq.getSinger())
                                     .source(musicPlayReq.getSource()).build();
                 musicRepository.save(music);
-                // 음악 다운로드
-                String cmd = "youtube-dl -f 18 -o " + music.getId() + ".%(ext)s " + music.getSource();
+                // 음악 다운로드 -> s3 업로딩
+                String cmd = "youtube-dl -f 18 -o src/main/resources/static/" + music.getId() + ".%(ext)s " + music.getSource();
                 Runtime rt = Runtime.getRuntime();
                 try {
                     Process pr = rt.exec(cmd);
                     pr.waitFor();
+                    String sourceFilepath = "src/main/resources/static/" + music.getId() + ".mp4";
+                    s3Uploader.dirUpload(new File(sourceFilepath),"static");
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
             }
 
+            // redis 현재 방 플레이리스트에 추가
             SharePlaylistMusic play = SharePlaylistMusic.builder()
                     .contents(musicPlayReq.getContents())
                     .musicId(music.getId())
@@ -232,5 +239,10 @@ class ShareMusicServiceImpl implements ShareMusicService {
         final String key = musicLikePrefix + playId;
         if (Boolean.TRUE.equals(setOperations.isMember(key, userId))) setOperations.add(key, userId);
         else setOperations.remove(key, userId);
+    }
+
+    @Override
+    public long getNextMusic(String playSeq) {
+        return 0;
     }
 }
