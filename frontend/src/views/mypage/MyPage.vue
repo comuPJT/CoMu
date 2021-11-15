@@ -5,11 +5,11 @@
       <div class="mypage-nav-logo">
         <img src="@/assets/images/logo_4X1.png" />
       </div>
-      <div class="mypage-nav-text">MyPage</div>
+      <div class="mypage-nav-text">마이페이지</div>
 
       <div class="mypage-nav-type">
         <img src="@/assets/images/mypage_account_logo.svg" />
-        Account
+        계정
       </div>
       <div
         class="mypage-nav-detail"
@@ -32,7 +32,16 @@
 
       <div class="mypage-nav-type">
         <img src="@/assets/images/mypage_music_logo.svg" />
-        Music
+        음악
+      </div>
+      <div
+        class="mypage-nav-detail"
+        @click="selectedMenu = 'userPersonalPlayList'"
+        v-bind:class="{
+          'mypage-nav-detail-selected': selectedMenu == 'userPersonalPlayList',
+        }"
+      >
+        내 재생 목록
       </div>
       <div
         class="mypage-nav-detail"
@@ -58,6 +67,7 @@
       <user-info v-if="selectedMenu == 'userInfo'"></user-info>
       <user-custom v-if="selectedMenu == 'userCustom'"></user-custom>
       <user-play-list v-if="selectedMenu == 'userPlayList'"></user-play-list>
+      <user-personal-play-list v-if="selectedMenu == 'userPersonalPlayList'"></user-personal-play-list>
     </div>
     <!-- 마이페이지 컨텐츠(회원정보, 캐릭터, 내 플레이 리스트) 뷰 끝 -->
   </div>
@@ -67,11 +77,12 @@
 import UserInfo from "./components/UserInfo.vue";
 import UserCustom from "./components/UserCustom.vue";
 import UserPlayList from "./components/UserPlayList.vue";
+import UserPersonalPlayList from "./components/UserPersonalPlayList.vue";
 
 export default {
   name: "MyPage",
 
-  components: {UserInfo, UserCustom, UserPlayList},
+  components: {UserInfo, UserCustom, UserPlayList, UserPersonalPlayList},
 
   props: {},
   data() {

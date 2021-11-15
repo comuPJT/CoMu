@@ -31,7 +31,7 @@
             Kakao로 로그인
           </div>
           <a
-            href="https://k5a304.p.ssafy.io/api/oauth2/authorization/google?redirect_uri=https://k5a304.p.ssafy.io/oauth/redirect"
+            href="http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/oauth/redirect"
           >
             <div class="login_button google">
               <img src="@/assets/images/google.svg" />
@@ -63,18 +63,17 @@
           <div class="join_character_wrapper_text">캐릭터 선택</div>
           <div class="join_carousel">
             <carousel
+              ref="my-carousel"
               class="join_carousel_inner"
               :navigation-enabled="true"
               :navigation-next-label="nextLabel"
               :navigation-prev-label="prevLabel"
               :per-page="1"
+              :loop="true"
               :pagination-enabled="false"
             >
-              <slide class="join_carousel_slide">
-                <img src="@/assets/images/tempchar1.png" />
-              </slide>
-              <slide class="join_carousel_slide">
-                <img src="@/assets/images/tempchar2.png" />
+              <slide v-for="t in 11" :key="t.num" class="join_carousel_slide">
+                <img :src="require(`@/assets/images/character0${t-1}.png`)" />
               </slide>
             </carousel>
           </div>
@@ -83,18 +82,20 @@
         <div class="join_nickname_wrapper">
           <div class="input_box" style="width: 18vw">
             <div class="title">닉네임</div>
-            <input placeholder="2~8자 이내의 닉네임을 입력해주세요." />
-            <div class="nickname_valid" v-if="false">
+            <input
+              v-model="inputNickname"
+              placeholder="2~8자 이내의 닉네임을 입력해주세요."
+            />
+            <div class="nickname_valid" v-if="inputNicknameValid">
               사용 가능한 닉네임입니다.
             </div>
-            <div class="nickname_unvalid">유효한 닉네임을 입력해주세요.</div>
+            <div class="nickname_unvalid" v-if="!inputNicknameValid">
+              유효한 닉네임을 입력해주세요.
+            </div>
           </div>
         </div>
         <div class="join_button_wrapper">
-          <div
-            class="smallbuttonbrown"
-            @click="$router.push({name: 'UnityView'})"
-          >
+          <div class="smallbuttonbrown" @click="joinRequest()">
             <div class="buttoncontent">가입하기</div>
           </div>
         </div>
@@ -107,6 +108,7 @@
 <script>
 import $ from "@/util/utils";
 import {Carousel, Slide} from "vue-carousel";
+import userApi from "@/api/user";
 
 export default {
   name: "Main",
@@ -119,15 +121,22 @@ export default {
   props: {},
   data() {
     return {
-      order: 1,
-      //1=시작화면, 2=로그인, 3=회원가입
+      order: 1, //1=시작화면, 2=로그인, 3=회원가입
       nextLabel:
         "<img src='https://i.ibb.co/SsQz0vB/next-1.png' style='width:1.2vw'/>",
       prevLabel:
-        "<img src='https://i.ibb.co/0GW9F05/prev-1.png' style='width:1.2vw'/>",
-      //캐릭터선택 좌/우 버튼
+        "<img src='https://i.ibb.co/0GW9F05/prev-1.png' style='width:1.2vw'/>", //캐릭터선택 좌/우 버튼
       inputNickname: "",
+      inputNicknameValid: false, // 닉네임 적합성 판단
     };
+  },
+  mounted() {
+    // sns 로그인시 첫 방문이면 닉네임, 캐릭터 설정으로 넘어갑니다.
+    if (this.$route.params.order == 3) {
+      this.order = 3;
+    } else {
+      this.order = 1;
+    }
   },
   methods: {
     nextStep() {
@@ -140,6 +149,41 @@ export default {
     },
     socialLoginUrl(socialType) {
       return $.getSocialLoginUrl(socialType);
+    },
+    joinRequest() {
+      if (!this.inputNicknameValid) {
+        alert("2~8글자 사이의 닉네임을 입력해주세요!");
+      } else {
+        const data = [
+          parseInt(this.$store.getters.user.userId),
+          this.inputNickname,
+          this.$refs["my-carousel"].currentPage,
+        ];
+        //입력한 정보로 회원가입 요청을 보냅니다.
+        userApi.join(
+          data,
+          (res) => {//성공하면 회원정보 저장시키고 유니티화면으로 이동
+            console.log(res);
+            this.$router.push({name: 'UnityView'})
+          },
+          (err) => {//실패(닉네임 중복)하면 중복된닉네임이라고 메시지 띄워줌
+            console.log(err);
+            alert("중복된 닉네임입니다")
+            this.$router.push({name: 'UnityView'}) //지울예정
+          }
+        );
+      }
+    },
+  },
+
+  watch: {
+    inputNickname: function () {
+      //닉네임길이 적합성 판단
+      if (this.inputNickname.length < 2 || this.inputNickname.length > 8) {
+        this.inputNicknameValid = false;
+      } else {
+        this.inputNicknameValid = true;
+      }
     },
   },
 };
