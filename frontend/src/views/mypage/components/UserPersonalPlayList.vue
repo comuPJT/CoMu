@@ -23,34 +23,32 @@
         </div>
         <!--신청곡 리스트 헤더 끝-->
 
-        <!--신청곡 리스트-->
+        <!--내 개인 플레이 리스트-->
         <div class="content-body">
           <table>
             <!-- 클릭시 selectOnPlayList 배열에 아이디를 담는데 임시로 id라는 문자열을 담습니다-->
             <tr
-              v-for="music in sharePlayListMusic"
+              v-for="music in personalPlayList"
               :key="music.id"
               v-bind:class="{'selected-table': music.isselected}"
-              @click="
-                [selectOnPlayList('id'), (music.isselected = !music.isselected)]
-              "
             >
               <td class="content-body-td2">
-                <img :src="music.cover" />
+                <img :src="music.thumbnail" />
               </td>
-              <td class="content-body-td3">{{ music.title }}</td>
-              <td class="content-body-td4">{{ music.artist }}</td>
+              <td class="content-body-td3">{{ music.name }}</td>
+              <td class="content-body-td4">{{ music.singer }}</td>
               <td class="content-body-td5">{{ music.album }}</td>
               <td class="content-body-td6">
                 <img
                   src="@/assets/images/close_button.svg"
                   style="width: 1.5vw; margin-right: 1vw"
+                  @click="deletePersonal(music.id)"
                 />
               </td>
             </tr>
           </table>
         </div>
-        <!--신청곡 리스트 끝-->
+        <!--내 개인 플레이 리스트 끝-->
 
         <!--리스트에 저장 / 신청하기 버튼-->
         <div class="playlist-button-wrapper">
@@ -129,7 +127,10 @@
                     {{ titleResult.album.name }}
                   </td>
                   <td class="content-body-td6">
-                    <img src="@/assets/images/add_icon.svg" />
+                    <img
+                      src="@/assets/images/add_icon.svg"
+                      @click="addToPersonal(titleResult)"
+                    />
                   </td>
                 </tr>
               </table>
@@ -150,6 +151,7 @@
 
 <script>
 import axios from "axios";
+import myPlayListApi from "@/api/myPlayList";
 export default {
   name: "UserPersonalPlayList",
 
@@ -161,7 +163,7 @@ export default {
       showModal: false,
       shareMusicView: "list", //플레이리스트, 곡 검색, 곡 신청 화면중 어떤걸 표시하는지
       //공용-재생중인 음악목록
-      sharePlayListMusic: [], //현재 공용 플레이 리스트에서 재생중인 곡들
+      personalPlayList: [], //현재 공용 플레이 리스트에서 재생중인 곡들
       selectedMusicOnPlayList: [], //공용플레이리스트에서 내 리스트로 옮기기 위해 선택한 곡"들"
       //음악검색
       searchKeyword: "", //검색어
@@ -174,17 +176,15 @@ export default {
   },
 
   mounted() {
-    for (var i = 0; i < 8; i++) {
-      this.sharePlayListMusic.push({
-        isselected: false,
-        id: i + 99,
-        cover:
-          "https://t1.daumcdn.net/thumb/R720x0.fpng/?fname=http://t1.daumcdn.net/brunch/service/user/8fXh/image/0_JTh3JET7ZCHaT_IJhG4VbhEpI.png",
-        title: "Insecure (Feat. Pink Sweat$)",
-        artist: "Bren Joy",
-        album: "Nothing Feels Better",
-      });
-    }
+    myPlayListApi.getPersonalPlayList(
+      (res) => {
+        console.log(res.data);
+        this.personalPlayList = res.data;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   },
 
   methods: {
@@ -238,6 +238,66 @@ export default {
             console.log(err);
           });
       }
+    },
+
+    addToPersonal(titleResult) {
+      const data = {
+        musicList: [
+          {
+            spotifyId: titleResult.id,
+            name: titleResult.name,
+            singer: titleResult.artists,
+            source: "source",
+            album: titleResult.album.name,
+            thumbnail: titleResult.album.images[2].url,
+          },
+        ],
+        userSeq: localStorage.getItem("user-seq"),
+      };
+
+      myPlayListApi.addPersonalPlayList(
+        data,
+        (res) => {
+          this.personalPlayList.push({
+            spotifyId: titleResult.id,
+            name: titleResult.name,
+            singer: titleResult.artists,
+            source: "source",
+            album: titleResult.album.name,
+            thumbnail: titleResult.album.images[2].url,
+          });
+          console.log(res);
+          alert("곡이 추가되었습니다.");
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+    },
+
+    deletePersonal(id) {
+      const data = {
+        musicIds: [id],
+        userSeq: localStorage.getItem("user-seq"),
+      };
+      myPlayListApi.deletePersonal(
+        data,
+        (res) => {
+          var index;
+          for (var i = 0; i < this.personalPlayList.length; i++) {
+            if (this.personalPlayList[i].id == id) {
+              index = i;
+              break;
+            }
+          }
+          this.$delete(this.personalPlayList, index);
+          console.log(res);
+          alert("곡이 삭제되었습니다.");
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
     },
   },
 };

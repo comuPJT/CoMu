@@ -10,10 +10,13 @@
   "dependencies": {
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
+    "firebase": "^7.9.1",
     "node-sass": "^5.0.0",
     "vue": "^2.6.11",
     "vue-carousel": "^0.18.0",
+    "vue-chat-scroll": "^1.4.0",
     "vue-marquee-text-component": "^1.2.0",
+    "vue-moment": "^4.1.0",
     "vue-router": "^3.5.3",
     "vue-unity-webgl": "^1.2.0",
     "vuedraggable": "^2.24.3",

@@ -4,6 +4,7 @@
     <!-- 유니티 화면 -->
     <div id="unity">
       <unity
+        v-if="false"
         src="unity/Build/unity.json"
         unityLoader="unity/Build/UnityLoader.js"
         :width="unityWidth"
@@ -66,7 +67,7 @@ export default {
 
   mounted() {
     // 테스트용 캐릭터 번호 값 셋팅
-    localStorage.setItem("characterNum", 1);
+    //localStorage.setItem("characterNum", 1);
 
     // 창 크기에 맞춰서 유니티 화면 크기 변경
     this.unityWidth = document.getElementById("unity").offsetWidth;
