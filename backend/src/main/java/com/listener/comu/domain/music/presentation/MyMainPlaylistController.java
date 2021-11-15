@@ -2,7 +2,7 @@ package com.listener.comu.domain.music.presentation;
 
 import com.listener.comu.domain.music.api.MyMainPlaylistService;
 import com.listener.comu.domain.music.domain.Music;
-import com.listener.comu.domain.music.dto.MyMainPlayllistAddMusicReq;
+import com.listener.comu.domain.music.dto.AddMyMusicReq;
 import com.listener.comu.domain.music.dto.MyMainPlaylistRemoveMusicReq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ public class MyMainPlaylistController {
     }
 
     @PostMapping
-    public ResponseEntity addMusic(@RequestBody MyMainPlayllistAddMusicReq request){
+    public ResponseEntity addMusic(@RequestBody AddMyMusicReq request){
         myMainPlaylistService.addMusic(request.getMusicList(), request.getUserSeq());
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -2,6 +2,7 @@ package com.listener.comu.domain.music.presentation;
 
 import com.listener.comu.domain.music.domain.Music;
 import com.listener.comu.domain.music.domain.Myplaylist;
+import com.listener.comu.domain.music.dto.AddMyMusicReq;
 import com.listener.comu.domain.music.dto.MyPlaylistRequest;
 import com.listener.comu.domain.music.api.MyPlaylistService;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,12 @@ public class MyPlaylistController {
     public ResponseEntity makeList(@RequestBody MyPlaylistRequest myPlaylistRequest){
         if (myPlaylistService.makeList(myPlaylistRequest.getUserSeq(), myPlaylistRequest.getName())) return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
+
+    @PostMapping("/music")
+    public ResponseEntity addMusics(@RequestBody AddMyMusicReq addMyMusicReq){
+        myPlaylistService.addMusics(addMyMusicReq.getMyplaylistId(), addMyMusicReq.getMusicList());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{myplaylistId}")

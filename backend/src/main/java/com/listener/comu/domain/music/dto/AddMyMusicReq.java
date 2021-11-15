@@ -8,9 +8,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class MyMainPlayllistAddMusicReq {
+public class AddMyMusicReq {
 
     private List<Music> musicList;
     private long userSeq;
+    private long myplaylistId;
 
 }
