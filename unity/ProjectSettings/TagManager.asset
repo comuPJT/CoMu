@@ -11,6 +11,12 @@ TagManager:
   - Theme3
   - Theme4
   - Theme5
+  - Record
+  - Playlist
+  - ApplyMusic
+  - TodayStory
+  - BestStory
+  - Character
   layers:
   - Default
   - TransparentFX

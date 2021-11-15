@@ -10,14 +10,9 @@
         :height="unityHeight"
         :hideFooter="true"
       ></unity>
-      <!-- 버튼 숨기기 (임시) -->
-      <div v-if="false">
-        <button id="show-modal" @click="showModal = true">
-          공용플레이리스트 띄우기
-        </button>
-        <public-play-list v-if="showModal" @close="showModal = false">
-        </public-play-list>
-      </div>
+      <!-- 공용 플레이리스트 -->
+      <public-play-list v-if="showModal" @close="closeModal">
+      </public-play-list>
     </div>
   </div>
 </template>
@@ -44,19 +39,29 @@ export default {
   },
 
   mounted() {
-    // 테스트용 캐릭터 번호 값 셋팅
+    // 테스트용 캐릭터 번호 값 설정
     localStorage.setItem("characterNum", 1);
 
     // 창 크기에 맞춰서 유니티 화면 크기 변경
     this.unityWidth = document.getElementById("unity").offsetWidth;
     this.unityHeight = document.getElementById("unity").offsetHeight;
     window.addEventListener("resize", this.handleResize);
+
+    setInterval(this.fetchShowModal, 100);
   },
 
   methods: {
     handleResize() {
       this.unityWidth = document.getElementById("unity").offsetWidth;
       this.unityHeight = document.getElementById("unity").offsetHeight;
+    },
+    fetchShowModal() {
+      this.showModal =
+        localStorage.getItem("showPlayList") == "TRUE" ? true : false;
+    },
+    closeModal() {
+      this.showModal = false;
+      localStorage.setItem("showPlayList", "FALSE");
     },
   },
 };
