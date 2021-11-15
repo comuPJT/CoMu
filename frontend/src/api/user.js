@@ -1,8 +1,26 @@
 import http from "@/util/http-common.js";
 
+
 const login = (callback, errorCallback) => {
   http
-    .post("/user/login", {})
+    .get("/v1/users")
+    .then((res) => {
+      console.log(res);
+      callback(res);
+    })
+    .catch((err) => {
+      console.log(err);
+      errorCallback(err);
+    });
+};
+
+const join = (data, callback, errorCallback) => {
+  http
+    .put("/v1/users", {
+      userSeq: data[0],
+      username: data[1],
+      characterNum: data[2],
+    })
     .then((res) => {
       callback(res);
     })
@@ -58,6 +76,7 @@ const updateCharacter = (data, callback, errorCallback) => {
 
 export default {
   login,
+  join,
   logout,
   withdrawal,
   updateNickname,

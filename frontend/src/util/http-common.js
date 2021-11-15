@@ -1,5 +1,6 @@
-import {API_SERVER_URL} from "@/constant/index.js";
+import { API_SERVER_URL } from "@/constant/index.js";
 import axios from "axios";
+import store from '@/store/index';
 // import jwt_decode from 'jwt-decode';
 const storage = localStorage;
 axios.defaults.baseURL = API_SERVER_URL;
@@ -11,17 +12,18 @@ const instance = axios.create();
 
 instance.interceptors.request.use(
   function (config) {
-    // 요청을 보내기 전에 수행할 일
-    // ...
-    // 1. 로그인, 공용플레이리스트, 사연함의 요청은 헤더 없이 전송
-    if (true) {
+    console.log(config);
+    //요청을 보내기 전에 수행할 일
+    //...
+    //1. 로그인, 공용플레이리스트, 사연함의 요청은 헤더 없이 전송
+    if (config.url.split("/")[3] === "user" && config.url.split("/")[4] !== "info") {
       //조건 true 추후 스웨거보고 수정 예정 ex)config.url.split("/")[3] === "user" && config.url.split("/")[4] !== "info"
       return config;
     }
     // 2. 그 외의 요청에는 항상 토큰을 헤더에 넣어서 보냄.
     else {
       config.headers["Authorization"] =
-        "Bearer " + storage.getItem("jwt-access-token");
+        `Bearer ${store.getters.token}`;
       return config;
     }
   },

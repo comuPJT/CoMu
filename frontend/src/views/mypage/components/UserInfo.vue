@@ -2,13 +2,16 @@
   <div class="user-info-wrapper">
     <div class="user-info-text">회원 정보</div>
     <div class="user-info-character">
-      useremail
-      <img src="@/assets/images/tempchar1.png" />
+      <img src="@/assets/images/google.svg" v-if="this.$store.getters.user.providerType=='GOOGLE'">
+      <img src="@/assets/images/kakao.svg" v-if="this.$store.getters.user.providerType=='KAKAO'">
+      <img src="@/assets/images/naver.svg" v-if="this.$store.getters.user.providerType=='NAVER'">
+      {{this.$store.getters.user.email}}
+      <img :src="require(`@/assets/images/character0${this.$store.getters.user.characterNum}.png`)" />
     </div>
     <div class="user-info-input">
       <div class="input_box" style="width: 18vw">
         <div class="title">닉네임</div>
-        <input placeholder="유저가 사용중이던 닉네임" />
+        <input v-model="inputNickName" :placeholder="`${this.$store.getters.user.nickName}`" />
       </div>
     </div>
     <div class="user-info-button">
@@ -28,7 +31,9 @@ export default {
 
   props: {},
   data() {
-    return {};
+    return {
+      inputNickName:"",
+    };
   },
   methods: {},
 };

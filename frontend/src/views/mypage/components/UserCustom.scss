@@ -49,11 +49,11 @@
   .user-custom-carousel {
     width: 14vw;
     .user-custom-carousel-inner {
+      img {
+        height: 11vw;
+      }
       .user-custom-carousel-slide {
         width: 100%;
-        img {
-          height: 11vw;
-        }
       }
     }
   }
