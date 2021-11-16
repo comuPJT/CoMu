@@ -156,7 +156,7 @@ public class ShareMusicController {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
-    @GetMapping("/nextmusic/{playSeq}")
+    @GetMapping("/nextmusic/{roomId}")
     @ApiOperation(value = "재생순서", notes = "유저측에서 재생이 끝나면 다음 곡을 위한 요청이 들어온다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
@@ -164,8 +164,8 @@ public class ShareMusicController {
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity getNextMusic(@PathVariable String playSeq) {
-        return  ResponseEntity.status(200).body(shareMusicService.getNextMusic(playSeq));
+    public ResponseEntity getNextMusic(@PathVariable long roomId, @RequestParam String playId) {
+        return  ResponseEntity.status(200).body(shareMusicService.getNextMusic(roomId, playId));
     }
 
 }

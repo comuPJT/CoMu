@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Setter
 @Getter
 @Builder
 @NoArgsConstructor
@@ -18,7 +19,7 @@ public class SharePlaylistMusic {
     @Builder.Default
     private LocalDateTime timestamp = LocalDateTime.now(); //접수 시간
     @Builder.Default
-    private String status = "todo";
+    private Status status = Status.TODO;
 
     public void setId(){
         this.playId = this.userId + this.title + this.timestamp;
