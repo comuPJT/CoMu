@@ -60,7 +60,7 @@ public class MyPlaylistController {
     }
 
     @ApiOperation(value = "플레이리스트 삭제", notes = "특정 플레이리스트를 삭제한다.")
-    @PutMapping("/{myplaylistId}/{userSeq}")
+    @DeleteMapping("/{myplaylistId}/{userSeq}")
     public ResponseEntity deleteList(@PathVariable long myplaylistId, @PathVariable long userSeq){
         myPlaylistService.deleteList(userSeq, myplaylistId);
         return new ResponseEntity<>(HttpStatus.OK);
