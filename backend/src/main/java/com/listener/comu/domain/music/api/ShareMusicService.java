@@ -19,7 +19,6 @@ public interface ShareMusicService {
     void deleteMusicFromHonorList(Long playId);
     void toggleLikeMusicRequest(Long playId, Long userId);
     /* EVENT DRIVEN */
-    /* TO DO - 재생하기 위해 다음곡 가져오기 */
     NextMusicRes getNextMusic(long roomId, String playId);
     /* TO DO - 재생 후 list 조정 */
 }

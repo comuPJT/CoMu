@@ -250,9 +250,10 @@ class ShareMusicServiceImpl implements ShareMusicService {
         String nowMusicKey = "nowplaying";
         SharePlaylistMusic nowPlay = objectMapper().convertValue(operations.get(nowMusicKey, "room:" + roomId), SharePlaylistMusic.class);
         if( nowPlay != null ){ // 진행할 신청곡이 있는 경우
-            System.out.println("There is music to be played soon..." + nowPlay.getMusicId());
+            System.out.println("There is music to be played soon..." + nowPlay.getMusicId() + " " + playId);
             if( nowPlay.getPlayId().equals(playId)) {
                 // 신청곡이 이전 곡으로, 바뀌지 않은 경우
+                System.out.println("Playing music not updated yet...!");
                 operations.delete(nowMusicKey, "room:" + roomId);
                 ListOperations<String, Object> listOps = redisTemplate.opsForList();
                 // 일반 사연으로 옮긴다.
@@ -261,13 +262,18 @@ class ShareMusicServiceImpl implements ShareMusicService {
                 // 재생되지 않은 신청곡 리스트에서 새로 값을 얻어와 스트리밍을 시작한다.
                 Object next = listOps.leftPop(musicReqPrefix + ":" + roomId);
                 nowPlay = objectMapper().convertValue(next, SharePlaylistMusic.class);
+                if(nowPlay == null)
+                    nowPlay = getRandomMusicObject(roomId, operations, nowMusicKey);
                 setNowPlayAndStream(roomId, operations, nowMusicKey, nowPlay);
             }
-            if( nowPlay.getStatus().equals(Status.PLAYING))  // 정상적으로 다음곡을 얻어온 경우
+            if( nowPlay.getStatus().equals(Status.PLAYING)) { // 정상적으로 다음곡을 얻어온 경우
+                System.out.println("Music is playing now...!" + nowPlay.getMusicId());
                 return NextMusicRes.builder()
-                    .playId(nowPlay.getPlayId())
-                    .musicId(nowPlay.getMusicId()).build();
+                        .playId(nowPlay.getPlayId())
+                        .musicId(nowPlay.getMusicId()).build();
+            }
             else if(observeFileCreated(roomId, nowPlay.getMusicId())){ // ready이거나 다음곡이 TODO 인 경우
+                System.out.println("Getting ready for the music...!" + nowPlay.getMusicId());
                 nowPlay.setStatus(Status.PLAYING);
                 operations.put(nowMusicKey, "room:"+roomId , nowPlay);
                 return NextMusicRes.builder()
@@ -276,9 +282,19 @@ class ShareMusicServiceImpl implements ShareMusicService {
             }
         }
         // 신청곡이 없을 때 랜덤한 곡을 틀도록 한다.
+        System.out.println("No music in the playlist...!");
+        nowPlay = getRandomMusicObject(roomId, operations, nowMusicKey);
+        // 지금 재생중인 곡을 리턴한다.
+        return NextMusicRes.builder()
+                .playId(nowPlay.getPlayId())
+                .musicId(nowPlay.getMusicId()).build();
+    }
+
+    private SharePlaylistMusic getRandomMusicObject(long roomId, HashOperations<String, Object, Object> operations, String nowMusicKey) {
+        SharePlaylistMusic nowPlay;
         long rand = getRandomSongForRoom(roomId); // 방id를 토대로 방에 맞는 랜덤곡을 받아온다.
         nowPlay = SharePlaylistMusic.builder()
-                .title("")
+                .title("none")
                 .contents("")
                 .musicId(rand)
                 .userId(-1L)
@@ -289,10 +305,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
             nowPlay.setStatus(Status.PLAYING); //재생중 상태로 옮긴다.
             operations.put(nowMusicKey, "room:"+roomId , nowPlay);
         }
-        // 지금 재생중인 곡을 리턴한다.
-        return NextMusicRes.builder()
-                .playId(nowPlay.getPlayId())
-                .musicId(nowPlay.getMusicId()).build();
+        return nowPlay;
     }
 
     private void setNowPlayAndStream(long roomId, HashOperations<String, Object, Object> operations, String nowMusicKey, SharePlaylistMusic nowPlay) {
