@@ -67,9 +67,8 @@ export default {
   },
 
   mounted() {
-    // 창 크기에 맞춰서 유니티 화면 크기 변경
-    this.unityWidth = document.getElementById("unity").offsetWidth;
-    this.unityHeight = document.getElementById("unity").offsetHeight;
+    // 창 크기가 바뀔 때마다 유니티 화면 크기 변경
+    this.handleResize();
     window.addEventListener("resize", this.handleResize);
 
     // 유니티 키보드 입력 활성화
@@ -80,7 +79,7 @@ export default {
     localStorage.setItem("showPlayListAdd", "FALSE");
     localStorage.setItem("showTodayStory", "FALSE");
 
-    // localStorage 값 변경 여부 확인할 인터벌함수
+    // localStorage 값 변경 확인할 인터벌 함수 실행
     setInterval(this.fetchShowModal, 100);
   },
 
@@ -98,11 +97,22 @@ export default {
         value
       );
     },
-
+    // 유니티 화면에 표시되는 닉네임 변경
+    setUserNickname(nickname) {
+      this.$refs.comu.message("Nickname", "SetUserNickname", nickname);
+      localStorage.setItem("user-nickname", nickname);
+    },
+    // 유니티 화면에 보여지는 캐릭터 번호 변경
+    setCharacterNum(num) {
+      this.$refs.comu.message("PlayerObject", "SetCharacterNum", num);
+      localStorage.setItem("characterNum", num);
+    },
+    // 창 크기에 맞춰서 유니티 화면 크기 변경
     handleResize() {
       this.unityWidth = document.getElementById("unity").offsetWidth;
       this.unityHeight = document.getElementById("unity").offsetHeight;
     },
+    // localStorage의 모달 관련 값 변경 여부 확인
     fetchShowModal() {
       this.showModalPlayList =
         localStorage.getItem("showPlayList") == "TRUE" ? true : false;
