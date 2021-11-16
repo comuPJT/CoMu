@@ -24,6 +24,10 @@ public class SharePlaylistMusicRes {
     private LocalDateTime timestamp;
     @ApiModelProperty(name="노래 제목")
     private String name;
+    @ApiModelProperty(name="이미지 썸네일")
+    private String thumbnail;
+    @ApiModelProperty(name="앨범 명")
+    private String album;
     @ApiModelProperty(name="가수")
     private String singer;
     @ApiModelProperty(name="사연자 닉네임")
