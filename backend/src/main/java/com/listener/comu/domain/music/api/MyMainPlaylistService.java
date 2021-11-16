@@ -1,6 +1,7 @@
 package com.listener.comu.domain.music.api;
 
 import com.listener.comu.domain.music.domain.*;
+import com.listener.comu.domain.music.dto.MusicIdPlayOrderDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -93,6 +94,25 @@ public class MyMainPlaylistService {
     }
 
     // 메인 재생 목록의 순서가 변경되었을 때 순서 적용
-//    public void setPlayOrder(long userSeq, List<MyMainPlaylist> myMainPlaylistList) {
-//    }
+    public void setPlayOrder(long userSeq, List<MusicIdPlayOrderDto> musicIdPlayOrderDtoList) {
+        List<MyMainPlaylist> myMainPlaylistList = myMainPlaylistRepository.getMyMainPlaylistsByUserSeq(userSeq); // DB에 저장되어 있는 재생 목록
+        List<MyMainPlaylist> newList = new ArrayList<>(); // Update할 재생 목록
+
+        MyMainPlaylist mmpl;
+        for(int i=0, size=myMainPlaylistList.size(); i<size; i++){
+            MusicIdPlayOrderDto musicIdPlayOrderDto = musicIdPlayOrderDtoList.get(i); // 새로 적용할 musicIdPlayOrderDto
+
+            // MusicId와 PlayOrder 새롭게 세팅
+            mmpl = myMainPlaylistList.get(i);
+            mmpl.setMusicId(musicIdPlayOrderDto.getMusicId());
+            mmpl.setPlayOrder(musicIdPlayOrderDto.getPlayOrder());
+
+            newList.add(mmpl);
+        }
+
+        myMainPlaylistRepository.saveAll(newList);
+    }
+
+
+
 }

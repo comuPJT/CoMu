@@ -22,7 +22,6 @@ import java.util.Map;
 public class MyPlaylistController {
 
     final private MyPlaylistService myPlaylistService;
-    final private UserController userController;
 
     @ApiOperation(value = "저장된 전체 플레이리스트 가져오기", notes = "사용자가 생성한 플레이리스트 목록 전체를 가져온다.")
     @GetMapping("/all/{userSeq}")
