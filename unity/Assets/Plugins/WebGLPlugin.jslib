@@ -33,4 +33,9 @@ mergeInto(LibraryManager.library, {
         localStorage.setItem("showCharacter", "TRUE");
     },
 
+    SetRoomName: function(str) {
+        var name = Pointer_stringify(str);
+        localStorage.setItem("roomName", name);
+    }
+
 });
