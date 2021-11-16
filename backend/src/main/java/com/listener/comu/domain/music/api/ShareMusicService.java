@@ -1,5 +1,6 @@
 package com.listener.comu.domain.music.api;
 
+import com.listener.comu.domain.music.dto.NextMusicRes;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicReq;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicRes;
 
@@ -19,6 +20,6 @@ public interface ShareMusicService {
     void toggleLikeMusicRequest(Long playId, Long userId);
     /* EVENT DRIVEN */
     /* TO DO - 재생하기 위해 다음곡 가져오기 */
-    long getNextMusic(String playSeq);
+    NextMusicRes getNextMusic(long roomId, String playId);
     /* TO DO - 재생 후 list 조정 */
 }
