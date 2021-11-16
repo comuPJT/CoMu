@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,9 +33,15 @@ public class MyPlaylistController {
 
     @ApiOperation(value = "플레이리스트에 저장된 곡들 가져오기", notes = "특정 플레이리스트에 저장된 전체 곡들을 가져온다.")
     @GetMapping("/{myplaylistId}")
-    public ResponseEntity<List<Music>> getMusics(@PathVariable long myplaylistId){
+    public ResponseEntity<Map<String, Object>> getMusics(@PathVariable long myplaylistId){
+        Map<String, Object> response = new HashMap<>();
+
         List<Music> musics = myPlaylistService.getMusics(myplaylistId);
-        return new ResponseEntity<>(musics, HttpStatus.OK);
+
+        response.put("musics", musics);
+        response.put("numberOfMusics", musics.size());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @ApiOperation(value = "새로운 플레이리스트 생성", notes = "새로운 플레이리스트를 생성한다.")
