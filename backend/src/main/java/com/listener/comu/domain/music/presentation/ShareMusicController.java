@@ -31,7 +31,7 @@ public class ShareMusicController {
     @GetMapping("/{roomId}")
     @ApiOperation(value = "신청곡/사연 목록 조회", notes = "현재 재생되는 곡의 이전곡 최대 15곡, 진행될 곡 최대 15곡을 반환한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = SearchMusicRes.class),
+            @ApiResponse(code = 200, message = "성공", response = SharePlaylistMusicRes.class),
             @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
