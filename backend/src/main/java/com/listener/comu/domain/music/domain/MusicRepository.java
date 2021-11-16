@@ -22,4 +22,7 @@ public interface MusicRepository extends JpaRepository<Music, Long> {
     @Query(value = "SELECT id FROM music WHERE spotify_id = :spotifyId", nativeQuery = true)
     long getMusicIdBySpotifyId(String spotifyId);
 
+    Music getMusicBySpotifyId(String spotifyId);
+    Music getMusicById(long id);
+
 }

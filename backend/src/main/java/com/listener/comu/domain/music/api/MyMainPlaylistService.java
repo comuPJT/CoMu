@@ -19,14 +19,14 @@ public class MyMainPlaylistService {
     // 재생 목록 가져오기
     public List<Music> getMyMainPlaylist(long userSeq){
 
-        System.out.println(userSeq);
+        // 현재 재생 목록(연결 테이블)에 들어있는 음악 번호 저장
         List<MyMainPlaylist> myMainPlaylists= myMainPlaylistRepository.getMyMainPlaylistsByUserSeq(userSeq);
         Collections.sort(myMainPlaylists, new Comparator<MyMainPlaylist>() {
             @Override
             public int compare(MyMainPlaylist o1, MyMainPlaylist o2) {
                 return o1.getPlayOrder() - o2.getPlayOrder();
             }
-        });
+        }); // 음악 번호를 재생 순서에 따라 정렬
 
         List<Long> musicIds = new ArrayList<>();
         for (MyMainPlaylist myMainPlaylist: myMainPlaylists){
@@ -92,4 +92,7 @@ public class MyMainPlaylistService {
         myMainPlaylistRepository.deleteMyMainPlaylistByUserSeqAndMusicIdIn(userSeq, musicIds);
     }
 
+    // 메인 재생 목록의 순서가 변경되었을 때 순서 적용
+//    public void setPlayOrder(long userSeq, List<MyMainPlaylist> myMainPlaylistList) {
+//    }
 }

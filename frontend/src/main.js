@@ -1,6 +1,6 @@
-import Vue from 'vue'
-import App from './App.vue'
-import Vuex from 'vuex'
+import Vue from "vue";
+import App from "./App.vue";
+import Vuex from "vuex";
 import store from "./store/index";
 import VueChatScroll from 'vue-chat-scroll'
 import router from "./router";
@@ -27,5 +27,5 @@ Vue.component('store', store)
 new Vue({
   router,
   store,
-  render: h => h(App),
-}).$mount('#app')
+  render: (h) => h(App),
+}).$mount("#app");

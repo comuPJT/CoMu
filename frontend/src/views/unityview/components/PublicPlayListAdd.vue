@@ -143,7 +143,7 @@
                   </div>
                   <div class="postcard-text-right">
                     <div class="postcard-line">
-                      {{ selectedMusicOnSearch.artists[0].name }}
+                      {{ selectedMusicOnSearch.artists }}
                     </div>
                     <div class="postcard-line">
                       {{ selectedMusicOnSearch.name }}
@@ -180,7 +180,7 @@
 <script>
 import axios from "axios";
 export default {
-  name: "PublicPlayList",
+  name: "PublicPlayListAdd",
 
   components: {},
 
@@ -199,19 +199,7 @@ export default {
     };
   },
 
-  mounted() {
-    for (var i = 0; i < 21; i++) {
-      this.sharePlayListMusic.push({
-        isselected: false,
-        id: i + 99,
-        cover:
-          "https://t1.daumcdn.net/thumb/R720x0.fpng/?fname=http://t1.daumcdn.net/brunch/service/user/8fXh/image/0_JTh3JET7ZCHaT_IJhG4VbhEpI.png",
-        title: "Insecure (Feat. Pink Sweat$)",
-        artist: "Bren Joy",
-        album: "Nothing Feels Better",
-      });
-    }
-  },
+  mounted() {},
 
   methods: {
     selectOnPlayList(musicId) {

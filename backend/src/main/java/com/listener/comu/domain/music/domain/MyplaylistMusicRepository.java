@@ -14,4 +14,8 @@ public interface MyplaylistMusicRepository extends JpaRepository<MyplaylistMusic
     // myplaylistId와 musicIds로 삭제
     @Transactional
     void deleteMyplaylistMusicByMyplaylistIdAndMusicIdIn(long myplaylistId, List<Long> musicIds);
+
+    // myplaylistId와 musicId로 삭제
+    @Transactional
+    void deleteMyplaylistMusicByMyplaylistIdAndMusicId(long myplaylistId, long musicId);
 }

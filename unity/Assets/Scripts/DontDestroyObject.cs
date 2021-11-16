@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DontDestroyObject : MonoBehaviour
 {
-    // Start is called before the first frame update
     void Start()
     {
         var objs = FindObjectsOfType<DontDestroyObject>();
@@ -18,7 +15,6 @@ public class DontDestroyObject : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         

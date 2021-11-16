@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.InteropServices;
 
@@ -11,7 +9,6 @@ public class PlayerPrefab : MonoBehaviour
 
     public static int characterNum = GetMyCharacterNum();
 
-    // Start is called before the first frame update
     void Start()
     {
         // 모든 캐릭터 모델 상태 비활성화
@@ -23,7 +20,6 @@ public class PlayerPrefab : MonoBehaviour
         this.transform.GetChild(characterNum).gameObject.SetActive(true);
     }
 
-    // Update is called once per frame
     void Update()
     {
 
