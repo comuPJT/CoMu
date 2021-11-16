@@ -22,7 +22,6 @@ import java.util.Map;
 public class MyPlaylistController {
 
     final private MyPlaylistService myPlaylistService;
-    final private UserController userController;
 
     @ApiOperation(value = "저장된 전체 플레이리스트 가져오기", notes = "사용자가 생성한 플레이리스트 목록 전체를 가져온다.")
     @GetMapping("/all/{userSeq}")
@@ -46,9 +45,9 @@ public class MyPlaylistController {
     }
 
     @ApiOperation(value = "플레이리스트에 음악 추가", notes = "특정 플레이리스트에 한 개 또는 여러 개의 곡을 추가한다.")
-    @PostMapping("/music")
-    public ResponseEntity addMusics(@RequestBody AddMyMusicReq addMyMusicReq){
-        myPlaylistService.addMusics(addMyMusicReq.getMyplaylistId(), addMyMusicReq.getMusicList());
+    @PostMapping("/{myplaylistId}/music")
+    public ResponseEntity addMusics(@PathVariable long myplaylistId, @RequestBody List<Music> musicList){
+        myPlaylistService.addMusics(myplaylistId, musicList);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

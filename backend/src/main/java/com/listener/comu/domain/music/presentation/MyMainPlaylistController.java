@@ -4,7 +4,7 @@ import com.listener.comu.domain.music.api.MyMainPlaylistService;
 import com.listener.comu.domain.music.domain.Music;
 import com.listener.comu.domain.music.dto.AddMyMusicReq;
 import com.listener.comu.domain.music.dto.MyMainPlaylistRemoveMusicReq;
-import com.listener.comu.domain.music.dto.SetPlayOrderDto;
+import com.listener.comu.domain.music.dto.SetPlayOrderReq;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -56,12 +56,12 @@ public class MyMainPlaylistController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // 메인 재생 목록의 순서가 변경되었을 때 순서 적용
-//    @PutMapping
-//    public ResponseEntity setPlayOrder(@RequestBody SetPlayOrderDto setPlayOrderDto){
-//        myMainPlaylistService.setPlayOrder(setPlayOrderDto.getUserSeq(), setPlayOrderDto.getMyMainPlaylistList());
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
+    @ApiOperation(value = "재생 목록 순서 변경", notes = "사용자가 메인 재생 목록 창을 닫을 때 변경된 순서로 곡을 저장한다.")
+    @PutMapping("/setPlayOrder")
+    public ResponseEntity setPlayOrder(@RequestBody SetPlayOrderReq setPlayOrderReq){
+        myMainPlaylistService.setPlayOrder(setPlayOrderReq.getUserSeq(), setPlayOrderReq.getMusicIdPlayOrderDtoList());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 
