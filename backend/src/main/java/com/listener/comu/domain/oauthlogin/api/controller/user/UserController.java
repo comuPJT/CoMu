@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
@@ -28,10 +30,16 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity modifyUserInfo(@RequestBody ComuUserInfo comuUserInfo) {
-        boolean response = userService.modifyUserInfo(comuUserInfo.getUserSeq(), comuUserInfo.getUsername(), comuUserInfo.getCharacterNum());
+        boolean response = userService.modifyUserInfo(comuUserInfo.getUserSeq(), comuUserInfo.getUsername());
         if (!response) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/character")
+    public ResponseEntity setCharacterNum(@RequestBody Map<String, Integer> request) {
+        userService.setCharacterNum(Long.valueOf(request.get("userSeq")),request.get("characterNum"));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
