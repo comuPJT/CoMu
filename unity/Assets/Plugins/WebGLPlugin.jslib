@@ -4,15 +4,6 @@ mergeInto(LibraryManager.library, {
         return localStorage.getItem("characterNum");
     },
 
-    GetInputActive: function () {
-        var value = localStorage.getItem("isUnityInputActive");
-        return value !== null;
-    },
-
-    SetInputInactive: function () {
-        localStorage.removeItem("isUnityInputActive");
-    },
-
     OpenPlaylistModal: function () {
         localStorage.setItem("showPlayList", "TRUE");
     },
