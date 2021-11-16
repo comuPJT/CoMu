@@ -177,7 +177,7 @@
               id="message"
               v-model="inputChat"
               placeholder="메시지를 입력해주세요!"
-              @keyup.enter="onSubmit"
+              @keypress.enter="onSubmit"
             />
           </div>
           <img
