@@ -1,11 +1,23 @@
 <template>
   <div>
-    <nav-bar></nav-bar>
+    <nav-bar
+      @clickNavbar="[SetUnityKeyboardInput('FALSE'), (isShowBlind = true)]"
+    ></nav-bar>
     <!-- 유니티 화면 -->
     <div id="unity">
+      <div
+        v-if="isShowBlind"
+        class="blind"
+        @click="[SetUnityKeyboardInput('TRUE'), (isShowBlind = false)]"
+      >
+        <div class="blind-msg">
+          다시 캐릭터를 움직이려면 화면을 클릭해주세요!
+        </div>
+      </div>
       <unity
         src="unity/Build/unity.json"
         unityLoader="unity/Build/UnityLoader.js"
+        ref="comu"
         :width="unityWidth"
         :height="unityHeight"
         :hideFooter="true"
@@ -50,6 +62,7 @@ export default {
       showModalTodayStory: false,
       unityWidth: 0,
       unityHeight: 0,
+      isShowBlind: false,
     };
   },
 
