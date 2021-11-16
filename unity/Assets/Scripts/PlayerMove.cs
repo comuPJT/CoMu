@@ -12,7 +12,7 @@ public class PlayerMove : MonoBehaviour
     Vector2 move = new Vector2();
     Rigidbody2D player;
 
-    public SPUM_Prefabs _prefabs;
+    public static SPUM_Prefabs _prefabs;
     public enum PlayerState
     {
         idle,
@@ -25,7 +25,6 @@ public class PlayerMove : MonoBehaviour
     void Start()
     {
         player = GetComponent<Rigidbody2D>();
-        _prefabs = transform.GetChild(PlayerPrefab.characterNum).GetComponent<SPUM_Prefabs>();
         SetRoomName("Main"); // 메인 공간에서 시작
     }
 
