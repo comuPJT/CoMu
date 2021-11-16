@@ -53,7 +53,7 @@ public class MyPlaylistController {
     }
 
     // 플레이리스트 삭제
-    @PutMapping("/{myplaylistId}")
+    @PutMapping("/delete/{myplaylistId}")
     public ResponseEntity deleteList(@PathVariable long myplaylistId, @RequestBody MyPlaylistRequest myPlaylistRequest){
         myPlaylistService.deleteList(myPlaylistRequest.getUserSeq(), myplaylistId);
         return new ResponseEntity<>(HttpStatus.OK);

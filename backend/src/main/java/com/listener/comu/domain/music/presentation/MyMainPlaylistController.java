@@ -4,6 +4,7 @@ import com.listener.comu.domain.music.api.MyMainPlaylistService;
 import com.listener.comu.domain.music.domain.Music;
 import com.listener.comu.domain.music.dto.AddMyMusicReq;
 import com.listener.comu.domain.music.dto.MyMainPlaylistRemoveMusicReq;
+import com.listener.comu.domain.music.dto.SetPlayOrderDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,14 @@ public class MyMainPlaylistController {
         myMainPlaylistService.removeMusic(request.getUserSeq(), request.getMusicIds());
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    // 메인 재생 목록의 순서가 변경되었을 때 순서 적용
+//    @PutMapping
+//    public ResponseEntity setPlayOrder(@RequestBody SetPlayOrderDto setPlayOrderDto){
+//        myMainPlaylistService.setPlayOrder(setPlayOrderDto.getUserSeq(), setPlayOrderDto.getMyMainPlaylistList());
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
+
 
 
 }
