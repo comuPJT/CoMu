@@ -106,7 +106,7 @@
             class="user-list-unfold"
             v-show="isOnlineUnfold"
             v-for="n in 5"
-            :key="n"
+            :key="n.id"
           >
             <div class="user-details">
               <img
@@ -135,7 +135,7 @@
             class="user-list-unfold"
             v-show="isGuestUnfold"
             v-for="n in 3"
-            :key="n"
+            :key="n.id"
           >
             <div class="user-details">
               <img src="@/assets/images/guest_icon.svg" />
@@ -148,56 +148,43 @@
 
       <!--채팅-->
       <div v-show="selectedMenu == 'chat'">
-        <div class="chat-box">
+        <div id="container" class="chat-box" v-chat-scroll>
           <!--채팅 UI테스트-->
-          <receive-chat
-            :message="'그래요'"
-            :nickname="'가장긴닉네임'"
-            :time="'11:00AM'"
-          ></receive-chat>
-          <send-chat
-            :message="'채팅채팅'"
-            :nickname="'dnguszz'"
-            :time="'11:00AM'"
-          ></send-chat>
-          <send-chat
-            :message="'반갑습니다안녕하세요오랜만이에요긴내용채우기123 하나둘셋반갑습니다안녕하세요오랜만이에요긴내용채우기123 하나둘셋반갑습니다안녕하세요오랜만이에요긴내용채우기123 하나둘셋'"
-            :nickname="'dnguszz'"
-            :time="'11:00AM'"
-          ></send-chat>
-          <receive-chat
-            :message="'그래요'"
-            :nickname="'가장긴닉네임'"
-            :time="'11:00AM'"
-          ></receive-chat>
-          <receive-chat
-            :message="'그래요'"
-            :nickname="'가장긴닉네임'"
-            :time="'11:00AM'"
-          ></receive-chat>
-          <receive-chat
-            :message="'그래요'"
-            :nickname="'가장긴닉네임'"
-            :time="'11:00AM'"
-          ></receive-chat>
-          <receive-chat
-            :message="'그래요'"
-            :nickname="'가장긴닉네임'"
-            :time="'11:00AM'"
-          ></receive-chat>
-          <receive-chat
-            :message="'그래요'"
-            :nickname="'가장긴닉네임'"
-            :time="'11:00AM'"
-          ></receive-chat>
+          <div class="chat-item" v-for="chat in chats" :key="chat.key">
+            <div>
+              <send-chat
+                v-if="chat.user == nicknameChat"
+                :message="chat.message"
+                :nickname="chat.user"
+                :time="chat.sendDate"
+                :img="chat.img"
+              ></send-chat>
+              <receive-chat
+                v-if="chat.user != nicknameChat"
+                :message="chat.message"
+                :nickname="chat.user"
+                :time="chat.sendDate"
+                :img="chat.img"
+              ></receive-chat>
+            </div>
+          </div>
           <!--채팅 UI테스트 끝-->
         </div>
 
         <div class="message-send-wrapper">
           <div class="input_box inputbox-none-title" style="width: 14vw">
-            <input placeholder="메시지를 입력해주세요!" />
+            <input
+              id="message"
+              v-model="inputChat"
+              placeholder="메시지를 입력해주세요!"
+              @keyup.enter="onSubmit"
+            />
           </div>
-          <img src="@/assets/images/message_send_icon.svg" />
+          <img
+            type="submit"
+            src="@/assets/images/message_send_icon.svg"
+            @click="onSubmit"
+          />
         </div>
       </div>
       <!--채팅끝-->
@@ -213,6 +200,7 @@
 import MarqueeText from "vue-marquee-text-component";
 import SendChat from "./components/SendChat.vue";
 import ReceiveChat from "./components/ReceiveChat.vue";
+import firebase from "firebase";
 
 export default {
   name: "NavBar",
@@ -233,11 +221,37 @@ export default {
       isArtistOverflow: false, //아티스트 이름이 상위 div보다 클때 true
       isOnlineUnfold: true, //온라인 유저 목록 펼쳐져있는지
       isGuestUnfold: true, //비회원 목록 펼쳐져있는지
+      //채팅관련
+      inputChat: "",
+      nicknameChat: "",
+      roomid: this.$route.params.roomid,
+      data: {type: "", nickname: "", message: ""},
+      chats: [],
+      errors: [],
+      offStatus: false,
     };
   },
+  created() {
+    this.nicknameChat = localStorage.getItem("user-nickname");
+    firebase
+      .database()
+      .ref("chatrooms/" + "-MoYVNUI7BlBdmvplUXI" + "/chats")
+      .on("value", (snapshot) => {
+        this.chats = [];
+        snapshot.forEach((doc) => {
+          let item = doc.val();
+          item.key = doc.key;
+          this.chats.push(item);
+        });
+      });
+  },
+
   mounted() {
     this.musicOverflowValid();
     this.artistOverflowValid();
+  },
+  updated() {
+    this.scrollToBottom();
   },
   methods: {
     //다른 메뉴로 변경할때 호출되는 메소드
@@ -267,6 +281,29 @@ export default {
       } else {
         this.isArtistOverflow = true;
       }
+    },
+
+    //채팅 보내기
+    onSubmit(evt) {
+      evt.preventDefault();
+      let newData = firebase
+        .database()
+        .ref("chatrooms/" + "-MoYVNUI7BlBdmvplUXI" + "/chats")
+        .push();
+      newData.set({
+        type: "newmsg",
+        user: localStorage.getItem("user-nickname"),
+        message: this.inputChat,
+        img: localStorage.getItem("characterNum"),
+        sendDate: this.$moment().format("MM-DD HH:MM:ss"),
+      });
+      this.inputChat = "";
+    },
+
+    //항상 채팅 맨 아래에 오도록 스크롤 조절
+    scrollToBottom() {
+      const container = this.$el.querySelector("#container");
+      container.scrollTop = container.scrollHeight;
     },
   },
   watch: {

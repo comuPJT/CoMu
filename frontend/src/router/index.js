@@ -6,6 +6,7 @@ import UnityView from "@/views/unityview/UnityView.vue"
 import MyPage from "@/views/mypage/MyPage.vue"
 
 import OauthRedirect from '@/components/oauth/Redirect'
+import RedirectRouter from '@/components/oauth/RedirectRouter'
 
 Vue.use(VueRouter);
 
@@ -29,6 +30,11 @@ const routes = [
     path: '/oauth/redirect',
     name: 'OauthRedrect',
     component: OauthRedirect
+  },
+  {
+    path: '/redirectrouter',
+    name: 'RedrectRouter',
+    component: RedirectRouter
   },
 
 ];

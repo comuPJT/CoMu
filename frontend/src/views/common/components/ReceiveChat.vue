@@ -2,16 +2,13 @@
   <div class="chat-wrapper">
     <div class="profile-wrapper">
       <div class="profile-wrapper-box">
-        <div class="profile-nickname">{{ nickname }}
-        </div>
-        <img
-          src="https://file.mk.co.kr/meet/neds/2015/09/image_readtop_2015_891935_14423221542127136.jpg"
-        />
+        <div class="profile-nickname">{{ nickname }}</div>
+        <img :src="require(`@/assets/images/bgr_character0${img}.png`)" />
       </div>
     </div>
     <div class="message-wrapper message-receive">
       {{ message }}
-      <div class="time-wrapper-receive">{{time}}</div>
+      <div class="time-wrapper-receive">{{ time }}</div>
     </div>
   </div>
 </template>
@@ -22,7 +19,7 @@ export default {
 
   components: {},
 
-  props: ["message", "nickname", "time"],
+  props: ["message", "nickname", "time", "img"],
   data() {
     return {};
   },

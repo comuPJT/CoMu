@@ -23,13 +23,17 @@
       <div class="login_box1">
         <img class="lp" src="@/assets/images/mainpage_lp.gif" />
         <div>
-          <div
-            class="login_button kakao"
-            @click="[socialLoginUrl('kakao'), nextStep()]"
+          <a
+            href="http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/oauth/redirect"
           >
-            <img src="@/assets/images/kakao.svg" />
-            Kakao로 로그인
-          </div>
+            <div
+              class="login_button kakao"
+              @click="[socialLoginUrl('kakao'), nextStep()]"
+            >
+              <img src="@/assets/images/kakao.svg" />
+              Kakao로 로그인
+            </div>
+          </a>
           <a
             href="http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/oauth/redirect"
           >
@@ -38,10 +42,14 @@
               Google로 로그인
             </div>
           </a>
-          <div class="login_button naver" @click="[socialLoginUrl('naver')]">
-            <img src="@/assets/images/naver.svg" />
-            Naver로 로그인
-          </div>
+          <a
+            href="http://localhost:8080/oauth2/authorization/naver?redirect_uri=http://localhost:3000/oauth/redirect"
+          >
+            <div class="login_button naver" @click="[socialLoginUrl('naver')]">
+              <img src="@/assets/images/naver.svg" />
+              Naver로 로그인
+            </div>
+          </a>
           <div
             class="login_button guest"
             @click="[socialLoginUrl('guest'), nextStep()]"
@@ -73,7 +81,7 @@
               :pagination-enabled="false"
             >
               <slide v-for="t in 11" :key="t.num" class="join_carousel_slide">
-                <img :src="require(`@/assets/images/character0${t-1}.png`)" />
+                <img :src="require(`@/assets/images/character0${t - 1}.png`)" />
               </slide>
             </carousel>
           </div>
@@ -155,21 +163,22 @@ export default {
         alert("2~8글자 사이의 닉네임을 입력해주세요!");
       } else {
         const data = [
-          parseInt(this.$store.getters.user.userId),
+          parseInt(this.$store.getters.user.userSeq),
           this.inputNickname,
           this.$refs["my-carousel"].currentPage,
         ];
         //입력한 정보로 회원가입 요청을 보냅니다.
         userApi.join(
           data,
-          (res) => {//성공하면 회원정보 저장시키고 유니티화면으로 이동
+          (res) => {
+            //성공하면 회원정보 저장시키고 유니티화면으로 이동
             console.log(res);
-            this.$router.push({name: 'UnityView'})
+            this.$router.push({name: "UnityView"});
           },
-          (err) => {//실패(닉네임 중복)하면 중복된닉네임이라고 메시지 띄워줌
+          (err) => {
+            //실패(닉네임 중복)하면 중복된닉네임이라고 메시지 띄워줌
             console.log(err);
-            alert("중복된 닉네임입니다")
-            this.$router.push({name: 'UnityView'}) //지울예정
+            alert("중복된 닉네임입니다");
           }
         );
       }
