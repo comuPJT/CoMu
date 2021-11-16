@@ -5,6 +5,7 @@ import com.listener.comu.domain.music.domain.Myplaylist;
 import com.listener.comu.domain.music.dto.AddMyMusicReq;
 import com.listener.comu.domain.music.dto.MyPlaylistRequest;
 import com.listener.comu.domain.music.api.MyPlaylistService;
+import com.listener.comu.domain.oauthlogin.api.controller.user.UserController;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.Map;
 public class MyPlaylistController {
 
     final private MyPlaylistService myPlaylistService;
+    final private UserController userController;
 
     @ApiOperation(value = "저장된 전체 플레이리스트 가져오기", notes = "사용자가 생성한 플레이리스트 목록 전체를 가져온다.")
     @GetMapping("/all/{userSeq}")
@@ -58,10 +60,9 @@ public class MyPlaylistController {
     }
 
     @ApiOperation(value = "플레이리스트 삭제", notes = "특정 플레이리스트를 삭제한다.")
-    @PutMapping("/{myplaylistId}")
-    public ResponseEntity deleteList(@PathVariable long myplaylistId){
-
-//        myPlaylistService.deleteList(userSeq, myplaylistId); /// 중간 과정
+    @PutMapping("/{myplaylistId}/{userSeq}")
+    public ResponseEntity deleteList(@PathVariable long myplaylistId, @PathVariable long userSeq){
+        myPlaylistService.deleteList(userSeq, myplaylistId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

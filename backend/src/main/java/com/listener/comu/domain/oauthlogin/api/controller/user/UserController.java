@@ -26,14 +26,6 @@ public class UserController {
         return ApiResponse.getUserSuccess("user", user, "userSeq", user.getUserSeq());
     }
 
-    // UserSeq 가져오는 부분 테스트용
-    public User getUserForIdentification(){
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        return userService.getUser(principal.getUsername());
-    }
-    ////////////////////
-
     @PutMapping
     public ResponseEntity modifyUserInfo(@RequestBody ComuUserInfo comuUserInfo) {
         boolean response = userService.modifyUserInfo(comuUserInfo.getUserSeq(), comuUserInfo.getUsername(), comuUserInfo.getCharacterNum());
