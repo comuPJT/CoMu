@@ -22,9 +22,17 @@ public class UserController {
         org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         User user = userService.getUser(principal.getUsername());
-        
+
         return ApiResponse.getUserSuccess("user", user, "userSeq", user.getUserSeq());
     }
+
+    // UserSeq 가져오는 부분 테스트용
+    public User getUserForIdentification(){
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return userService.getUser(principal.getUsername());
+    }
+    ////////////////////
 
     @PutMapping
     public ResponseEntity modifyUserInfo(@RequestBody ComuUserInfo comuUserInfo) {
