@@ -23,13 +23,17 @@
       <div class="login_box1">
         <img class="lp" src="@/assets/images/mainpage_lp.gif" />
         <div>
-          <div
-            class="login_button kakao"
-            @click="[socialLoginUrl('kakao'), nextStep()]"
+          <a
+            href="http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/oauth/redirect"
           >
-            <img src="@/assets/images/kakao.svg" />
-            Kakao로 로그인
-          </div>
+            <div
+              class="login_button kakao"
+              @click="[socialLoginUrl('kakao'), nextStep()]"
+            >
+              <img src="@/assets/images/kakao.svg" />
+              Kakao로 로그인
+            </div>
+          </a>
           <a
             href="http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/oauth/redirect"
           >
@@ -38,10 +42,14 @@
               Google로 로그인
             </div>
           </a>
-          <div class="login_button naver" @click="[socialLoginUrl('naver')]">
-            <img src="@/assets/images/naver.svg" />
-            Naver로 로그인
-          </div>
+          <a
+            href="http://localhost:8080/oauth2/authorization/naver?redirect_uri=http://localhost:3000/oauth/redirect"
+          >
+            <div class="login_button naver" @click="[socialLoginUrl('naver')]">
+              <img src="@/assets/images/naver.svg" />
+              Naver로 로그인
+            </div>
+          </a>
           <div
             class="login_button guest"
             @click="[socialLoginUrl('guest'), nextStep()]"
