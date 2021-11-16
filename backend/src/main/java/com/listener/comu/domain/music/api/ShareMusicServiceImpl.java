@@ -53,7 +53,9 @@ class ShareMusicServiceImpl implements ShareMusicService {
                                     .thumbnail(musicPlayReq.getThumbnail())
                                     .name(musicPlayReq.getName())
                                     .singer(musicPlayReq.getSinger())
-                                    .source(musicPlayReq.getSource()).build();
+                                    .source(musicPlayReq.getSource())
+                                    .album(musicPlayReq.getAlbum())
+                                    .build();
                 musicRepository.save(music);
                 // 음악 다운로드 -> s3 업로딩
                 String cmd = "youtube-dl -f 160+140 -o src/main/resources/static/" + music.getId() + ".%(ext)s " + music.getSource();

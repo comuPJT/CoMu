@@ -4,7 +4,6 @@ import com.listener.comu.domain.music.api.ShareMusicService;
 import com.listener.comu.domain.music.dto.BaseResponseBody;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicReq;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicRes;
-import com.listener.comu.domain.music.dto.SearchMusicRes;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
