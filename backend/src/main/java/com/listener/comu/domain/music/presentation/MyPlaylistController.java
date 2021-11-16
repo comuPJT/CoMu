@@ -45,9 +45,9 @@ public class MyPlaylistController {
     }
 
     @ApiOperation(value = "플레이리스트에 음악 추가", notes = "특정 플레이리스트에 한 개 또는 여러 개의 곡을 추가한다.")
-    @PostMapping("/music")
-    public ResponseEntity addMusics(@RequestBody AddMyMusicReq addMyMusicReq){
-        myPlaylistService.addMusics(addMyMusicReq.getMyplaylistId(), addMyMusicReq.getMusicList());
+    @PostMapping("/{myplaylistId}/music")
+    public ResponseEntity addMusics(@PathVariable long myplaylistId, @RequestBody List<Music> musicList){
+        myPlaylistService.addMusics(myplaylistId, musicList);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
