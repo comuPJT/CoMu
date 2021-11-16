@@ -60,7 +60,7 @@ export default {
     window.addEventListener("resize", this.handleResize);
 
     // 유니티 키보드 입력 활성화
-    localStorage.setItem("isUnityInputActive", "TRUE");
+    this.SetUnityKeyboardInput("TRUE");
 
     // 모달창 모두 닫힌 상태로 시작
     localStorage.setItem("showPlayList", "FALSE");
@@ -71,7 +71,21 @@ export default {
     setInterval(this.fetchShowModal, 100);
   },
 
+  beforeDestroy() {
+    // 유니티 키보드 입력 비활성화
+    this.SetUnityKeyboardInput("FALSE");
+  },
+
   methods: {
+    // 유니티 키보드 입력 활성화 여부 변경
+    SetUnityKeyboardInput(value) {
+      this.$refs.comu.message(
+        "textbox-playlist",
+        "SetUnityKeyboardInput",
+        value
+      );
+    },
+
     handleResize() {
       this.unityWidth = document.getElementById("unity").offsetWidth;
       this.unityHeight = document.getElementById("unity").offsetHeight;
@@ -88,19 +102,19 @@ export default {
     closePlayListModal() {
       this.showModalPlayList = false;
       localStorage.setItem("showPlayList", "FALSE");
-      localStorage.setItem("isUnityInputActive", "TRUE");
+      this.SetUnityKeyboardInput("TRUE");
     },
     // 곡 신청 페이지 닫기
     closePlayListAddModal() {
       this.showModalPlayListAdd = false;
       localStorage.setItem("showPlayListAdd", "FALSE");
-      localStorage.setItem("isUnityInputActive", "TRUE");
+      this.SetUnityKeyboardInput("TRUE");
     },
     // 오늘의 사연 페이지 닫기
     closeTodayStoryModal() {
       this.showModalTodayStory = false;
       localStorage.setItem("showTodayStory", "FALSE");
-      localStorage.setItem("isUnityInputActive", "TRUE");
+      this.SetUnityKeyboardInput("TRUE");
     },
   },
 };
