@@ -5,7 +5,7 @@ FROM openjdk:8-jdk-alpine as builder
 
 COPY . .
 # RUN chmod +x ./gradlew
-RUN ./gradlew clean build
+RUN ./gradlew clean build -x test
 RUN mkdir -p build/dependency
 WORKDIR build/dependency
 RUN jar -xf ../libs/Comu-0.0.1-SNAPSHOT.jar

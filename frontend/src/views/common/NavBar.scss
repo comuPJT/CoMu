@@ -165,8 +165,8 @@
 }
 
 .chat-box {
-  overflow-y: scroll;
   height: calc(100vh - (5.2vw + 8vw + 5.2vw));
+  overflow-y: scroll;
 }
 
 .message-send-wrapper {

@@ -3,8 +3,10 @@ package com.listener.comu.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.SecurityReference;
@@ -22,6 +24,7 @@ import static com.google.common.collect.Lists.newArrayList;
 /**
  * API 문서 관련 swagger2 설정 정의.
  */
+// http://localhost:8080/swagger-ui/
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
@@ -29,6 +32,7 @@ public class SwaggerConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2).useDefaultResponseMessages(false)
+                .apiInfo(this.swaggerInfo())
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.ant("/api/**"))
@@ -64,6 +68,12 @@ public class SwaggerConfig {
         return UiConfigurationBuilder.builder()
 //                .supportedSubmitMethods(newArrayList("get").toArray(new String[0])) // try it 기능 활성화 범위
 //                .operationsSorter(METHOD)
+                .build();
+    }
+
+    private ApiInfo swaggerInfo() {
+        return new ApiInfoBuilder().title("CoMu API Documentation")
+                .description("CoMu API Reference for Developers")
                 .build();
     }
 }
