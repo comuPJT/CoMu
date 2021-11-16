@@ -4,7 +4,6 @@
     <!-- 유니티 화면 -->
     <div id="unity">
       <unity
-        v-if="false"
         src="unity/Build/unity.json"
         unityLoader="unity/Build/UnityLoader.js"
         :width="unityWidth"
