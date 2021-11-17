@@ -23,7 +23,7 @@
     </div>
     <div class="user-custom-button">
       <div class="smallbuttonbrown">
-        <div class="buttoncontent" @click="uadateInfo()">저장</div>
+        <div class="buttoncontent" @click="updateInfo()">저장</div>
       </div>
     </div>
   </div>
@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setUserCharacter"]),
-    uadateInfo() {
+    updateInfo() {
       const data = [
         parseInt(this.$store.getters.user.userSeq),
         this.$store.getters.user.user.username,

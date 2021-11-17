@@ -1,6 +1,5 @@
 import http from "@/util/http-common.js";
 
-
 const login = (callback, errorCallback) => {
   http
     .get("/v1/users")
@@ -25,10 +24,10 @@ const logout = (callback, errorCallback) => {
     });
 };
 
-const withdrawal = (data, callback, errorCallback) => { //회원탈퇴
+const withdrawal = (data, callback, errorCallback) => {
+  //회원탈퇴
   http
-    .delete("/user", {
-    })
+    .delete("/user", {})
     .then((res) => {
       callback(res);
     })
@@ -37,11 +36,11 @@ const withdrawal = (data, callback, errorCallback) => { //회원탈퇴
     });
 };
 
-const updateNicmname = (data, callback, errorCallback) => {
+const updateNickname = (data, callback, errorCallback) => {
   http
     .put("/v1/users", {
       userSeq: data[0],
-      username: data[1]
+      username: data[1],
     })
     .then((res) => {
       callback(res);
@@ -55,7 +54,7 @@ const updateCharacter = (data, callback, errorCallback) => {
   http
     .put("/v1/users/character", {
       userSeq: data[0],
-      characterNum: data[2]
+      characterNum: data[2],
     })
     .then((res) => {
       callback(res);
@@ -65,11 +64,10 @@ const updateCharacter = (data, callback, errorCallback) => {
     });
 };
 
-
 export default {
   login,
   logout,
   withdrawal,
-  updateNicmname,
+  updateNickname,
   updateCharacter,
 };

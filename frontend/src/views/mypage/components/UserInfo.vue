@@ -32,7 +32,7 @@
     </div>
     <div class="user-info-button">
       <div class="smallbuttonbrown">
-        <div class="buttoncontent" @click="uadateInfo()">닉네임 변경</div>
+        <div class="buttoncontent" @click="updateInfo()">닉네임 변경</div>
       </div>
       <a>로그아웃</a>
     </div>
@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setUserName"]),
-    uadateInfo() {
+    updateInfo() {
       if (this.inputNickName.length < 2 || this.inputNickName.length > 8) {
         alert("2~8글자 사이의 닉네임을 입력해주세요!");
       } else {

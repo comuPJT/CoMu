@@ -5,8 +5,6 @@
 <script>
 export default {
   mounted() {
-    console.log(this.$store.getters.user.user.username);
-    console.log(this.$store.getters.user);
     if (this.$store.getters.user.user.firstVisitYn == "Y") {
       //처음방문이면 닉네임, 캐릭터선택으로
       this.$router.replace({name: "Main", params: {order: 3}});
