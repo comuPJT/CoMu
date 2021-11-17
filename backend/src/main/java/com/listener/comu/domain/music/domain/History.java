@@ -44,4 +44,13 @@ public class History {
 
     @Column(name = "likes")
     private Long likes;
+
+    public History() { }
+    public History(Long roomId, String title, String contents, LocalDateTime timestamp, Long likes) {
+        this.roomId = roomId;
+        this.title = title;
+        this.contents = contents;
+        this.timestamp = timestamp;
+        this.likes = likes;
+    }
 }
