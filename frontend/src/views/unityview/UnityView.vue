@@ -1,11 +1,23 @@
 <template>
   <div>
-    <nav-bar></nav-bar>
+    <nav-bar
+      @clickNavbar="[SetUnityKeyboardInput('FALSE'), (isShowBlind = true)]"
+    ></nav-bar>
     <!-- 유니티 화면 -->
     <div id="unity">
+      <div
+        v-if="isShowBlind"
+        class="blind"
+        @click="[SetUnityKeyboardInput('TRUE'), (isShowBlind = false)]"
+      >
+        <div class="blind-msg">
+          다시 캐릭터를 움직이려면 화면을 클릭해주세요!
+        </div>
+      </div>
       <unity
         src="unity/Build/unity.json"
         unityLoader="unity/Build/UnityLoader.js"
+        ref="comu"
         :width="unityWidth"
         :height="unityHeight"
         :hideFooter="true"
@@ -23,6 +35,8 @@
       <normal-story v-if="showModalTodayStory" @close="closeTodayStoryModal">
       </normal-story>
     </div>
+    <!-- 음악 재생 -->
+    <video v-show="false" id="video"></video>
   </div>
 </template>
 
@@ -31,6 +45,7 @@ import Unity from "vue-unity-webgl";
 import PublicPlayList from "./components/PublicPlayList.vue";
 import PublicPlayListAdd from "./components/PublicPlayListAdd.vue";
 import NormalStory from "./components/NormalStory.vue";
+import Hls from "hls.js";
 
 export default {
   name: "UnityView",
@@ -50,32 +65,68 @@ export default {
       showModalTodayStory: false,
       unityWidth: 0,
       unityHeight: 0,
+      isShowBlind: false,
     };
   },
 
   mounted() {
-    // 창 크기에 맞춰서 유니티 화면 크기 변경
-    this.unityWidth = document.getElementById("unity").offsetWidth;
-    this.unityHeight = document.getElementById("unity").offsetHeight;
+    // 창 크기가 바뀔 때마다 유니티 화면 크기 변경
+    this.handleResize();
     window.addEventListener("resize", this.handleResize);
 
     // 유니티 키보드 입력 활성화
-    localStorage.setItem("isUnityInputActive", "TRUE");
+    this.SetUnityKeyboardInput("TRUE");
 
     // 모달창 모두 닫힌 상태로 시작
     localStorage.setItem("showPlayList", "FALSE");
     localStorage.setItem("showPlayListAdd", "FALSE");
     localStorage.setItem("showTodayStory", "FALSE");
 
-    // localStorage 값 변경 여부 확인할 인터벌함수
+    // localStorage 값 변경 확인할 인터벌 함수 실행
     setInterval(this.fetchShowModal, 100);
+
+    var video = document.getElementById("video");
+    var videoSrc = "http://k5a304.p.ssafy.io:8234/hls/1/1.m3u8";
+
+    if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      video.src = videoSrc;
+    } else if (Hls.isSupported()) {
+      var hls = new Hls();
+      hls.loadSource(videoSrc);
+      hls.attachMedia(video);
+    }
+  },
+
+  beforeDestroy() {
+    // 유니티 키보드 입력 비활성화
+    this.SetUnityKeyboardInput("FALSE");
   },
 
   methods: {
+    // 유니티 키보드 입력 활성화 여부 변경
+    SetUnityKeyboardInput(value) {
+      this.$refs.comu.message(
+        "textbox-playlist",
+        "SetUnityKeyboardInput",
+        value
+      );
+    },
+    // 유니티 화면에 표시되는 닉네임 변경
+    setUserNickname(nickname) {
+      this.$refs.comu.message("Nickname", "SetUserNickname", nickname);
+      localStorage.setItem("user-nickname", nickname);
+    },
+    // 유니티 화면에 보여지는 캐릭터 번호 변경
+    setCharacterNum(num) {
+      this.$refs.comu.message("PlayerObject", "SetCharacterNum", num);
+      localStorage.setItem("characterNum", num);
+    },
+    // 창 크기에 맞춰서 유니티 화면 크기 변경
     handleResize() {
       this.unityWidth = document.getElementById("unity").offsetWidth;
       this.unityHeight = document.getElementById("unity").offsetHeight;
     },
+    // localStorage의 모달 관련 값 변경 여부 확인
     fetchShowModal() {
       this.showModalPlayList =
         localStorage.getItem("showPlayList") == "TRUE" ? true : false;
@@ -88,19 +139,19 @@ export default {
     closePlayListModal() {
       this.showModalPlayList = false;
       localStorage.setItem("showPlayList", "FALSE");
-      localStorage.setItem("isUnityInputActive", "TRUE");
+      this.SetUnityKeyboardInput("TRUE");
     },
     // 곡 신청 페이지 닫기
     closePlayListAddModal() {
       this.showModalPlayListAdd = false;
       localStorage.setItem("showPlayListAdd", "FALSE");
-      localStorage.setItem("isUnityInputActive", "TRUE");
+      this.SetUnityKeyboardInput("TRUE");
     },
     // 오늘의 사연 페이지 닫기
     closeTodayStoryModal() {
       this.showModalTodayStory = false;
       localStorage.setItem("showTodayStory", "FALSE");
-      localStorage.setItem("isUnityInputActive", "TRUE");
+      this.SetUnityKeyboardInput("TRUE");
     },
   },
 };

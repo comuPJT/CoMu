@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor

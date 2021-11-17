@@ -86,7 +86,8 @@ public class User {
         this.userId = userId;
         this.username = username;
         this.password = "NO_PASS";
-        this.email = email != null ? email : "NO_EMAIL";
+//        this.email = email != null ? email : "NO_EMAIL";
+        this.email = email;
         this.emailVerifiedYn = emailVerifiedYn;
         this.providerType = providerType;
         this.roleType = roleType;

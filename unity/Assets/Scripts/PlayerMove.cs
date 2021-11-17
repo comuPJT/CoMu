@@ -1,13 +1,18 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Runtime.InteropServices;
 
 public class PlayerMove : MonoBehaviour
 {
+    // 현재 방 이름 저장
+    [DllImport("__Internal")]
+    private static extern void SetRoomName(string name);
+
     public float moveSpeed = 8.0f;
     Vector2 move = new Vector2();
     Rigidbody2D player;
 
-    public SPUM_Prefabs _prefabs;
+    public static SPUM_Prefabs _prefabs;
     public enum PlayerState
     {
         idle,
@@ -20,7 +25,7 @@ public class PlayerMove : MonoBehaviour
     void Start()
     {
         player = GetComponent<Rigidbody2D>();
-        _prefabs = transform.GetChild(PlayerPrefab.characterNum).GetComponent<SPUM_Prefabs>();
+        SetRoomName("Main"); // 메인 공간에서 시작
     }
 
     void Update()
@@ -77,6 +82,9 @@ public class PlayerMove : MonoBehaviour
             // 메인 씬으로 돌아오기
             CameraFollow.isMain = true;
             SceneManager.LoadScene("Main", LoadSceneMode.Single);
+
+            // 메인으로 방 이름 변경
+            SetRoomName("Main");
         }
         else if (move.y > 0 && (collision.gameObject.CompareTag("MyRoom")
             || collision.gameObject.CompareTag("Theme1")
@@ -91,6 +99,9 @@ public class PlayerMove : MonoBehaviour
 
             // 문에 해당하는 씬으로 이동
             SceneManager.LoadScene(collision.gameObject.tag, LoadSceneMode.Single);
+
+            // 이동하는 곳으로 방 이름 변경
+            SetRoomName(collision.gameObject.tag);
         }
     }
 }

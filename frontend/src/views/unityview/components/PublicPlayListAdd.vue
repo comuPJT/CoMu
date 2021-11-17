@@ -84,7 +84,7 @@
             </div>
             <div class="playlist-button-wrapper music-applicate">
               <div class="smallbuttonbrown">
-                <div class="buttoncontent">신청</div>
+                <div class="buttoncontent" @click="addMusic()">신청</div>
               </div>
               <div class="smallbuttonwhite" @click="moveToPostCard">
                 <div class="buttoncontent">사연과 함께 신청</div>
@@ -148,7 +148,9 @@
                     <div class="postcard-line">
                       {{ selectedMusicOnSearch.name }}
                     </div>
-                    <div class="postcard-line">usernickname</div>
+                    <div class="postcard-line">
+                      {{ $store.getters.user.user.username }}
+                    </div>
                     <div class="postcard-line">&nbsp;</div>
                     <div class="postcard-line">&nbsp;</div>
                   </div>
@@ -179,6 +181,9 @@
 
 <script>
 import axios from "axios";
+import shareApi from "@/api/share";
+import youtubeApi from "@/api/youtube";
+
 export default {
   name: "PublicPlayListAdd",
 
@@ -210,7 +215,7 @@ export default {
     async searchMusic(keyword) {
       //검색어로 음악을 검색합니다.
       if (keyword.length < 1) {
-        alert("1글자 이상의 검색어를 입력해주세요!");
+        this.$alert("1글자 이상의 검색어를 입력해주세요!");
       } else {
         const headers = {
           headers: {
@@ -275,9 +280,46 @@ export default {
     moveToPostCard() {
       Object.keys(this.selectedMusicOnSearch).length;
       if (Object.keys(this.selectedMusicOnSearch).length === 0) {
-        alert("곡을 선택해주세요.");
+        this.$alert("곡을 선택해주세요.");
       } else {
         this.shareMusicView = "postcard";
+      }
+    },
+
+    async addMusic() {
+      if (Object.keys(this.selectedMusicOnSearch).length === 0) {
+       this.$alert("곡을 선택해주세요.");
+      } else {
+        var youtubesrc = "";
+        youtubesrc += await youtubeApi.getYouTubeUrl(
+          this.selectedMusicOnSearch.artists,
+          this.selectedMusicOnSearch.name
+        );
+        const data = [
+          {
+            album: this.selectedMusicOnSearch.album.name,
+            contents: this.postcardContent,
+            name: this.selectedMusicOnSearch.name,
+            singer: this.selectedMusicOnSearch.artists,
+            source: youtubesrc,
+            spotifyId: this.selectedMusicOnSearch.id,
+            thumbnail: this.selectedMusicOnSearch.album.images[2].url,
+            title: this.postcardTitle,
+            userId: localStorage.getItem("userSeq"),
+          },
+        ];
+        console.log(data);
+        shareApi.addMusicPublicPlayList(
+          0, //몇번 플레이리스트인지,,, ex) 0=메인, 1=1번테마, 2=2번테마...
+          data,
+          (res) => {
+            this.$alert("곡을 선택해주세요.");
+            console.log(res);
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
       }
     },
   },

@@ -151,6 +151,7 @@
 
 <script>
 import axios from "axios";
+import youtubeAPI from "@/api/youtube";
 import myPlayListApi from "@/api/myPlayList";
 export default {
   name: "UserPersonalPlayList",
@@ -176,7 +177,9 @@ export default {
   },
 
   mounted() {
+    const data = "흐으음";
     myPlayListApi.getPersonalPlayList(
+      data,
       (res) => {
         console.log(res.data);
         this.personalPlayList = res.data;
@@ -191,7 +194,7 @@ export default {
     async searchMusic(keyword) {
       //검색어로 음악을 검색합니다.
       if (keyword.length < 1) {
-        alert("1글자 이상의 검색어를 입력해주세요!");
+        this.$alert("1글자 이상의 검색어를 입력해주세요!");
       } else {
         const headers = {
           headers: {
@@ -240,21 +243,25 @@ export default {
       }
     },
 
-    addToPersonal(titleResult) {
+    async addToPersonal(titleResult) {
+      var youtubesrc = "";
+      youtubesrc += await youtubeAPI.getYouTubeUrl(
+        titleResult.artists,
+        titleResult.name
+      );
       const data = {
         musicList: [
           {
             spotifyId: titleResult.id,
             name: titleResult.name,
             singer: titleResult.artists,
-            source: "source",
+            source: youtubesrc,
             album: titleResult.album.name,
             thumbnail: titleResult.album.images[2].url,
           },
         ],
-        userSeq: localStorage.getItem("user-seq"),
+        userSeq: localStorage.getItem("userSeq"),
       };
-
       myPlayListApi.addPersonalPlayList(
         data,
         (res) => {
@@ -262,12 +269,12 @@ export default {
             spotifyId: titleResult.id,
             name: titleResult.name,
             singer: titleResult.artists,
-            source: "source",
+            source: youtubesrc,
             album: titleResult.album.name,
             thumbnail: titleResult.album.images[2].url,
           });
           console.log(res);
-          alert("곡이 추가되었습니다.");
+          this.$alert("곡이 추가되었습니다.");
         },
         (err) => {
           console.log(err);
@@ -278,7 +285,7 @@ export default {
     deletePersonal(id) {
       const data = {
         musicIds: [id],
-        userSeq: localStorage.getItem("user-seq"),
+        userSeq: localStorage.getItem("userSeq"),
       };
       myPlayListApi.deletePersonal(
         data,
@@ -292,7 +299,7 @@ export default {
           }
           this.$delete(this.personalPlayList, index);
           console.log(res);
-          alert("곡이 삭제되었습니다.");
+          this.$alert("곡이 삭제되었습니다.");
         },
         (err) => {
           console.log(err);

@@ -1,16 +1,15 @@
 mergeInto(LibraryManager.library, {
 
+    GetUserNickname: function () {
+        var returnStr = localStorage.getItem("userNickname");
+        var bufferSize = lengthBytesUTF8(returnStr) + 1;
+        var buffer = _malloc(bufferSize);
+        stringToUTF8(returnStr, buffer, bufferSize);
+        return buffer;
+    },
+
     GetMyCharacterNum: function () {
         return localStorage.getItem("characterNum");
-    },
-
-    GetInputActive: function () {
-        var value = localStorage.getItem("isUnityInputActive");
-        return value !== null;
-    },
-
-    SetInputInactive: function () {
-        localStorage.removeItem("isUnityInputActive");
     },
 
     OpenPlaylistModal: function () {
@@ -32,5 +31,10 @@ mergeInto(LibraryManager.library, {
     OpenCharacterModal: function () {
         localStorage.setItem("showCharacter", "TRUE");
     },
+
+    SetRoomName: function(str) {
+        var name = Pointer_stringify(str);
+        localStorage.setItem("roomName", name);
+    }
 
 });

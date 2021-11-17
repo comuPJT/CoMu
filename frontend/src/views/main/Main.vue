@@ -23,29 +23,20 @@
       <div class="login_box1">
         <img class="lp" src="@/assets/images/mainpage_lp.gif" />
         <div>
-          <a
-            href="http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/oauth/redirect"
-          >
-            <div
-              class="login_button kakao"
-              @click="[socialLoginUrl('kakao'), nextStep()]"
-            >
+          <a :href="socialLoginUrl('kakao')">
+            <div class="login_button kakao">
               <img src="@/assets/images/kakao.svg" />
               Kakao로 로그인
             </div>
           </a>
-          <a
-            href="http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/oauth/redirect"
-          >
+          <a :href="socialLoginUrl('google')">
             <div class="login_button google">
               <img src="@/assets/images/google.svg" />
               Google로 로그인
             </div>
           </a>
-          <a
-            href="http://localhost:8080/oauth2/authorization/naver?redirect_uri=http://localhost:3000/oauth/redirect"
-          >
-            <div class="login_button naver" @click="[socialLoginUrl('naver')]">
+          <a :href="socialLoginUrl('naver')">
+            <div class="login_button naver">
               <img src="@/assets/images/naver.svg" />
               Naver로 로그인
             </div>
@@ -80,8 +71,8 @@
               :loop="true"
               :pagination-enabled="false"
             >
-              <slide v-for="t in 11" :key="t.num" class="join_carousel_slide">
-                <img :src="require(`@/assets/images/character0${t - 1}.png`)" />
+              <slide v-for="t in 10" :key="t.num" class="join_carousel_slide">
+                <img :src="require(`@/assets/images/character0${t}.png`)" />
               </slide>
             </carousel>
           </div>
@@ -114,7 +105,8 @@
 </template>
 
 <script>
-import $ from "@/util/utils";
+import {API_SERVER_URL, API_CLIENT_URL} from "@/constant/index.js";
+import {mapMutations} from "vuex";
 import {Carousel, Slide} from "vue-carousel";
 import userApi from "@/api/user";
 
@@ -147,6 +139,8 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(["setUserName"]),
+    ...mapMutations(["setUserCharacter"]),
     nextStep() {
       //다음 화면으로 이동하는 메소드
       this.order += 1;
@@ -156,29 +150,41 @@ export default {
       this.$router.go();
     },
     socialLoginUrl(socialType) {
-      return $.getSocialLoginUrl(socialType);
+      return `${API_SERVER_URL}/oauth2/authorization/${socialType}?redirect_uri=${API_CLIENT_URL}/oauth/redirect`;
     },
-    joinRequest() {
+    async joinRequest() {
       if (!this.inputNicknameValid) {
-        alert("2~8글자 사이의 닉네임을 입력해주세요!");
+        this.$alert("2~8글자 사이의 닉네임을 입력해주세요!");
       } else {
         const data = [
           parseInt(this.$store.getters.user.userSeq),
           this.inputNickname,
-          this.$refs["my-carousel"].currentPage,
+          this.$refs["my-carousel"].currentPage + 1,
         ];
         //입력한 정보로 회원가입 요청을 보냅니다.
-        userApi.join(
+        await userApi.updateNickname(
           data,
           (res) => {
             //성공하면 회원정보 저장시키고 유니티화면으로 이동
-            console.log(res);
             this.$router.push({name: "UnityView"});
+            console.log(res);
           },
           (err) => {
             //실패(닉네임 중복)하면 중복된닉네임이라고 메시지 띄워줌
+            this.$alert("중복된 닉네임입니다!");
             console.log(err);
-            alert("중복된 닉네임입니다");
+          }
+        );
+        
+        await userApi.updateCharacter(
+          data,
+          (res) => {
+            console.log(res);
+            this.setUserName(data[1]);
+            this.setUserCharacter(data[2]);
+          },
+          (err) => {
+            console.log(err);
           }
         );
       }
