@@ -158,6 +158,20 @@
   }
 }
 
+#swal2-content {
+  font-family: BMHANNA !important;
+}
+
+.swal2-styled {
+  background-color: #613a2e !important;
+  border-left-color: #613a2e !important;
+  border-right-color: #613a2e !important;
+}
+
+.swal2-popup .swal2-styled:focus {
+    box-shadow: none !important;
+}
+
 html::-webkit-scrollbar {
   display: none;
 }

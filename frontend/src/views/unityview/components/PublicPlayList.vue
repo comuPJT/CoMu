@@ -97,7 +97,7 @@ export default {
 
   mounted() {
     shareApi.getPublicPlayList(
-      1,//몇번 플레이리스트인지,,, ex) 0=메인, 1=1번테마, 2=2번테마...
+      0,//몇번 플레이리스트인지,,, ex) 0=메인, 1=1번테마, 2=2번테마...
       (res) => {
         console.log(res);
         for (var i = 0; i < res.data.length; i++) {

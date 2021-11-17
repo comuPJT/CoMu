@@ -194,7 +194,7 @@ export default {
     async searchMusic(keyword) {
       //검색어로 음악을 검색합니다.
       if (keyword.length < 1) {
-        alert("1글자 이상의 검색어를 입력해주세요!");
+        this.$alert("1글자 이상의 검색어를 입력해주세요!");
       } else {
         const headers = {
           headers: {
@@ -274,7 +274,7 @@ export default {
             thumbnail: titleResult.album.images[2].url,
           });
           console.log(res);
-          alert("곡이 추가되었습니다.");
+          this.$alert("곡이 추가되었습니다.");
         },
         (err) => {
           console.log(err);
@@ -299,7 +299,7 @@ export default {
           }
           this.$delete(this.personalPlayList, index);
           console.log(res);
-          alert("곡이 삭제되었습니다.");
+          this.$alert("곡이 삭제되었습니다.");
         },
         (err) => {
           console.log(err);

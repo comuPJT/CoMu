@@ -81,7 +81,7 @@
           </div>
         </div>
       </div>
-      <div class="room-title">별이빛나는낮에 30.4FM</div>
+      <div class="room-title">{{ theme }}</div>
       <!--현재 재생중인 음악 끝-->
       <!--접속중인 유저 목록-->
       <div v-show="selectedMenu == 'online'">
@@ -152,20 +152,22 @@
           <!--채팅 UI테스트-->
           <div class="chat-item" v-for="chat in chats" :key="chat.key">
             <div>
-              <send-chat
-                v-if="chat.user == nicknameChat"
-                :message="chat.message"
-                :nickname="chat.user"
-                :time="chat.sendDate"
-                :img="chat.img"
-              ></send-chat>
-              <receive-chat
-                v-if="chat.user != nicknameChat"
-                :message="chat.message"
-                :nickname="chat.user"
-                :time="chat.sendDate"
-                :img="chat.img"
-              ></receive-chat>
+              <div v-if="chat.sendDate > curDate">
+                <send-chat
+                  v-if="chat.user == idChat"
+                  :message="chat.message"
+                  :nickname="nickNameChat"
+                  :time="chat.sendDate"
+                  :img="chat.img"
+                ></send-chat>
+                <receive-chat
+                  v-if="chat.user != idChat"
+                  :message="chat.message"
+                  :nickname="nickNameChat"
+                  :time="chat.sendDate"
+                  :img="chat.img"
+                ></receive-chat>
+              </div>
             </div>
           </div>
           <!--채팅 UI테스트 끝-->
@@ -223,19 +225,26 @@ export default {
       isGuestUnfold: true, //비회원 목록 펼쳐져있는지
       //채팅관련
       inputChat: "",
-      nicknameChat: "",
+      idChat: "",
+      nickNameChat: "",
+      curDate: "",
       roomid: this.$route.params.roomid,
       data: {type: "", nickname: "", message: ""},
       chats: [],
       errors: [],
       offStatus: false,
+      roomName: "",
+      theme: "",
+      chatRoomId: "-MoYW1WEd9p5xM_OxIDz",
     };
   },
+
   created() {
-    this.nicknameChat = localStorage.getItem("userNickname");
+    this.idChat = localStorage.getItem("userSeq");
+    this.nickNameChat = localStorage.getItem("userNickname");
     firebase
       .database()
-      .ref("chatrooms/" + "-MoYVNUI7BlBdmvplUXI" + "/chats")
+      .ref("chatrooms/" + this.chatRoomId + "/chats")
       .on("value", (snapshot) => {
         this.chats = [];
         snapshot.forEach((doc) => {
@@ -249,11 +258,16 @@ export default {
   mounted() {
     this.musicOverflowValid();
     this.artistOverflowValid();
+    setInterval(this.fetchRoom, 100);
   },
   updated() {
     this.scrollToBottom();
   },
   methods: {
+    fetchRoom() {
+      this.roomName = localStorage.getItem("roomName");
+    },
+
     //다른 메뉴로 변경할때 호출되는 메소드
     changeMenu(select) {
       this.selectedMenu = select;
@@ -283,21 +297,38 @@ export default {
       }
     },
 
+    //채팅방초기화
+    initChatRoom() {
+      firebase
+        .database()
+        .ref("chatrooms/" + this.chatRoomId + "/chats")
+        .on("value", (snapshot) => {
+          this.chats = [];
+          snapshot.forEach((doc) => {
+            let item = doc.val();
+            item.key = doc.key;
+            this.chats.push(item);
+          });
+        });
+    },
+
     //채팅 보내기
     onSubmit(evt) {
-      evt.preventDefault();
-      let newData = firebase
-        .database()
-        .ref("chatrooms/" + "-MoYVNUI7BlBdmvplUXI" + "/chats")
-        .push();
-      newData.set({
-        type: "newmsg",
-        user: localStorage.getItem("userNickname"),
-        message: this.inputChat,
-        img: localStorage.getItem("characterNum"),
-        sendDate: this.$moment().format("MM-DD HH:mm:ss"),
-      });
-      this.inputChat = "";
+      if (this.inputChat.length > 0) {
+        evt.preventDefault();
+        let newData = firebase
+          .database()
+          .ref("chatrooms/" + this.chatRoomId + "/chats")
+          .push();
+        newData.set({
+          type: "newmsg",
+          user: localStorage.getItem("userSeq"),
+          message: this.inputChat,
+          img: localStorage.getItem("characterNum"),
+          sendDate: this.$moment().format("MM-DD HH:mm:ss"),
+        });
+        this.inputChat = "";
+      }
     },
 
     //항상 채팅 맨 아래에 오도록 스크롤 조절
@@ -314,6 +345,32 @@ export default {
     },
     artistName: function () {
       this.artistOverflowValid;
+    },
+    roomName: function () {
+      if (this.roomName === "Main") {
+        this.theme = "메인공간";
+        this.chatRoomId = "-MoYW1WEd9p5xM_OxIDz";
+      } else if (this.roomName === "Theme1") {
+        this.theme = "별이빛나는 낮에 30.4FM";
+        this.chatRoomId = "-MoYW38qSow1G3SNIYH3";
+      } else if (this.roomName === "Theme2") {
+        this.theme = "내적 댄스 유발";
+        this.chatRoomId = "-MoYW40D_W8h5lLMpoge";
+      } else if (this.roomName === "Theme3") {
+        this.theme = "코뮤-다방";
+        this.chatRoomId = "-MoYW4eYGD_57sLRCrTP";
+      } else if (this.roomName === "Theme4") {
+        this.theme = "멀캠도서관";
+        this.chatRoomId = "-MoYW5hC1bb9mXtR_gjA";
+      } else if (this.roomName === "Theme5") {
+        this.theme = "COMU CAFE";
+        this.chatRoomId = "-MoYW6JDoLl-kmso69ax";
+      } else if (this.roomName === "MyRoom") {
+        this.theme = "마이룸";
+        this.chatRoomId = "-MoYW1WEd9p5xM_OxIDz";
+      }
+      this.initChatRoom();
+      this.curDate = this.$moment().format("MM-DD HH:mm:ss");
     },
   },
 };
