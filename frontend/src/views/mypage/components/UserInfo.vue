@@ -3,19 +3,6 @@
     <div class="user-info-text">회원 정보</div>
     <div class="user-info-character">
       <img
-        src="@/assets/images/google.svg"
-        v-if="this.$store.getters.user.user.providerType == 'GOOGLE'"
-      />
-      <img
-        src="@/assets/images/kakao.svg"
-        v-if="this.$store.getters.user.user.providerType == 'KAKAO'"
-      />
-      <img
-        src="@/assets/images/naver.svg"
-        v-if="this.$store.getters.user.user.providerType == 'NAVER'"
-      />
-      {{ this.$store.getters.user.user.email }}
-      <img
         :src="
           require(`@/assets/images/character0${this.$store.getters.user.user.characterNum}.png`)
         "
@@ -58,7 +45,7 @@ export default {
     ...mapMutations(["setUserName"]),
     updateInfo() {
       if (this.inputNickName.length < 2 || this.inputNickName.length > 8) {
-        alert("2~8글자 사이의 닉네임을 입력해주세요!");
+        this.$alert("2~8글자 사이의 닉네임을 입력해주세요!");
       } else {
         const data = [
           parseInt(this.$store.getters.user.userSeq),
@@ -70,11 +57,11 @@ export default {
           (res) => {
             this.setUserName(data[1]);
             localStorage.setItem("userNickname", data[1]);
-            alert("변경되었습니다.");
+            this.$alert("닉네임이 변경되었습니다.");
             console.log(res);
           },
           (err) => {
-            alert("중복된 닉네임입니다.");
+            this.$alert("중복된 닉네임입니다.");
             console.log(err);
           }
         );

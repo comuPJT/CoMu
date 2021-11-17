@@ -11,6 +11,6 @@ import lombok.Setter;
 public class NextMusicRes {
     @ApiModelProperty(name="재생id")
     String playId;
-    @ApiModelProperty(name="음악Id")
-    long musicId;
+    @ApiModelProperty(name="음악 파일 이름")
+    String musicName;
 }

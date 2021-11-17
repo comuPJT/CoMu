@@ -215,7 +215,7 @@ export default {
     async searchMusic(keyword) {
       //검색어로 음악을 검색합니다.
       if (keyword.length < 1) {
-        alert("1글자 이상의 검색어를 입력해주세요!");
+        this.$alert("1글자 이상의 검색어를 입력해주세요!");
       } else {
         const headers = {
           headers: {
@@ -280,7 +280,7 @@ export default {
     moveToPostCard() {
       Object.keys(this.selectedMusicOnSearch).length;
       if (Object.keys(this.selectedMusicOnSearch).length === 0) {
-        alert("곡을 선택해주세요.");
+        this.$alert("곡을 선택해주세요.");
       } else {
         this.shareMusicView = "postcard";
       }
@@ -288,7 +288,7 @@ export default {
 
     async addMusic() {
       if (Object.keys(this.selectedMusicOnSearch).length === 0) {
-        alert("곡을 선택해주세요.");
+       this.$alert("곡을 선택해주세요.");
       } else {
         var youtubesrc = "";
         youtubesrc += await youtubeApi.getYouTubeUrl(
@@ -297,7 +297,7 @@ export default {
         );
         const data = [
           {
-            ////////////////album: this.selectedMusicOnSearch.name,////////////
+            album: this.selectedMusicOnSearch.album.name,
             contents: this.postcardContent,
             name: this.selectedMusicOnSearch.name,
             singer: this.selectedMusicOnSearch.artists,
@@ -310,10 +310,10 @@ export default {
         ];
         console.log(data);
         shareApi.addMusicPublicPlayList(
-          1, //몇번 플레이리스트인지,,, ex) 0=메인, 1=1번테마, 2=2번테마...
+          0, //몇번 플레이리스트인지,,, ex) 0=메인, 1=1번테마, 2=2번테마...
           data,
           (res) => {
-            alert("곡이 신청되었습니다!");
+            this.$alert("곡을 선택해주세요.");
             console.log(res);
           },
           (err) => {
