@@ -36,7 +36,7 @@
       </normal-story>
     </div>
     <!-- 음악 재생 -->
-    <div v-show="false" id="video"></div>
+    <video v-show="false" id="video"></video>
   </div>
 </template>
 

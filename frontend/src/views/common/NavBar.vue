@@ -303,7 +303,9 @@ export default {
     //항상 채팅 맨 아래에 오도록 스크롤 조절
     scrollToBottom() {
       const container = this.$el.querySelector("#container");
-      container.scrollTop = container.scrollHeight;
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
     },
   },
   watch: {
