@@ -35,6 +35,8 @@
       <normal-story v-if="showModalTodayStory" @close="closeTodayStoryModal">
       </normal-story>
     </div>
+    <!-- 음악 재생 -->
+    <div v-show="false" id="video"></div>
   </div>
 </template>
 
@@ -68,17 +70,6 @@ export default {
   },
 
   mounted() {
-    var video = document.getElementById("video");
-    var videoSrc = "http://k5a304.p.ssafy.io:8234/hls/1/1.m3u8";
-
-    if (video.canPlayType("application/vnd.apple.mpegurl")) {
-      video.src = videoSrc;
-    } else if (Hls.isSupported()) {
-      var hls = new Hls();
-      hls.loadSource(videoSrc);
-      hls.attachMedia(video);
-    }
-
     // 창 크기가 바뀔 때마다 유니티 화면 크기 변경
     this.handleResize();
     window.addEventListener("resize", this.handleResize);
@@ -93,6 +84,17 @@ export default {
 
     // localStorage 값 변경 확인할 인터벌 함수 실행
     setInterval(this.fetchShowModal, 100);
+
+    var video = document.getElementById("video");
+    var videoSrc = "http://comu.co.kr:8234/hls/1/1.m3u8";
+
+    if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      video.src = videoSrc;
+    } else if (Hls.isSupported()) {
+      var hls = new Hls();
+      hls.loadSource(videoSrc);
+      hls.attachMedia(video);
+    }
   },
 
   beforeDestroy() {
