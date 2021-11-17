@@ -157,14 +157,14 @@
                 :message="chat.message"
                 :nickname="chat.user"
                 :time="chat.sendDate"
-                :img="chat.img"
+                :img="chat.img ? chat.img : 0"
               ></send-chat>
               <receive-chat
                 v-if="chat.user != nicknameChat"
                 :message="chat.message"
                 :nickname="chat.user"
                 :time="chat.sendDate"
-                :img="chat.img"
+                :img="chat.img ? chat.img : 0"
               ></receive-chat>
             </div>
           </div>
