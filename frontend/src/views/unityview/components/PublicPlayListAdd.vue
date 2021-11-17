@@ -148,7 +148,9 @@
                     <div class="postcard-line">
                       {{ selectedMusicOnSearch.name }}
                     </div>
-                    <div class="postcard-line">usernickname</div>
+                    <div class="postcard-line">
+                      {{ $store.getters.user.user.username }}
+                    </div>
                     <div class="postcard-line">&nbsp;</div>
                     <div class="postcard-line">&nbsp;</div>
                   </div>
