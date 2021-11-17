@@ -3,7 +3,9 @@
     <div class="profile-wrapper">
       <div class="profile-wrapper-box">
         <div class="profile-nickname">{{ nickname }}</div>
-        <img :src="require(`@/assets/images/bgr_character0${img}.png`)" />
+        <div class="profile-img">
+          <img :src="require(`@/assets/images/character0${img}.png`)" />
+        </div>
       </div>
     </div>
     <div class="message-wrapper message-receive">
