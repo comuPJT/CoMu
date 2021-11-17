@@ -322,7 +322,8 @@ class ShareMusicServiceImpl implements ShareMusicService {
         nowPlay.setStatus(Status.READY);
         operations.put(nowMusicKey, "room:"+roomId , nowPlay);
         Runtime rt = Runtime.getRuntime();
-        String cmd = "sh stream.sh " + roomId + " " + nowPlay.getMusicId();
+//        String cmd = "sh stream.sh " + roomId + " " + nowPlay.getMusicId();
+        String cmd = "stream.bat " + roomId + " " + nowPlay.getMusicId();
         try {
             System.out.println("Streaming start...");
             rt.exec(cmd);
@@ -333,7 +334,8 @@ class ShareMusicServiceImpl implements ShareMusicService {
 
     private static boolean observeFileCreated(long roomId, long musicId) {
 //        String targetFile ="/tmp/hls/" + roomId + "/" + musicId + ".m3u8";
-        String targetFile = "stream.sh";
+//        String targetFile = "stream.sh";
+        String targetFile = "stream.bat";
         while(true){ // 디렉토리를 모니터링 하다가 파일이 생성되는 시점에 응답주기
             File created = new File(targetFile);
             if(created.isFile()) {
