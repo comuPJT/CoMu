@@ -34,6 +34,13 @@
       <!-- 오늘의 사연 보기 -->
       <normal-story v-if="showModalTodayStory" @close="closeTodayStoryModal">
       </normal-story>
+      <!-- 캐릭터 커스텀 변경 -->
+      <character-custom
+        v-if="showModalCharacterCustom"
+        @setCharacter="setCharacterNum"
+        @close="closeCharacterCustomModal"
+      >
+      </character-custom>
     </div>
     <!-- 음악 재생 -->
     <video v-show="false" id="video"></video>
@@ -45,6 +52,7 @@ import Unity from "vue-unity-webgl";
 import PublicPlayList from "./components/PublicPlayList.vue";
 import PublicPlayListAdd from "./components/PublicPlayListAdd.vue";
 import NormalStory from "./components/NormalStory.vue";
+import CharacterCustom from "./components/CharacterCustom.vue";
 import Hls from "hls.js";
 
 export default {
@@ -55,6 +63,7 @@ export default {
     PublicPlayList,
     PublicPlayListAdd,
     NormalStory,
+    CharacterCustom,
   },
 
   props: {},
@@ -63,6 +72,7 @@ export default {
       showModalPlayList: false,
       showModalPlayListAdd: false,
       showModalTodayStory: false,
+      showModalCharacterCustom: false,
       unityWidth: 0,
       unityHeight: 0,
       isShowBlind: false,
@@ -81,6 +91,7 @@ export default {
     localStorage.setItem("showPlayList", "FALSE");
     localStorage.setItem("showPlayListAdd", "FALSE");
     localStorage.setItem("showTodayStory", "FALSE");
+    localStorage.setItem("showCharacter", "FALSE");
 
     // localStorage 값 변경 확인할 인터벌 함수 실행
     setInterval(this.fetchShowModal, 100);
@@ -119,7 +130,6 @@ export default {
     // 유니티 화면에 보여지는 캐릭터 번호 변경
     setCharacterNum(num) {
       this.$refs.comu.message("PlayerObject", "SetCharacterNum", num);
-      localStorage.setItem("characterNum", num);
     },
     // 창 크기에 맞춰서 유니티 화면 크기 변경
     handleResize() {
@@ -134,6 +144,8 @@ export default {
         localStorage.getItem("showPlayListAdd") == "TRUE" ? true : false;
       this.showModalTodayStory =
         localStorage.getItem("showTodayStory") == "TRUE" ? true : false;
+      this.showModalCharacterCustom =
+        localStorage.getItem("showCharacter") == "TRUE" ? true : false;
     },
     // 공용 플레이리스트 닫기
     closePlayListModal() {
@@ -151,6 +163,12 @@ export default {
     closeTodayStoryModal() {
       this.showModalTodayStory = false;
       localStorage.setItem("showTodayStory", "FALSE");
+      this.SetUnityKeyboardInput("TRUE");
+    },
+    // 유저 캐릭터 커스텀창 닫기
+    closeCharacterCustomModal() {
+      this.showModalCharacterCustom = false;
+      localStorage.setItem("showCharacter", "FALSE");
       this.SetUnityKeyboardInput("TRUE");
     },
   },
