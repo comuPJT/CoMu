@@ -1,6 +1,7 @@
 package com.listener.comu.domain.music.api;
 
 import com.listener.comu.domain.music.domain.*;
+import com.listener.comu.domain.music.dto.AllPlaylistRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,16 @@ public class MyPlaylistService {
 
 
     // 전체 플레이리스트 가져오기
-    public List<Myplaylist> getList(long userSeq) {
-        return myplaylistRepository.getByUserSeq(userSeq);
+    public List<AllPlaylistRes> getAllPlaylistResList(long userSeq) {
+        List<AllPlaylistRes> response = new ArrayList<>();
+
+        List<Myplaylist> myPlaylistList = myplaylistRepository.getByUserSeq(userSeq);
+        for(int i=0, size=myPlaylistList.size(); i<size; i++){
+            Myplaylist myplaylist = myPlaylistList.get(i);
+            List<String> thumbnails = myplaylistRepository.getThumbnails(myplaylist.getId());
+            response.add(AllPlaylistRes.builder().myplaylist(myplaylist).thumbnails(thumbnails).build());
+        }
+        return response;
     }
 
     // 특정 플레이리스트 안의 곡들 가져오기
@@ -99,6 +108,5 @@ public class MyPlaylistService {
     public void deleteMusic(long myplaylistId, List<Long> musicIds) {
         myplaylistMusicRepository.deleteMyplaylistMusicByMyplaylistIdAndMusicIdIn(myplaylistId, musicIds);
     }
-
 
 }
