@@ -16,7 +16,7 @@ public class UserService {
         return userRepository.findByUserId(userId);
     }
 
-    public boolean modifyUserInfo(long userSeq, String username) {
+    public void modifyUserInfo(long userSeq, String username) {
 
         User inputUser = userRepository.getById(userSeq);
         inputUser.setUserSeq(userSeq);
@@ -24,7 +24,6 @@ public class UserService {
         inputUser.setFirstVisitYn("N");
         userRepository.save(inputUser);
 
-        return true;
     }
 
     public void setCharacterNum(Long userSeq, Integer characterNum) {
