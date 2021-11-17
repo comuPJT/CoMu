@@ -151,6 +151,7 @@
 
 <script>
 import axios from "axios";
+import youtubeAPI from '@/api/youtube'
 import myPlayListApi from "@/api/myPlayList";
 export default {
   name: "UserPersonalPlayList",
@@ -240,21 +241,22 @@ export default {
       }
     },
 
-    addToPersonal(titleResult) {
+    async addToPersonal(titleResult) {
+      var youtubesrc = "";
+      youtubesrc+= await youtubeAPI.getYouTubeUrl(titleResult.artists, titleResult.name);
       const data = {
         musicList: [
           {
             spotifyId: titleResult.id,
             name: titleResult.name,
             singer: titleResult.artists,
-            source: "source",
+            source: youtubesrc,
             album: titleResult.album.name,
             thumbnail: titleResult.album.images[2].url,
           },
         ],
-        userSeq: localStorage.getItem("user-seq"),
+        userSeq: localStorage.getItem("userSeq"),
       };
-
       myPlayListApi.addPersonalPlayList(
         data,
         (res) => {
@@ -262,7 +264,7 @@ export default {
             spotifyId: titleResult.id,
             name: titleResult.name,
             singer: titleResult.artists,
-            source: "source",
+            source: youtubesrc,
             album: titleResult.album.name,
             thumbnail: titleResult.album.images[2].url,
           });
@@ -278,7 +280,7 @@ export default {
     deletePersonal(id) {
       const data = {
         musicIds: [id],
-        userSeq: localStorage.getItem("user-seq"),
+        userSeq: localStorage.getItem("userSeq"),
       };
       myPlayListApi.deletePersonal(
         data,

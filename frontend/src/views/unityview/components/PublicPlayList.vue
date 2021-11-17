@@ -77,13 +77,15 @@
 
 <script>
 import AddToMyList from "./AddToMyList.vue";
+import shareApi from "@/api/share";
+
 export default {
   name: "PublicPlayList",
 
   components: {AddToMyList},
 
   props: {},
-  
+
   data() {
     return {
       showModal: false,
@@ -94,17 +96,26 @@ export default {
   },
 
   mounted() {
-    for (var i = 0; i < 21; i++) {
+    shareApi.getPublicPlayList(
+      1,//몇번 플레이리스트인지,,, ex) 0=메인, 1=1번테마, 2=2번테마...
+      (res) => {
+        console.log(res);
+        for (var i = 0; i < res.data.length; i++) {
       this.sharePlayListMusic.push({
         isselected: false,
-        id: i + 99,
+        id: res.data[i].playId,
         cover:
           "https://t1.daumcdn.net/thumb/R720x0.fpng/?fname=http://t1.daumcdn.net/brunch/service/user/8fXh/image/0_JTh3JET7ZCHaT_IJhG4VbhEpI.png",
-        title: "Insecure (Feat. Pink Sweat$)",
-        artist: "Bren Joy",
+        title: res.data[i].name,
+        artist: res.data[i].singer,
         album: "Nothing Feels Better",
       });
     }
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   },
 
   methods: {

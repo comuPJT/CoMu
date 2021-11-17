@@ -1,8 +1,9 @@
 <template>
   <div>
-    <nav-bar></nav-bar>
+    <nav-bar id="navbaris" @clickNavbar="testMethod"></nav-bar>
     <!-- 유니티 화면 -->
     <div id="unity">
+      <video id="video"></video>
       <unity
         src="unity/Build/unity.json"
         unityLoader="unity/Build/UnityLoader.js"
@@ -31,6 +32,7 @@ import Unity from "vue-unity-webgl";
 import PublicPlayList from "./components/PublicPlayList.vue";
 import PublicPlayListAdd from "./components/PublicPlayListAdd.vue";
 import NormalStory from "./components/NormalStory.vue";
+import Hls from "hls.js";
 
 export default {
   name: "UnityView",
@@ -54,6 +56,16 @@ export default {
   },
 
   mounted() {
+    var video = document.getElementById("video");
+    var videoSrc = "http://k5a304.p.ssafy.io:8234/hls/1/1.m3u8";
+
+    if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      video.src = videoSrc;
+    } else if (Hls.isSupported()) {
+      var hls = new Hls();
+      hls.loadSource(videoSrc);
+      hls.attachMedia(video);
+    }
     // 창 크기에 맞춰서 유니티 화면 크기 변경
     this.unityWidth = document.getElementById("unity").offsetWidth;
     this.unityHeight = document.getElementById("unity").offsetHeight;
@@ -72,6 +84,18 @@ export default {
   },
 
   methods: {
+    // 유니티 키보드 입력 비활성화
+    testMethod() {
+      console.log("뭐야ㅋ");
+      localStorage.removeItem("isUnityInputActive");
+      this.$refs.myInstance.message(
+        "textbox-playlist",
+        "SetCaptureKeyboardInput",
+        "FALSE"
+      );
+      console.log("뭐야ㅠㅠ");
+    },
+
     handleResize() {
       this.unityWidth = document.getElementById("unity").offsetWidth;
       this.unityHeight = document.getElementById("unity").offsetHeight;
