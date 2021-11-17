@@ -162,7 +162,7 @@ export default {
           this.$refs["my-carousel"].currentPage + 1,
         ];
         //입력한 정보로 회원가입 요청을 보냅니다.
-        await userApi.updateNicmname(
+        await userApi.updateNickname(
           data,
           (res) => {
             //성공하면 회원정보 저장시키고 유니티화면으로 이동
