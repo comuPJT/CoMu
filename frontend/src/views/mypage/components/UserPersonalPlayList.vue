@@ -151,7 +151,7 @@
 
 <script>
 import axios from "axios";
-import youtubeAPI from '@/api/youtube'
+import youtubeAPI from "@/api/youtube";
 import myPlayListApi from "@/api/myPlayList";
 export default {
   name: "UserPersonalPlayList",
@@ -177,7 +177,9 @@ export default {
   },
 
   mounted() {
+    const data = "흐으음";
     myPlayListApi.getPersonalPlayList(
+      data,
       (res) => {
         console.log(res.data);
         this.personalPlayList = res.data;
@@ -243,7 +245,10 @@ export default {
 
     async addToPersonal(titleResult) {
       var youtubesrc = "";
-      youtubesrc+= await youtubeAPI.getYouTubeUrl(titleResult.artists, titleResult.name);
+      youtubesrc += await youtubeAPI.getYouTubeUrl(
+        titleResult.artists,
+        titleResult.name
+      );
       const data = {
         musicList: [
           {
