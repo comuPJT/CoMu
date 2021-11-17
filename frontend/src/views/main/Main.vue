@@ -154,7 +154,7 @@ export default {
     },
     async joinRequest() {
       if (!this.inputNicknameValid) {
-        alert("2~8글자 사이의 닉네임을 입력해주세요!");
+        this.$alert("2~8글자 사이의 닉네임을 입력해주세요!");
       } else {
         const data = [
           parseInt(this.$store.getters.user.userSeq),
@@ -171,7 +171,7 @@ export default {
           },
           (err) => {
             //실패(닉네임 중복)하면 중복된닉네임이라고 메시지 띄워줌
-            alert("중복된 닉네임입니다!");
+            this.$alert("중복된 닉네임입니다!");
             console.log(err);
           }
         );

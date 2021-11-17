@@ -52,7 +52,7 @@ const updateNickname = (data, callback, errorCallback) => {
 
 const updateCharacter = (data, callback, errorCallback) => {
   http
-    .post("/v1/users/character", {
+    .put("/v1/users/character", {
       userSeq: data[0],
       characterNum: data[2],
     })
