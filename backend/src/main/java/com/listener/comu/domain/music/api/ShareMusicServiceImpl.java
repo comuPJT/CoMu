@@ -8,6 +8,7 @@ import com.listener.comu.domain.oauthlogin.api.entity.user.User;
 import com.listener.comu.domain.oauthlogin.api.repository.user.UserRepository;
 import com.listener.comu.util.S3Uploader;
 import org.springframework.data.redis.core.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -322,8 +323,8 @@ class ShareMusicServiceImpl implements ShareMusicService {
         nowPlay.setStatus(Status.READY);
         operations.put(nowMusicKey, "room:"+roomId , nowPlay);
         Runtime rt = Runtime.getRuntime();
-//        String cmd = "sh stream.sh " + roomId + " " + nowPlay.getMusicId();
-        String cmd = "stream.bat " + roomId + " " + nowPlay.getMusicId();
+        String cmd = "sh stream.sh " + roomId + " " + nowPlay.getMusicId();
+  //      String cmd = "stream.bat " + roomId + " " + nowPlay.getMusicId();
         try {
             System.out.println("Streaming start...");
             rt.exec(cmd);
@@ -334,8 +335,8 @@ class ShareMusicServiceImpl implements ShareMusicService {
 
     private static boolean observeFileCreated(long roomId, long musicId) {
 //        String targetFile ="/tmp/hls/" + roomId + "/" + musicId + ".m3u8";
-//        String targetFile = "stream.sh";
-        String targetFile = "stream.bat";
+        String targetFile = "stream.sh";
+//        String targetFile = "stream.bat";
         while(true){ // 디렉토리를 모니터링 하다가 파일이 생성되는 시점에 응답주기
             File created = new File(targetFile);
             if(created.isFile()) {
@@ -346,6 +347,37 @@ class ShareMusicServiceImpl implements ShareMusicService {
     }
     private static long getRandomSongForRoom(long roomId){
         Random rd = new Random();
-        return  rd.nextInt(3) + (roomId -1)*3;
+        return  rd.nextInt(3) + roomId*3;
+    }
+    // 매일 밤 12시 마다 redis에 있던 일반 사연 목록 중 좋아요수가 10이 넘는 사연을 명예의 전당에 영구적으로 저장한다.
+    @Scheduled(cron = "0 0 0 * * *")
+    public void saveMusicAsHistory() {
+        ListOperations<String, Object> operations = redisTemplate.opsForList();
+        long roomSize = 6;
+        for(long i = 0; i < roomSize; i++){
+            String key = playedPrefix + ":" + i;
+            List<Object> roomPlayed = operations.range(key, 0,-1);
+            List<History> honoredPlaylist = new ArrayList<>();
+            if(roomPlayed != null) {
+                convertObjectListToHistoryAndSave(i, roomPlayed);
+            }
+        }
+
+    }
+
+    private void convertObjectListToHistoryAndSave(Long roomId, List<Object> roomPlayed) {
+        long threshold = 10L;
+        for (Object o : roomPlayed) {
+            SharePlaylistMusic play = objectMapper().convertValue(o, SharePlaylistMusic.class);
+            Long likeCount = redisTemplate.opsForSet().size(musicLikePrefix + ":" + play.getPlayId());
+            Music reqMusic = musicRepository.getMusicById(play.getMusicId());
+            User user = userRepository.getById(play.getUserId());
+            if (likeCount != null && likeCount > threshold && reqMusic != null) { // 좋아요수가 기준치를 넘은 경우에만
+                History history = new History(roomId, play.getTitle(), play.getContents(), play.getTimestamp(), likeCount);
+                history.setMusic(reqMusic);
+                history.setUser(user);
+                historyRepository.save(history); // DB history table 저장
+            }
+        }
     }
 }
