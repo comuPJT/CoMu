@@ -24,6 +24,11 @@ public class CameraSetup : MonoBehaviourPun
 
     }
 
+    /*void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }*/
+
     /*void Update()
     {
         if (isMain)

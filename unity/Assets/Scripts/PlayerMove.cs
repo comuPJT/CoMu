@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Runtime.InteropServices;
 using Photon.Pun;
+using Photon.Realtime;
 
 public class PlayerMove : MonoBehaviourPun
 {
@@ -37,7 +38,7 @@ public class PlayerMove : MonoBehaviourPun
     private void FixedUpdate()
     {
         // 로컬 플레이어인 경우에만 적용
-        if (!photonView.IsMine)
+        if (!photonView.IsMine || _prefabs == null)
         {
             return;
         }
@@ -88,10 +89,13 @@ public class PlayerMove : MonoBehaviourPun
         {
             // 메인 씬으로 돌아오기
             CameraFollow.isMain = true;
-            SceneManager.LoadScene("Main", LoadSceneMode.Single);
+            // SceneManager.LoadScene("Main", LoadSceneMode.Single);
+            PhotonNetwork.Destroy(gameObject);
+            // Destroy(gameObject);
+            PhotonNetwork.LoadLevel("Main");
 
             // 메인으로 방 이름 변경
-            SetRoomName("Main");
+            // SetRoomName("Main");
         }
         else if (move.y > 0 && (collision.gameObject.CompareTag("MyRoom")
             || collision.gameObject.CompareTag("Theme1")
@@ -105,10 +109,13 @@ public class PlayerMove : MonoBehaviourPun
             CameraFollow.isFirst = true;
 
             // 문에 해당하는 씬으로 이동
-            SceneManager.LoadScene(collision.gameObject.tag, LoadSceneMode.Single);
+            // SceneManager.LoadScene(collision.gameObject.tag, LoadSceneMode.Single);
+            PhotonNetwork.Destroy(gameObject);
+            // Destroy(gameObject);
+            PhotonNetwork.LoadLevel(collision.gameObject.tag);
 
             // 이동하는 곳으로 방 이름 변경
-            SetRoomName(collision.gameObject.tag);
+            // SetRoomName(collision.gameObject.tag);
         }
     }
 }

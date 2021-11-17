@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     // 외부에서 싱글톤 오브젝트를 가져올때 사용할 프로퍼티
-    public static GameManager instance
+    /*public static GameManager instance
     {
         get
         {
@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    private static GameManager m_instance; // 싱글톤이 할당될 static 변수
+    private static GameManager m_instance;*/ // 싱글톤이 할당될 static 변수
 
     public GameObject playerPrefab; // 생성할 플레이어 캐릭터 프리팹
 
@@ -58,15 +58,16 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     }
 
 
-    private void Awake()
+    /*private void Awake()
     {
         // 씬에 싱글톤 오브젝트가 된 다른 GameManager 오브젝트가 있다면
         if (instance != this)
         {
             // 자신을 파괴
+            PhotonNetwork.Destroy(gameObject);
             Destroy(gameObject);
         }
-    }
+    }*/
 
     // 게임 시작과 동시에 플레이어가 될 게임 오브젝트를 생성
     private void Start()
