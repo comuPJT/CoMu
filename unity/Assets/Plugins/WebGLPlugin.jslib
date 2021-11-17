@@ -1,7 +1,7 @@
 mergeInto(LibraryManager.library, {
 
     GetUserNickname: function () {
-        var returnStr = localStorage.getItem("user-nickname");
+        var returnStr = localStorage.getItem("userNickname");
         var bufferSize = lengthBytesUTF8(returnStr) + 1;
         var buffer = _malloc(bufferSize);
         stringToUTF8(returnStr, buffer, bufferSize);
