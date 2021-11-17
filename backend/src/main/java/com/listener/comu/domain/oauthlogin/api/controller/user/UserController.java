@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @ApiOperation(value = "username 중복 체크하기", notes = "사용자가 입력한 username이 이미 존재하는 username인지 확인한다. 사용이 가능할 때 상태코드 200을 반환한다.")
+    @ApiOperation(value = "User 객체 받아오기", notes = "토큰 값으로 User 객체를 받아온다.")
     @GetMapping
     public ApiResponse getUser() {
         org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -50,10 +51,7 @@ public class UserController {
     @ApiOperation(value = "사용자 이름(username) 등록하기", notes = "사용자의 이름을 설정한다.")
     @PutMapping
     public ResponseEntity modifyUserInfo(@RequestBody ComuUserInfo comuUserInfo) {
-        boolean response = userService.modifyUserInfo(comuUserInfo.getUserSeq(), comuUserInfo.getUsername());
-        if (!response) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+        userService.modifyUserInfo(comuUserInfo.getUserSeq(), comuUserInfo.getUsername());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
