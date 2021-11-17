@@ -65,7 +65,6 @@ export default {
           this.inputNickName,
           localStorage.getItem("characterNum"),
         ];
-        
         userApi.updateNickname(
           data,
           (res) => {

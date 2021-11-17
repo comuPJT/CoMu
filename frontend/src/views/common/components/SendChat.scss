@@ -12,18 +12,28 @@
 }
 .profile-wrapper-box {
   position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   bottom: 0px;
   text-align: center;
   width: 4.2vw;
-  img {
+  .profile-nickname {
+    font-size: 0.62vw;
+    margin-bottom: 0.2vw;
+  }
+  .profile-img {
+    overflow: hidden;
     width: 2.7vw;
     height: 2.7vw;
+    background: #D1C1B7;
     border-radius: 200px;
+    img {
+      transform: translate(-15%, -10%);
+      width: 140%;
+      height: auto;
+    }
   }
-}
-.profile-nickname {
-  font-size: 0.62vw;
-  margin-bottom: 0.2vw;
 }
 
 .message-wrapper {
@@ -47,7 +57,7 @@
 
 .time-wrapper-receive {
   position: absolute;
-  bottom: 0.4vw;
+  bottom: 0.1vw;
   right: 0.4vw;
   font-size: 0.32vw;
   color: #4f4f4f;
@@ -55,7 +65,7 @@
 }
 .time-wrapper-send {
   position: absolute;
-  bottom: 0.4vw;
+  bottom: 0.1vw;
   left: 0.4vw;
   font-size: 0.32vw;
   color: #4f4f4f;
