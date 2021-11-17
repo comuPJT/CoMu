@@ -1,4 +1,4 @@
 module.exports = {
-  apiServerUri: "https://comu.co.kr/api",
-  apiClientUri: "https://comu.co.kr",
+  apiServerUri: "https://k5a304.p.ssafy.io/api",
+  apiClientUri: "https://k5a304.p.ssafy.io",
 };

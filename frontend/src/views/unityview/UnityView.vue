@@ -86,7 +86,7 @@ export default {
     setInterval(this.fetchShowModal, 100);
 
     var video = document.getElementById("video");
-    var videoSrc = "http://comu.co.kr:8234/hls/1/1.m3u8";
+    var videoSrc = "http://k5a304.p.ssafy.io:8234/hls/1/1.m3u8";
 
     if (video.canPlayType("application/vnd.apple.mpegurl")) {
       video.src = videoSrc;
