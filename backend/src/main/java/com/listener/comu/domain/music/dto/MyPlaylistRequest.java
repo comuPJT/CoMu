@@ -11,6 +11,5 @@ public class MyPlaylistRequest {
 
     private long userSeq;
     private String name;
-    private List<Long> musicIds;
 
 }
