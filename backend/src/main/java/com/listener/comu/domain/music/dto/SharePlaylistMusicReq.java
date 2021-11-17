@@ -13,7 +13,7 @@ public class SharePlaylistMusicReq {
     private String title;
     @ApiModelProperty(name="사연 내용", example = "처음 가입해 봤어요! 너무 신기하네요~")
     private String contents;
-    @ApiModelProperty(name="사연자 id", example ="1")
+    @ApiModelProperty(name="사연자 고유 시퀀스", example ="1")
     private Long userId;
     @ApiModelProperty(name="신청한 음악의 스포티파이 Id", example = "3FeVmId7tL5YN8B7R3imoM")
     private String spotifyId;

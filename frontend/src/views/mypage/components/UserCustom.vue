@@ -24,7 +24,6 @@
     <div class="user-custom-button">
       <div class="smallbuttonbrown">
         <div class="buttoncontent" @click="updateInfo()">저장</div>
-        <button @click="deleteTest()">딜리트테스트</button>
       </div>
     </div>
   </div>
@@ -33,7 +32,6 @@
 <script>
 import {Carousel, Slide} from "vue-carousel";
 import userApi from "@/api/user";
-import myPlayListApi from "@/api/myPlayList";
 import {mapMutations} from "vuex";
 
 export default {
@@ -70,20 +68,7 @@ export default {
         (res) => {
           this.setUserCharacter(data[2]);
           localStorage.setItem("characterNum", data[2]);
-          alert("변경되었습니다.");
-          console.log(res);
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-    },
-
-    deleteTest() {
-      const data = [1, 2];
-      myPlayListApi.deletePlayList(
-        data,
-        (res) => {
+          this.$alert("캐릭터가 변경되었습니다.");
           console.log(res);
         },
         (err) => {
