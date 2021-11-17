@@ -28,11 +28,11 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject playerPrefab; // 생성할 플레이어 캐릭터 프리팹
 
     // 플레이어의 캐릭터 번호 받아오기
-    [DllImport("__Internal")]
+    /*[DllImport("__Internal")]
     private static extern int GetMyCharacterNum();
 
     // public static int characterNum = GetMyCharacterNum();
-    public static int characterNum = 1;
+    public static int characterNum = 1;*/
 
     /*private int score = 0; // 현재 게임 점수
     public bool isGameover { get; private set; } // 게임 오버 상태*/

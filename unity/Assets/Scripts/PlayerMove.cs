@@ -59,6 +59,7 @@ public class PlayerMove : MonoBehaviourPun
 
     private void UpdateState()
     {
+        
         // 이동하고 있을 때 애니메이션 활성화
         if (move.x > 0)
         {
