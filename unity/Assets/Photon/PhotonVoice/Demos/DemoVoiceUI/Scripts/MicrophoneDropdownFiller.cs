@@ -105,12 +105,12 @@ namespace Photon.Voice.Unity.Demos.DemoVoiceUI
             this.micOptions = new List<MicRef>();
             List<string> micOptionsStrings = new List<string>();
 
-            for(int i=0; i < Microphone.devices.Length; i++)
+            /*for(int i=0; i < Microphone.devices.Length; i++)
             {
                 string x = Microphone.devices[i];
                 this.micOptions.Add(new MicRef(x));
                 micOptionsStrings.Add(string.Format("[Unity] {0}", x));
-            }
+            }*/
 
             #if PHOTON_MICROPHONE_ENUMERATOR
             if (this.recorder.MicrophonesEnumerator.IsSupported)
