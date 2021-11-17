@@ -4,7 +4,6 @@ import com.listener.comu.domain.music.api.ShareMusicService;
 import com.listener.comu.domain.music.dto.BaseResponseBody;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicReq;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicRes;
-import com.listener.comu.domain.music.dto.SearchMusicRes;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -32,7 +31,7 @@ public class ShareMusicController {
     @GetMapping("/{roomId}")
     @ApiOperation(value = "신청곡/사연 목록 조회", notes = "현재 재생되는 곡의 이전곡 최대 15곡, 진행될 곡 최대 15곡을 반환한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = SearchMusicRes.class),
+            @ApiResponse(code = 200, message = "성공", response = SharePlaylistMusicRes.class),
             @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
@@ -156,7 +155,7 @@ public class ShareMusicController {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
-    @GetMapping("/nextmusic/{playSeq}")
+    @GetMapping("/nextmusic/{roomId}")
     @ApiOperation(value = "재생순서", notes = "유저측에서 재생이 끝나면 다음 곡을 위한 요청이 들어온다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
@@ -164,8 +163,8 @@ public class ShareMusicController {
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity getNextMusic(@PathVariable String playSeq) {
-        return  ResponseEntity.status(200).body(shareMusicService.getNextMusic(playSeq));
+    public ResponseEntity getNextMusic(@PathVariable long roomId, @RequestParam String playId) {
+        return  ResponseEntity.status(200).body(shareMusicService.getNextMusic(roomId, playId));
     }
 
 }

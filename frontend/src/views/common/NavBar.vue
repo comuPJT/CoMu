@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @click="$emit('clickNavbar')">
     <!--네비바 좌측 메뉴선택부분-->
     <div class="nav-bar-left">
       <img class="logo-2X2" src="@/assets/images/logo_2X2.png" />
@@ -177,7 +177,7 @@
               id="message"
               v-model="inputChat"
               placeholder="메시지를 입력해주세요!"
-              @keyup.enter="onSubmit"
+              @keypress.enter="onSubmit"
             />
           </div>
           <img

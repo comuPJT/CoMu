@@ -25,5 +25,6 @@ public class SharePlaylistMusicReq {
     private String singer;
     @ApiModelProperty(name="유튜브 소스", example = "https://www.youtube.com/watch?v=3YqPKLZF_WU")
     private String source;
-
+    @ApiModelProperty(name = "앨범명", example = "화양연화")
+    private String album;
 }

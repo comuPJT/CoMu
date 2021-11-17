@@ -3,14 +3,6 @@ using System.Runtime.InteropServices;
 
 public class ObjectInteract : MonoBehaviour
 {
-    // 키보드 입력 설정 확인
-    [DllImport("__Internal")]
-    private static extern bool GetInputActive();
-
-    // 키보드 입력 설정 변경
-    [DllImport("__Internal")]
-    private static extern void SetInputInactive();
-
     // 플레이리스트 모달창 열기
     [DllImport("__Internal")]
     private static extern void OpenPlaylistModal();
@@ -73,14 +65,7 @@ public class ObjectInteract : MonoBehaviour
             }
 
             // 모달창이 열리면 유니티에서의 키보드 입력 막기
-            SetInputInactive();
-            UnityEngine.WebGLInput.captureAllKeyboardInput = false;
-        }
-
-        // 유니티 키보드 입력 활성화 시키기
-        if (GetInputActive())
-        {
-            UnityEngine.WebGLInput.captureAllKeyboardInput = true;
+            SetUnityKeyboardInput("FALSE");
         }
     }
 
@@ -120,5 +105,12 @@ public class ObjectInteract : MonoBehaviour
 
             isTrigger = false;
         }
+    }
+
+    private void SetUnityKeyboardInput(string str)
+    {
+        // 유니티 키보드 입력 활성화 또는 비활성화
+        bool flag = str.Equals("TRUE");
+        UnityEngine.WebGLInput.captureAllKeyboardInput = flag;
     }
 }

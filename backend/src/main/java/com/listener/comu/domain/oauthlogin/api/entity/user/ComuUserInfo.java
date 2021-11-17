@@ -10,6 +10,5 @@ public class ComuUserInfo {
 
     long userSeq;
     String username;
-    int characterNum;
 
 }
