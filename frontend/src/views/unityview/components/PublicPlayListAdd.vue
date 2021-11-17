@@ -66,7 +66,7 @@
                       "
                     >
                       <td class="content-body-td2">
-                        <img :src="titleResult.album.images[2].url" />
+                        <img :src="titleResult.album.images[1].url" />
                       </td>
                       <td class="content-body-td3">
                         {{ titleResult.name }}

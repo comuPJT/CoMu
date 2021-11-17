@@ -60,10 +60,77 @@ const deletePlayList = (data, callback, errorCallback) => {
 };
 
 
+//개인 플레이리스트
+const newPlayList = (data, callback, errorCallback) => {
+    //새로운 플레이리스트를 생성합니다.
+    http
+        .post("/myplaylist/", {
+            musicIds: data.musicIds,
+            name: data.name,
+            userSeq: data.userSeq,
+        })
+        .then((res) => {
+            callback(res);
+        })
+        .catch((err) => {
+            errorCallback(err);
+        });
+};
+
+const listPlayList = (data, callback, errorCallback) => {
+    //유저의 플레이리스트 전체를 가져옵니다.
+    http
+        .get("/myplaylist/all/" + data)
+        .then((res) => {
+            callback(res);
+        })
+        .catch((err) => {
+            errorCallback(err);
+        });
+};
+
+const playListDetail = (data, callback, errorCallback) => {
+    //특정 플레이리스트에 저장된 전체 곡들을 가져온다.
+    http
+        .get("/myplaylist/" + data)
+        .then((res) => {
+            callback(res);
+        })
+        .catch((err) => {
+            errorCallback(err);
+        });
+};
+
+const editListName = (data, callback, errorCallback) => {
+    //리스트의 이름을 변경한다.
+
+    // {
+    //  
+    //         "name": "string",
+    //             "userSeq": 0
+    // }
+    http
+        .put("/myplaylist/" + data.id, {
+            name: data.name,
+            userSeq: data.userSeq
+        })
+        .then((res) => {
+            callback(res);
+        })
+        .catch((err) => {
+            errorCallback(err);
+        });
+};
+
+
 
 export default {
     getPersonalPlayList,
     addPersonalPlayList,
     deletePersonal,
-    deletePlayList
+    deletePlayList,
+    newPlayList,
+    listPlayList,
+    playListDetail,
+    editListName
 };

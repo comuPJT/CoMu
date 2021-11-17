@@ -60,8 +60,11 @@
         border-radius: 8px 8px 0px 0px;
         font-family: BMHANNA;
         color: white;
-        font-size: 1.04vw;
+        font-size: 0.83vw;
         z-index: 6;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       .img-1 {
         width: 60%;

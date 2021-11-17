@@ -5,6 +5,7 @@
     ></nav-bar>
     <!-- 유니티 화면 -->
     <div id="unity">
+      <button @click="showModalPlayList=true">dsds</button>
       <div
         v-if="isShowBlind"
         class="blind"
@@ -15,6 +16,7 @@
         </div>
       </div>
       <unity
+        v-if="false"
         src="unity/Build/unity.json"
         unityLoader="unity/Build/UnityLoader.js"
         ref="comu"
@@ -34,6 +36,10 @@
       <!-- 오늘의 사연 보기 -->
       <normal-story v-if="showModalTodayStory" @close="closeTodayStoryModal">
       </normal-story>
+
+      <!--사연 명예의전당 보기-->
+      <best-story v-if="showModalBestStory" @close="closeBestStoryModal">
+      </best-story>
     </div>
     <!-- 음악 재생 -->
     <video v-show="false" id="video"></video>
@@ -45,6 +51,7 @@ import Unity from "vue-unity-webgl";
 import PublicPlayList from "./components/PublicPlayList.vue";
 import PublicPlayListAdd from "./components/PublicPlayListAdd.vue";
 import NormalStory from "./components/NormalStory.vue";
+import BestStory from "./components/BestStory.vue";
 import Hls from "hls.js";
 
 export default {
@@ -55,6 +62,7 @@ export default {
     PublicPlayList,
     PublicPlayListAdd,
     NormalStory,
+    BestStory,
   },
 
   props: {},
@@ -63,6 +71,7 @@ export default {
       showModalPlayList: false,
       showModalPlayListAdd: false,
       showModalTodayStory: false,
+      showModalBestStory: false,
       unityWidth: 0,
       unityHeight: 0,
       isShowBlind: false,
@@ -151,6 +160,12 @@ export default {
     closeTodayStoryModal() {
       this.showModalTodayStory = false;
       localStorage.setItem("showTodayStory", "FALSE");
+      this.SetUnityKeyboardInput("TRUE");
+    },
+    // 사연 명예의전당 페이지 닫기
+    closeBestStoryModal() {
+      this.showModalBestStory = false;
+      localStorage.setItem("showBestStory", "FALSE");
       this.SetUnityKeyboardInput("TRUE");
     },
   },
