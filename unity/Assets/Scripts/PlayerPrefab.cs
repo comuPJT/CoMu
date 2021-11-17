@@ -9,7 +9,8 @@ public class PlayerPrefab : MonoBehaviour
 
     void Start()
     {
-        SetCharacterNum(GetMyCharacterNum());
+        // SetCharacterNum(GetMyCharacterNum());
+        SetCharacterNum(5);
     }
 
     void Update()

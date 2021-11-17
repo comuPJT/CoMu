@@ -13,7 +13,8 @@ public class NicknameScript : MonoBehaviour
     void Start()
     {
         // 받아온 유저 닉네임 설정
-        SetUserNickname(GetUserNickname());
+        // SetUserNickname(GetUserNickname());
+        SetUserNickname("test");
     }
 
     void Update()

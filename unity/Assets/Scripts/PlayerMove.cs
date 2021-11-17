@@ -25,7 +25,7 @@ public class PlayerMove : MonoBehaviour
     void Start()
     {
         player = GetComponent<Rigidbody2D>();
-        SetRoomName("Main"); // 메인 공간에서 시작
+        // SetRoomName("Main"); // 메인 공간에서 시작
     }
 
     void Update()
