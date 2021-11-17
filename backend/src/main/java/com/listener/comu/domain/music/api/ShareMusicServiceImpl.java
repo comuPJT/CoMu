@@ -15,9 +15,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import static com.listener.comu.config.RedisConfig.objectMapper;
+import static java.lang.Thread.*;
 
 @Service
 class ShareMusicServiceImpl implements ShareMusicService {
@@ -59,12 +61,12 @@ class ShareMusicServiceImpl implements ShareMusicService {
                                     .build();
                 musicRepository.save(music);
                 // 음악 다운로드 -> s3 업로딩
-                String cmd = "youtube-dl -f 160+140 -o src/main/resources/static/" + music.getId() + ".%(ext)s " + music.getSource();
+                String cmd = "youtube-dl -f 160+140 -o src/main/resources/static/" + music.getSpotifyId() + ".%(ext)s " + music.getSource();
                 Runtime rt = Runtime.getRuntime();
                 try {
                     Process pr = rt.exec(cmd);
                     pr.waitFor();
-                    String sourceFilepath = "src/main/resources/static/" + music.getId() + ".mp4";
+                    String sourceFilepath = "src/main/resources/static/" + music.getSpotifyId() + ".mp4";
                     s3Uploader.dirUpload(new File(sourceFilepath),"static");
                     pr.destroy();
                 } catch (IOException | InterruptedException e) {
@@ -105,6 +107,8 @@ class ShareMusicServiceImpl implements ShareMusicService {
         String playedKey = playedPrefix + ":" + roomId;
         String reqKey = musicReqPrefix + ":" + roomId;
         ListOperations<String, Object> operations = redisTemplate.opsForList();
+        HashOperations<String, Object, Object> nowplayoperation = redisTemplate.opsForHash();
+        SharePlaylistMusic nowPlay = objectMapper().convertValue(nowplayoperation.get("nowplaying", "room:" + roomId), SharePlaylistMusic.class);
         List<Object> playedList = operations.range(playedKey, 0,-1);
         List<Object> requestList = operations.range(reqKey, 0 ,-1);
         List<SharePlaylistMusicRes> response = new ArrayList<>();
@@ -113,6 +117,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
                 resObjectList.addAll(playedList);
             else resObjectList.addAll(playedList.subList(0, (int)limit));
         }
+        if( nowPlay != null) resObjectList.add(nowPlay);
         if( requestList != null ) resObjectList.addAll(requestList);
         convertObjectListToDtoList(resObjectList, response);
         return response;
@@ -122,22 +127,25 @@ class ShareMusicServiceImpl implements ShareMusicService {
         for (Object o : resObjectList) {
             SharePlaylistMusic play = objectMapper().convertValue(o, SharePlaylistMusic.class);
             Long likeCount = redisTemplate.opsForSet().size( musicLikePrefix + ":" + play.getPlayId());
-            Music reqMusic = musicRepository.getMusicById(play.getMusicId());
-            User user = userRepository.getById(play.getUserId());
-            if (likeCount != null && reqMusic != null) {
-                response.add(SharePlaylistMusicRes.builder()
+            Optional<Music> reqMusic = musicRepository.findById(play.getMusicId());
+            Optional<User> user = userRepository.findById(play.getUserId());
+            String username = ( user.isPresent())? user.get().getUsername() : "Anonymous";
+            if (likeCount != null && reqMusic.isPresent()) {
+                Music music = reqMusic.get();
+                SharePlaylistMusicRes res = SharePlaylistMusicRes.builder()
                         .playId(play.getPlayId())
                         .title(play.getTitle())
                         .contents(play.getContents())
                         .timestamp(play.getTimestamp())
-                        .name(reqMusic.getName())
-                        .thumbnail(reqMusic.getThumbnail())
-                        .album(reqMusic.getAlbum())
-                        .singer(reqMusic.getSinger())
-                        .username(user.getUsername())
+                        .name(music.getName())
+                        .thumbnail(music.getThumbnail())
+                        .album(music.getAlbum())
+                        .singer(music.getSinger())
+                        .username(username)
                         .likes(likeCount)
                         .status(play.getStatus())
-                        .build());
+                        .build();
+                response.add(res);
             }
         }
     }
@@ -261,80 +269,91 @@ class ShareMusicServiceImpl implements ShareMusicService {
         String nowMusicKey = "nowplaying";
         SharePlaylistMusic nowPlay = objectMapper().convertValue(operations.get(nowMusicKey, "room:" + roomId), SharePlaylistMusic.class);
         if( nowPlay != null ){ // 진행할 신청곡이 있는 경우
-            System.out.println("There is music to be played soon..." + nowPlay.getMusicId() + " " + playId);
+            System.out.println("There is music to be played soon..." + playId);
+            String musicName = musicRepository.getMusicById(nowPlay.getMusicId()).getSpotifyId();
             if( nowPlay.getPlayId().equals(playId)) {
                 // 신청곡이 이전 곡으로, 바뀌지 않은 경우
                 System.out.println("Playing music not updated yet...!");
                 operations.delete(nowMusicKey, "room:" + roomId);
                 ListOperations<String, Object> listOps = redisTemplate.opsForList();
                 // 일반 사연으로 옮긴다.
-                nowPlay.setStatus(Status.DONE);
-                listOps.rightPush(playedPrefix + ":" + roomId, nowPlay);
+                if( nowPlay.getUserId() != -1L) {
+                    nowPlay.setStatus(Status.DONE);
+                    listOps.rightPush(playedPrefix + ":" + roomId, nowPlay);
+                }
                 // 재생되지 않은 신청곡 리스트에서 새로 값을 얻어와 스트리밍을 시작한다.
                 Object next = listOps.leftPop(musicReqPrefix + ":" + roomId);
                 nowPlay = objectMapper().convertValue(next, SharePlaylistMusic.class);
-                if(nowPlay == null)
+                if(nowPlay == null) {// 신청곡이 하나도 없다면 랜덤으로 얻어오기
                     nowPlay = getRandomMusicObject(roomId, operations, nowMusicKey);
-                setNowPlayAndStream(roomId, operations, nowMusicKey, nowPlay);
+                    musicName = nowPlay.getTitle();
+                }
+                setNowPlayAndStream(roomId, musicName, operations, nowMusicKey, nowPlay);
             }
             if( nowPlay.getStatus().equals(Status.PLAYING)) { // 정상적으로 다음곡을 얻어온 경우
-                System.out.println("Music is playing now...!" + nowPlay.getMusicId());
+                System.out.println("Music is playing now...!");
                 return NextMusicRes.builder()
                         .playId(nowPlay.getPlayId())
-                        .musicId(nowPlay.getMusicId()).build();
+                        .musicName(musicName).build();
             }
-            else if(observeFileCreated(roomId, nowPlay.getMusicId())){ // ready이거나 다음곡이 TODO 인 경우
-                System.out.println("Getting ready for the music...!" + nowPlay.getMusicId());
+            else if(observeFileCreated(roomId)){ // ready이거나 다음곡이 TODO 인 경우
+                System.out.println("Getting ready for the music...!");
                 nowPlay.setStatus(Status.PLAYING);
                 operations.put(nowMusicKey, "room:"+roomId , nowPlay);
                 return NextMusicRes.builder()
                         .playId(nowPlay.getPlayId())
-                        .musicId(nowPlay.getMusicId()).build();
+                        .musicName(musicName).build();
             }
         }
         // 신청곡이 없을 때 랜덤한 곡을 틀도록 한다.
         System.out.println("No music in the playlist...!");
-        nowPlay = getRandomMusicObject(roomId, operations, nowMusicKey);
         // 지금 재생중인 곡을 리턴한다.
+        nowPlay = getRandomMusicObject( roomId,operations, nowMusicKey);
         return NextMusicRes.builder()
-                .playId(nowPlay.getPlayId())
-                .musicId(nowPlay.getMusicId()).build();
+                .playId("Anonymous")
+                .musicName(nowPlay.getTitle()).build();
     }
 
     private SharePlaylistMusic getRandomMusicObject(long roomId, HashOperations<String, Object, Object> operations, String nowMusicKey) {
-        SharePlaylistMusic nowPlay;
         long rand = getRandomSongForRoom(roomId); // 방id를 토대로 방에 맞는 랜덤곡을 받아온다.
-        nowPlay = SharePlaylistMusic.builder()
-                .title("none")
+        SharePlaylistMusic nowPlay = SharePlaylistMusic.builder()
+                .title("")
                 .contents("")
+                .playId("Anonymous")
                 .musicId(rand)
                 .userId(-1L)
                 .build();
-        nowPlay.setId();
-        setNowPlayAndStream(roomId, operations, nowMusicKey, nowPlay);// 현재 재생으로 옮기고 streaming한다.
-        if( observeFileCreated(roomId, nowPlay.getMusicId())){ // 스트리밍 파일이 생성되면
+        String musicName = musicRepository.getMusicById(rand).getSpotifyId();
+        nowPlay.setTitle(musicName);
+        setNowPlayAndStream(roomId, musicName, operations, nowMusicKey, nowPlay);// 현재 재생으로 옮기고 streaming한다.
+        if( observeFileCreated(roomId)){ // 스트리밍 파일이 생성되면
             nowPlay.setStatus(Status.PLAYING); //재생중 상태로 옮긴다.
             operations.put(nowMusicKey, "room:"+roomId , nowPlay);
         }
         return nowPlay;
     }
 
-    private void setNowPlayAndStream(long roomId, HashOperations<String, Object, Object> operations, String nowMusicKey, SharePlaylistMusic nowPlay) {
+    private void setNowPlayAndStream(long roomId, String musicName, HashOperations<String, Object, Object> operations, String nowMusicKey, SharePlaylistMusic nowPlay) {
         nowPlay.setStatus(Status.READY);
         operations.put(nowMusicKey, "room:"+roomId , nowPlay);
         Runtime rt = Runtime.getRuntime();
-        String cmd = "sh stream.sh " + roomId + " " + nowPlay.getMusicId();
-  //      String cmd = "stream.bat " + roomId + " " + nowPlay.getMusicId();
+        String cmd = "sh stream.sh " + roomId + " " + musicName;
+  //      String cmd = "stream.bat " + roomId + " " + musicName;
         try {
             System.out.println("Streaming start...");
             rt.exec(cmd);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
-    private static boolean observeFileCreated(long roomId, long musicId) {
-//        String targetFile ="/tmp/hls/" + roomId + "/" + musicId + ".m3u8";
+    private static boolean observeFileCreated(long roomId) {
+//        String targetFile ="/tmp/hls/" + roomId + "/" + "music.m3u8";
         String targetFile = "stream.sh";
 //        String targetFile = "stream.bat";
         while(true){ // 디렉토리를 모니터링 하다가 파일이 생성되는 시점에 응답주기
@@ -347,7 +366,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
     }
     private static long getRandomSongForRoom(long roomId){
         Random rd = new Random();
-        return  rd.nextInt(3) + roomId*3;
+        return  rd.nextInt(3) + (roomId-1)*3;
     }
     // 매일 밤 12시 마다 redis에 있던 일반 사연 목록 중 좋아요수가 10이 넘는 사연을 명예의 전당에 영구적으로 저장한다.
     @Scheduled(cron = "0 0 0 * * *")
@@ -357,7 +376,6 @@ class ShareMusicServiceImpl implements ShareMusicService {
         for(long i = 0; i < roomSize; i++){
             String key = playedPrefix + ":" + i;
             List<Object> roomPlayed = operations.range(key, 0,-1);
-            List<History> honoredPlaylist = new ArrayList<>();
             if(roomPlayed != null) {
                 convertObjectListToHistoryAndSave(i, roomPlayed);
             }
