@@ -26,22 +26,21 @@ public class ObjectInteract : MonoBehaviour
     public GameObject target;
     public GameObject message;
 
-    private bool isTrigger; // 상호작용 범위 내에 있는지
+    private bool isTrigger = false; // 상호작용 범위 내에 있는지
 
-    private Shader normal, outline1, outline2;
+    private Shader normal, outline;
 
     void Start()
     {
-        isTrigger = false;
+        // 테두리 굵기를 맞추기 위해 에셋에 따라 아웃라인 쉐이더를 다르게 설정
+        outline = target.CompareTag("Record") ? Shader.Find("Sprites/Outline1") : Shader.Find("Sprites/Outline2");
         normal = Shader.Find("Sprites/Default");
-        outline1 = Shader.Find("Sprites/Outline1");
-        outline2 = Shader.Find("Sprites/Outline2");
     }
 
     void Update()
     {
         // 상호작용 가능 범위 내에서 X키를 누르면 기능 실행
-        if (isTrigger && Input.GetKeyUp(KeyCode.X))
+        if (isTrigger && (Input.GetKeyDown(KeyCode.X) || Input.GetKeyUp(KeyCode.X)))
         {
             if (gameObject.CompareTag("PlayList"))
             {
@@ -74,15 +73,7 @@ public class ObjectInteract : MonoBehaviour
         // 플레이어가 오브젝트와 가까워지면 테두리 표시하기
         if (collision.gameObject.CompareTag("Player"))
         {
-            // 에셋에 따라 테두리 굵기 다르게 설정
-            if (target.CompareTag("Record"))
-            {
-                target.GetComponent<SpriteRenderer>().material.shader = outline1;
-            }
-            else
-            {
-                target.GetComponent<SpriteRenderer>().material.shader = outline2;
-            }
+            target.GetComponent<SpriteRenderer>().material.shader = outline;
 
             // 상호작용 방법 안내 메시지 표시하기
             message.SetActive(true);

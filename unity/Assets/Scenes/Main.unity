@@ -491,6 +491,11 @@ PrefabInstance:
       propertyPath: m_GravityScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2264593362713716660, guid: 4fd99ad1026eb4676b6ed98658f868a9,
+        type: 3}
+      propertyPath: m_SleepingMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2264593362713716661, guid: 4fd99ad1026eb4676b6ed98658f868a9,
         type: 3}
       propertyPath: m_RootOrder
