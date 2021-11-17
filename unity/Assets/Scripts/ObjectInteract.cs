@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Runtime.InteropServices;
+using Photon.Pun;
 
-public class ObjectInteract : MonoBehaviour
+public class ObjectInteract : MonoBehaviourPun
 {
     // 플레이리스트 모달창 열기
     [DllImport("__Internal")]
@@ -40,6 +41,11 @@ public class ObjectInteract : MonoBehaviour
 
     void Update()
     {
+        // 로컬 플레이어인 경우에만 적용
+        if (!photonView.IsMine)
+        {
+            return;
+        }
         // 상호작용 가능 범위 내에서 X키를 누르면 기능 실행
         if (isTrigger && Input.GetKeyUp(KeyCode.X))
         {

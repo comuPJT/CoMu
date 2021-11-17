@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Runtime.InteropServices;
+using Photon.Pun;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMove : MonoBehaviourPun
 {
     // 현재 방 이름 저장
     [DllImport("__Internal")]
@@ -35,6 +36,11 @@ public class PlayerMove : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // 로컬 플레이어인 경우에만 적용
+        if (!photonView.IsMine)
+        {
+            return;
+        }
         UpdateState();
         MoveCharacter();
     }

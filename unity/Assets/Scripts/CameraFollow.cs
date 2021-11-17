@@ -1,6 +1,7 @@
 using UnityEngine;
+using Photon.Pun; // 포톤 유니티 라이브러리
 
-public class CameraFollow : MonoBehaviour
+public class CameraFollow : MonoBehaviourPun
 {
     public Transform target;
 
@@ -17,6 +18,11 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // 로컬 플레이어인 경우에만 카메라 따라가기
+        if (!photonView.IsMine) // 현재 오브젝트가 로컬 오브젝트인 경우에만 true 값
+        {
+            return;
+        }
         if (isMain)
         {
             // 카메라의 위치를 목표 트랜스폼의 위치에 일치
