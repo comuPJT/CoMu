@@ -16,6 +16,7 @@ const getPersonalPlayList = (callback, errorCallback) => {
 
 const addPersonalPlayList = (data, callback, errorCallback) => {
     //내 재생목록에 곡을 추가합니다.
+    console.log(data);
     http
         .post("/mymainplaylist/", {
             musicList: data.musicList,
@@ -31,18 +32,16 @@ const addPersonalPlayList = (data, callback, errorCallback) => {
 
 const deletePersonal = (data, callback, errorCallback) => {
     //내 재생목록에서 곡을 삭제합니다.
+    console.log(data);
     http
-        .delete("/mymainplaylist/", {
-            data: {
-                musicIds: data.MusicIds,
-                userSeq: data.userSeq,
-            }
+        .put("/mymainplaylist/", {
+            musicIds: data.musicIds,
+            userSeq: data.userSeq,
         })
         .then((res) => {
             callback(res);
         })
         .catch((err) => {
-            console.log("여기여기");
             console.log(data);
             errorCallback(err);
         });

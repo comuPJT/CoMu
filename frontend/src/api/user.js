@@ -1,6 +1,5 @@
 import http from "@/util/http-common.js";
 
-
 const login = (callback, errorCallback) => {
   http
     .get("/v1/users")
@@ -10,21 +9,6 @@ const login = (callback, errorCallback) => {
     })
     .catch((err) => {
       console.log(err);
-      errorCallback(err);
-    });
-};
-
-const join = (data, callback, errorCallback) => {
-  http
-    .put("/v1/users", {
-      userSeq: data[0],
-      username: data[1],
-      characterNum: data[2],
-    })
-    .then((res) => {
-      callback(res);
-    })
-    .catch((err) => {
       errorCallback(err);
     });
 };
@@ -41,9 +25,9 @@ const logout = (callback, errorCallback) => {
 };
 
 const withdrawal = (data, callback, errorCallback) => {
+  //회원탈퇴
   http
-    .delete("/user", {
-    })
+    .delete("/user", {})
     .then((res) => {
       callback(res);
     })
@@ -54,7 +38,10 @@ const withdrawal = (data, callback, errorCallback) => {
 
 const updateNickname = (data, callback, errorCallback) => {
   http
-    .put("/v1/users", data)
+    .put("/v1/users", {
+      userSeq: data[0],
+      username: data[1],
+    })
     .then((res) => {
       callback(res);
     })
@@ -65,7 +52,10 @@ const updateNickname = (data, callback, errorCallback) => {
 
 const updateCharacter = (data, callback, errorCallback) => {
   http
-    .put("/user", data)
+    .put("/v1/users/character", {
+      userSeq: data[0],
+      characterNum: data[2],
+    })
     .then((res) => {
       callback(res);
     })
@@ -76,7 +66,6 @@ const updateCharacter = (data, callback, errorCallback) => {
 
 export default {
   login,
-  join,
   logout,
   withdrawal,
   updateNickname,

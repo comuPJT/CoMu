@@ -232,7 +232,7 @@ export default {
     };
   },
   created() {
-    this.nicknameChat = localStorage.getItem("user-nickname");
+    this.nicknameChat = localStorage.getItem("userNickname");
     firebase
       .database()
       .ref("chatrooms/" + "-MoYVNUI7BlBdmvplUXI" + "/chats")
@@ -292,10 +292,10 @@ export default {
         .push();
       newData.set({
         type: "newmsg",
-        user: localStorage.getItem("user-nickname"),
+        user: localStorage.getItem("userNickname"),
         message: this.inputChat,
         img: localStorage.getItem("characterNum"),
-        sendDate: this.$moment().format("MM-DD HH:MM:ss"),
+        sendDate: this.$moment().format("MM-DD HH:mm:ss"),
       });
       this.inputChat = "";
     },

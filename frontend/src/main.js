@@ -5,7 +5,7 @@ import store from "./store/index";
 import VueChatScroll from 'vue-chat-scroll'
 import router from "./router";
 import * as firebase from 'firebase';
-import VueMoment from 'vue-moment'
+import VueMoment from 'vue-moment';
 
 import NavBar from "@/views/common/NavBar";
 Vue.config.productionTip = false

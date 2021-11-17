@@ -26,5 +26,11 @@ export default {
     setUser(state, user) {
       state.user = user
     },
+    setUserName(state, username) {
+      state.user.user.username = username
+    },
+    setUserCharacter(state, character) {
+      state.user.user.characterNum = character
+    },
   }
 }
