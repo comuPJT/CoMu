@@ -175,7 +175,7 @@ export default {
             console.log(err);
           }
         );
-
+        
         await userApi.updateCharacter(
           data,
           (res) => {
