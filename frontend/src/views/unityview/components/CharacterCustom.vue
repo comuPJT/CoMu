@@ -89,7 +89,7 @@ export default {
           this.setUserCharacter(data[2]);
           localStorage.setItem("characterNum", data[2]);
           this.$emit("setCharacter", data[2]);
-          alert("변경되었습니다.");
+          this.$alert("캐릭터가 변경되었습니다.");
           this.$emit("close");
           console.log(res);
         },
