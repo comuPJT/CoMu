@@ -1,7 +1,21 @@
 <template>
   <div class="user-personal-wrapper">
+    <youtube
+      v-if="
+        this.personalPlayList.length > 0 &&
+        (this.shareMusicView == 'list' || this.shareMusicView == 'search')
+      "
+      :video-id="
+        (this.musicUrl = this.$youtube.getIdFromURL(
+          this.personalPlayList[this.musicIndex].source
+        ))
+      "
+      :player-vars="{start: 0, autoplay: 1}"
+      @ended="endVideo()"
+      style="display: none"
+    ></youtube>
     <!-- 현재 재생중인 플레이리스트 -->
-    <div class="modal-window" v-show="shareMusicView == 'list'">
+    <div class="modal-window" v-if="shareMusicView == 'list'">
       <!--현재 방 이름 / 모달 닫기 버튼-->
       <div class="modal-top">
         <p>내 재생 목록</p>
@@ -25,26 +39,32 @@
 
         <!--내 개인 플레이 리스트-->
         <div class="content-body">
-          <table>
+          <table class="table">
             <!-- 클릭시 selectOnPlayList 배열에 아이디를 담는데 임시로 id라는 문자열을 담습니다-->
             <tr
               v-for="music in personalPlayList"
-              :key="music.id"
-              v-bind:class="{'selected-table': music.isselected}"
+              :key="music.spotifyid"
+              v-bind:class="{
+                'selected-table':
+                  music.spotifyId == personalPlayList[musicIndex].spotifyId,
+              }"
+              @click="changeMusic(music.spotifyId)"
             >
+              <td class="content-body-td2">
+                <img
+                  v-if="
+                    music.spotifyId == personalPlayList[musicIndex].spotifyId
+                  "
+                  src="@/assets/images/sound-wave.gif"
+                />
+              </td>
               <td class="content-body-td2">
                 <img :src="music.thumbnail" />
               </td>
               <td class="content-body-td3">{{ music.name }}</td>
               <td class="content-body-td4">{{ music.singer }}</td>
               <td class="content-body-td5">{{ music.album }}</td>
-              <td class="content-body-td6">
-                <img
-                  src="@/assets/images/close_button.svg"
-                  style="width: 1.5vw; margin-right: 1vw"
-                  @click="deletePersonal(music.id)"
-                />
-              </td>
+              <td class="content-body-td6"></td>
             </tr>
           </table>
         </div>
@@ -53,7 +73,7 @@
         <!--리스트에 저장 / 신청하기 버튼-->
         <div class="playlist-button-wrapper">
           <div class="smallbuttonbrown">
-            <div class="buttoncontent">편집(구현예정)</div>
+            <div class="buttoncontent" @click="goEditPage()">편집</div>
           </div>
           <div class="smallbuttonwhite">
             <div class="buttoncontent" @click="shareMusicView = 'search'">
@@ -106,7 +126,7 @@
               </div>
             </div>
             <div class="content-body">
-              <table>
+              <table class="table">
                 <tr
                   v-for="titleResult in searchResultTitle"
                   :key="titleResult.id"
@@ -146,6 +166,72 @@
       </div>
     </div>
     <!-- 곡 검색화면 끝-->
+
+    <!--리스트편집-->
+    <div class="modal-window" v-show="shareMusicView == 'edit'">
+      <div class="modal-top">
+        <p>재생목록 편집</p>
+      </div>
+      <div class="modal-content">
+        <!--신청곡 리스트 헤더 => 스크롤때문에 th안쓰고 따로작성-->
+        <div class="content-header">
+          <div class="content-header-1">
+            <div class="header-text">곡 제목</div>
+          </div>
+          <div class="content-header-2">
+            <div class="header-text">아티스트</div>
+          </div>
+          <div class="content-header-3">
+            <div class="header-text">앨범</div>
+          </div>
+        </div>
+        <!--신청곡 리스트 헤더 끝-->
+
+        <!--내 개인 플레이 리스트-->
+        <div class="content-body">
+          <div class="table">
+            <draggable
+              v-model="personalPlayList"
+              @start="drag = true"
+              @end="drag = false"
+              style="width: 100%; height: 100%"
+            >
+              <!-- 클릭시 selectOnPlayList 배열에 아이디를 담는데 임시로 id라는 문자열을 담습니다-->
+              <div
+                class="drag-tr"
+                v-for="music in personalPlayList"
+                :key="music.spotifyid"
+              >
+                <div class="content-body-td2 drag-td"></div>
+                <div class="content-body-td2 drag-td">
+                  <img :src="music.thumbnail" />
+                </div>
+                <div class="content-body-td3 drag-td">{{ music.name }}</div>
+                <div class="content-body-td4 drag-td">{{ music.singer }}</div>
+                <div class="content-body-td5 drag-td">{{ music.album }}</div>
+                <div class="content-body-td6 drag-td">
+                  <img
+                    src="@/assets/images/close_button.svg"
+                    style="width: 1.5vw; margin-right: 1vw"
+                    @click="deleteMusic(music.spotifyId, music.id)"
+                  />
+                </div>
+              </div>
+            </draggable>
+          </div>
+        </div>
+        <!--내 개인 플레이 리스트 끝-->
+
+        <!--리스트에 저장 / 신청하기 버튼-->
+        <div class="playlist-button-wrapper">
+          <div class="smallbuttonwhite">
+            <div class="buttoncontent" @click="saveChange()">완료</div>
+          </div>
+        </div>
+        <!--리스트에 저장 / 신청하기 버튼 끝-->
+      </div>
+    </div>
+    <!--리스트편집 끝-->
   </div>
 </template>
 
@@ -153,10 +239,12 @@
 import axios from "axios";
 import youtubeAPI from "@/api/youtube";
 import myPlayListApi from "@/api/myPlayList";
+import draggable from "vuedraggable";
+
 export default {
   name: "UserPersonalPlayList",
 
-  components: {},
+  components: {draggable},
 
   props: {},
   data() {
@@ -164,8 +252,8 @@ export default {
       showModal: false,
       shareMusicView: "list", //플레이리스트, 곡 검색, 곡 신청 화면중 어떤걸 표시하는지
       //공용-재생중인 음악목록
-      personalPlayList: [], //현재 공용 플레이 리스트에서 재생중인 곡들
-      selectedMusicOnPlayList: [], //공용플레이리스트에서 내 리스트로 옮기기 위해 선택한 곡"들"
+      personalPlayList: [],
+      selectedMusicOnPlayList: [],
       //음악검색
       searchKeyword: "", //검색어
       searchResultTitle: [], //노래 검색결과 배열
@@ -173,11 +261,13 @@ export default {
       //사연과 신청
       postcardTitle: "",
       postcardContent: "",
+      musicIndex: 0,
+      musicUrl: "",
     };
   },
 
   mounted() {
-    const data = "흐으음";
+    const data = "";
     myPlayListApi.getPersonalPlayList(
       data,
       (res) => {
@@ -243,6 +333,58 @@ export default {
       }
     },
 
+    goEditPage() {
+      this.shareMusicView = "edit";
+    },
+
+    saveChange() {
+      const data = {
+        musicIdPlayOrderDtoList: [],
+        userSeq: localStorage.getItem("userSeq"),
+      };
+      for (var i = 0; i < this.personalPlayList.length; i++) {
+        data.musicIdPlayOrderDtoList.push({
+          musicId: this.personalPlayList[i].id,
+          playOrder: i,
+        });
+      }
+      myPlayListApi.editPlayList(
+        data,
+        (res) => {
+          console.log(res);
+          this.$alert("리스트 수정이 완료되었습니다!.");
+          this.shareMusicView = "list";
+          this.musicIndex = 0;
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+    },
+
+    deleteMusic(spotifyId, musicid) {
+      const data = {
+        musicIds: [musicid],
+        userSeq: localStorage.getItem("userSeq"),
+      };
+      myPlayListApi.deletePersonal(
+        data,
+        (res) => {
+          console.log(res);
+          this.$alert("곡이 삭제되었습니다.");
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+      this.personalPlayList.splice(
+        this.personalPlayList.findIndex(function (music) {
+          return music.spotifyId === spotifyId;
+        }),
+        1
+      );
+    },
+
     async addToPersonal(titleResult) {
       var youtubesrc = "";
       youtubesrc += await youtubeAPI.getYouTubeUrl(
@@ -282,29 +424,18 @@ export default {
       );
     },
 
-    deletePersonal(id) {
-      const data = {
-        musicIds: [id],
-        userSeq: localStorage.getItem("userSeq"),
-      };
-      myPlayListApi.deletePersonal(
-        data,
-        (res) => {
-          var index;
-          for (var i = 0; i < this.personalPlayList.length; i++) {
-            if (this.personalPlayList[i].id == id) {
-              index = i;
-              break;
-            }
-          }
-          this.$delete(this.personalPlayList, index);
-          console.log(res);
-          this.$alert("곡이 삭제되었습니다.");
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+    endVideo() {
+      if (this.musicIndex == this.personalPlayList.length - 1) {
+        this.musicIndex = 0;
+      } else {
+        this.musicIndex++;
+      }
+    },
+
+    changeMusic(spotifyId) {
+      this.musicIndex = this.personalPlayList.findIndex(function (music) {
+        return music.spotifyId === spotifyId;
+      });
     },
   },
 };
