@@ -151,6 +151,8 @@ export default {
         localStorage.getItem("showPlayListAdd") == "TRUE" ? true : false;
       this.showModalTodayStory =
         localStorage.getItem("showTodayStory") == "TRUE" ? true : false;
+      this.showModalBestStory =
+        localStorage.getItem("showestStory") == "TRUE" ? true : false;
       this.showModalCharacterCustom =
         localStorage.getItem("showCharacter") == "TRUE" ? true : false;
     },
@@ -176,6 +178,7 @@ export default {
     closeBestStoryModal() {
       this.showModalBestStory = false;
       localStorage.setItem("showBestStory", "FALSE");
+      this.SetUnityKeyboardInput("TRUE");
     },
     // 유저 캐릭터 커스텀창 닫기
     closeCharacterCustomModal() {

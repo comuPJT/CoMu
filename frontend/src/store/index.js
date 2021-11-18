@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 import account from './modules/account'
+import theme from './modules/theme'
 
 Vue.use(Vuex)
 
@@ -9,6 +10,6 @@ const debug = process.env.NODE_ENV !== 'production'
 
 export default new Vuex.Store({
   plugins: [createPersistedState({ storage: window.sessionStorage })],
-  modules: { account },
+  modules: { account, theme },
   strict: debug
 })

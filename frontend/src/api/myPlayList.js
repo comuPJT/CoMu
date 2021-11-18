@@ -102,13 +102,6 @@ const playListDetail = (data, callback, errorCallback) => {
 };
 
 const editListName = (data, callback, errorCallback) => {
-    //리스트의 이름을 변경한다.
-
-    // {
-    //  
-    //         "name": "string",
-    //             "userSeq": 0
-    // }
     http
         .put("/myplaylist/" + data.id, {
             name: data.name,

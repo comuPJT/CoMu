@@ -115,7 +115,6 @@
           <!--현재 방 이름 / 모달 닫기 버튼 끝-->
 
           <div class="modal-content">
-            <!--신청곡 리스트-->
             <div class="postcard-margin"></div>
             <div class="content-body postcard-wrapper">
               <div class="postcard-body">
@@ -159,15 +158,12 @@
             </div>
             <div class="playlist-button-wrapper">
               <div class="smallbuttonbrown">
-                <div class="buttoncontent" @click="shareMusicView = 'search'">
-                  이전
-                </div>
+                <div class="buttoncontent" @click="goPrev()">이전</div>
               </div>
               <div class="smallbuttonwhite">
-                <div class="buttoncontent">신청</div>
+                <div class="buttoncontent" @click="addMusic()">신청</div>
               </div>
             </div>
-            <!--신청곡 리스트 끝-->
           </div>
         </div>
         <!--사연과 함께 음악 신청화면끝-->
@@ -287,39 +283,53 @@ export default {
     },
 
     async addMusic() {
+      console.log(Object.keys(this.selectedMusicOnSearch).length);
       if (Object.keys(this.selectedMusicOnSearch).length === 0) {
-       this.$alert("곡을 선택해주세요.");
+        this.$alert("곡을 선택해주세요.");
       } else {
         var youtubesrc = "";
         youtubesrc += await youtubeApi.getYouTubeUrl(
           this.selectedMusicOnSearch.artists,
           this.selectedMusicOnSearch.name
         );
-        const data = [
-          {
-            album: this.selectedMusicOnSearch.album.name,
-            contents: this.postcardContent,
-            name: this.selectedMusicOnSearch.name,
-            singer: this.selectedMusicOnSearch.artists,
-            source: youtubesrc,
-            spotifyId: this.selectedMusicOnSearch.id,
-            thumbnail: this.selectedMusicOnSearch.album.images[2].url,
-            title: this.postcardTitle,
-            userId: localStorage.getItem("userSeq"),
-          },
-        ];
-        console.log(data);
+        const data = {
+          album: this.selectedMusicOnSearch.album.name,
+          contents: this.postcardContent,
+          name: this.selectedMusicOnSearch.name,
+          singer: this.selectedMusicOnSearch.artists,
+          source: youtubesrc,
+          spotifyId: this.selectedMusicOnSearch.id,
+          thumbnail: this.selectedMusicOnSearch.album.images[2].url,
+          title: this.postcardTitle,
+          userId: localStorage.getItem("userSeq"),
+        };
+
         shareApi.addMusicPublicPlayList(
-          0, //몇번 플레이리스트인지,,, ex) 0=메인, 1=1번테마, 2=2번테마...
+          this.$store.getters.themeId, //몇번 플레이리스트인지
           data,
           (res) => {
-            this.$alert("곡을 선택해주세요.");
+            this.$alert("신청곡이 접수되었습니다.");
+            this.shareMusicView = "search"; //사연과신청이면 검색결과로
+            this.postcardTitle = "";
+            this.postcardContent = "";
+            for (var i = 0; i < this.searchResultTitle.length; i++) {
+              this.searchResultTitle[i].isselected = false;
+            }
+            this.selectedMusicOnSearch = {}; //선택한 노래와 사연들 초기화
             console.log(res);
           },
           (err) => {
             console.log(err);
           }
         );
+      }
+    },
+
+    goPrev() {
+      this.shareMusicView = "search";
+      this.selectedMusicOnSearch = {};
+      for (var i = 0; i < this.searchResultTitle.length; i++) {
+        this.searchResultTitle[i].isselected = false;
       }
     },
   },

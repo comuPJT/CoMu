@@ -19,6 +19,7 @@ const addMusicPublicPlayList = (roomdata, data, callback, errorCallback) => {
     console.log(data);
     http
         .post("/share/" + roomdata, {
+            album: data.album,
             contents: data.contents,
             name: data.name,
             singer: data.singer,
@@ -26,7 +27,7 @@ const addMusicPublicPlayList = (roomdata, data, callback, errorCallback) => {
             spotifyId: data.spotifyId,
             thumbnail: data.thumbnail,
             title: data.title,
-            userId: data.userId,
+            userId: parseInt(data.userId),
         })
         .then((res) => {
             callback(res);
