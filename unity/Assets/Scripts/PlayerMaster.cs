@@ -44,7 +44,7 @@ public class PlayerMaster : MonoBehaviourPunCallbacks
             int characterNum = GetMyCharacterNum();
             //int characterNum = 5;
             SetCharacterNum(characterNum);
-            playerInfo = new Hashtable() { { "cNum", "5" } };
+            playerInfo = new Hashtable() { { "cNum", characterNum.ToString() } };
             photonView.Owner.SetCustomProperties(playerInfo);
         }
         else
