@@ -81,7 +81,7 @@
           </div>
         </div>
       </div>
-      <div class="room-title">{{ theme }}</div>
+      <div class="room-title">{{ this.$store.getters.themeName }}</div>
       <!--현재 재생중인 음악 끝-->
       <!--접속중인 유저 목록-->
       <div v-show="selectedMenu == 'online'">
@@ -156,14 +156,14 @@
                 <send-chat
                   v-if="chat.user == idChat"
                   :message="chat.message"
-                  :nickname="nickNameChat"
+                  :nickname="chat.userName"
                   :time="chat.sendDate"
                   :img="chat.img ? chat.img : 0"
                 ></send-chat>
                 <receive-chat
                   v-if="chat.user != idChat"
                   :message="chat.message"
-                  :nickname="nickNameChat"
+                  :nickname="chat.userName"
                   :time="chat.sendDate"
                   :img="chat.img ? chat.img : 0"
                 ></receive-chat>
@@ -202,6 +202,7 @@
 import MarqueeText from "vue-marquee-text-component";
 import SendChat from "./components/SendChat.vue";
 import ReceiveChat from "./components/ReceiveChat.vue";
+import {mapMutations} from "vuex";
 import firebase from "firebase";
 
 export default {
@@ -234,7 +235,6 @@ export default {
       errors: [],
       offStatus: false,
       roomName: "",
-      theme: "",
       chatRoomId: "-MoYW1WEd9p5xM_OxIDz",
     };
   },
@@ -264,6 +264,8 @@ export default {
     this.scrollToBottom();
   },
   methods: {
+    ...mapMutations(["setThemeName"]),
+    ...mapMutations(["setThemeId"]),
     fetchRoom() {
       this.roomName = localStorage.getItem("roomName");
     },
@@ -323,6 +325,7 @@ export default {
         newData.set({
           type: "newmsg",
           user: localStorage.getItem("userSeq"),
+          userName: localStorage.getItem("userNickname"),
           message: this.inputChat,
           img: localStorage.getItem("characterNum"),
           sendDate: this.$moment().format("MM-DD HH:mm:ss"),
@@ -348,25 +351,31 @@ export default {
     },
     roomName: function () {
       if (this.roomName === "Main") {
-        this.theme = "메인공간";
+        this.setThemeName("메인공간");
+        this.setThemeId(1);
         this.chatRoomId = "-MoYW1WEd9p5xM_OxIDz";
       } else if (this.roomName === "Theme1") {
-        this.theme = "별이빛나는 낮에 30.4FM";
+        this.setThemeName("별이빛나는 낮에 30.4FM");
+        this.setThemeId(3);
         this.chatRoomId = "-MoYW38qSow1G3SNIYH3";
       } else if (this.roomName === "Theme2") {
-        this.theme = "내적 댄스 유발";
+        this.setThemeName("내적 댄스 유발");
+        this.setThemeId(4);
         this.chatRoomId = "-MoYW40D_W8h5lLMpoge";
       } else if (this.roomName === "Theme3") {
-        this.theme = "코뮤-다방";
+        this.setThemeName("코뮤-다방");
+        this.setThemeId(2);
         this.chatRoomId = "-MoYW4eYGD_57sLRCrTP";
       } else if (this.roomName === "Theme4") {
-        this.theme = "멀캠도서관";
+        this.setThemeName("멀캠도서관");
+        this.setThemeId(6);
         this.chatRoomId = "-MoYW5hC1bb9mXtR_gjA";
       } else if (this.roomName === "Theme5") {
-        this.theme = "COMU CAFE";
+        this.setThemeName("COMU CAFE");
+        this.setThemeId(5);
         this.chatRoomId = "-MoYW6JDoLl-kmso69ax";
       } else if (this.roomName === "MyRoom") {
-        this.theme = "마이룸";
+        this.setThemeName("마이룸");
         this.chatRoomId = "-MoYW1WEd9p5xM_OxIDz";
       }
       this.initChatRoom();
