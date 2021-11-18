@@ -41,6 +41,7 @@ pipeline {
 						)
 						sh 'docker rm -f frontend'
 						sh 'docker build -t dockerize-vuejs-app ./frontend'
+						sh 'docker container prune'
 						sh 'docker rmi $(docker images -f dangling=true -q)'
 						sh 'docker run --name frontend --network front-back -d -p 80:80 -p 443:443 -v /home/ubuntu/cert/:/etc/letsencrypt/ dockerize-vuejs-app'
 					} catch(e) {
