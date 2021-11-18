@@ -1,15 +1,17 @@
 <template>
   <div @click="$emit('clickNavbar')">
+    <video
+      ref="video"
+      width="100%"
+      height="0"
+      controls
+      autoplay="autoplay"
+      muted="muted"
+    ></video>
     <!--네비바 좌측 메뉴선택부분-->
     <div class="nav-bar-left">
       <img class="logo-2X2" src="@/assets/images/logo_2X2.png" />
       <div class="menu_icons">
-        <img
-          src="@/assets/images/online_icon.svg"
-          class="menu_icon"
-          :class="{'menu-selected': selectedMenu === 'online'}"
-          @click="changeMenu('online')"
-        />
         <img
           src="@/assets/images/chat_icon.svg"
           class="menu_icon"
@@ -17,10 +19,22 @@
           @click="changeMenu('chat')"
         />
         <img
-          src="@/assets/images/setting_icon.svg"
+          src="@/assets/images/letter_icon.svg"
           class="menu_icon"
-          :class="{'menu-selected': selectedMenu === 'setting'}"
-          @click="changeMenu('setting')"
+          :class="{'menu-selected': selectedMenu === 'online'}"
+          @click="changeMenu('online')"
+        />
+        <img
+          v-if="!isMute"
+          src="@/assets/images/mute-icon.png"
+          class="menu_icon"
+          @click="mute()"
+        />
+        <img
+          v-if="isMute"
+          src="@/assets/images/unmute-icon.png"
+          class="menu_icon"
+          @click="mute()"
         />
         <img
           src="@/assets/images/mypage_icon.svg"
@@ -86,60 +100,27 @@
       <!--접속중인 유저 목록-->
       <div v-show="selectedMenu == 'online'">
         <div class="user-list-box">
-          <div class="user-list">
-            <div class="user-list-title">&nbsp;ONLINE - 5</div>
-            <img
-              class="fold-button"
-              src="@/assets/images/fold_icon.svg"
-              v-show="isOnlineUnfold"
-              @click="isOnlineUnfold = !isOnlineUnfold"
-            />
-            <img
-              class="fold-button"
-              src="@/assets/images/unfold_icon.svg"
-              v-show="!isOnlineUnfold"
-              @click="isOnlineUnfold = !isOnlineUnfold"
-            />
-            <img class="online-dot" src="@/assets/images/online_dot.svg" />
-          </div>
-          <div
-            class="user-list-unfold"
-            v-show="isOnlineUnfold"
-            v-for="n in 5"
-            :key="n.id"
-          >
-            <div class="user-details">
-              <img
-                src="https://file.mk.co.kr/meet/neds/2015/09/image_readtop_2015_891935_14423221542127136.jpg"
-              />
-              <div>&nbsp;&nbsp;dnguszz</div>
-            </div>
-          </div>
+          <div class="story-wrapper">
+            <div class="story-wrapper-box">
+              <div
+                class="story-wrapper-box-top"
+                style="width: 100%; height: 40%"
+              >
+                <img src="@/assets/images/tempcover1.jpg" />
+                <div class="title">
+                  <div class="title-title">노래제목</div>
+                  <div class="title-artist">가수이름</div>
+                </div>
+              </div>
 
-          <div class="user-list">
-            <div class="user-list-title">&nbsp;GUEST - 3</div>
-            <img
-              class="fold-button"
-              src="@/assets/images/fold_icon.svg"
-              v-show="isGuestUnfold"
-              @click="isGuestUnfold = !isGuestUnfold"
-            />
-            <img
-              class="fold-button"
-              src="@/assets/images/unfold_icon.svg"
-              v-show="!isGuestUnfold"
-              @click="isGuestUnfold = !isGuestUnfold"
-            />
-          </div>
-          <div
-            class="user-list-unfold"
-            v-show="isGuestUnfold"
-            v-for="n in 3"
-            :key="n.id"
-          >
-            <div class="user-details">
-              <img src="@/assets/images/guest_icon.svg" />
-              <div>&nbsp;&nbsp;Guest - {{ n }}</div>
+              <div class="story-wrapper-box-bottom">
+                <div class="story-title">
+                  사연제목사연제목사연제목사연제목사연제목사연제목사연제목사연제목사연제목
+                </div>
+                <div class="story-content">
+                  내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -204,6 +185,8 @@ import SendChat from "./components/SendChat.vue";
 import ReceiveChat from "./components/ReceiveChat.vue";
 import {mapMutations} from "vuex";
 import firebase from "firebase";
+import Hls from "hls.js";
+import storyApi from "@/api/story";
 
 export default {
   name: "NavBar",
@@ -236,6 +219,8 @@ export default {
       offStatus: false,
       roomName: "",
       chatRoomId: "-MoYW1WEd9p5xM_OxIDz",
+      isMute: true,
+      story: [],
     };
   },
 
@@ -256,9 +241,36 @@ export default {
   },
 
   mounted() {
+    //스트리밍
+    let hls = new Hls();
+    // let stream =
+    //   "http://k5a304.p.ssafy.io:8234/hls/" +
+    //   this.$store.getters.themeId +
+    //   "/music.m3u8";
+    let stream = "http://k5a304.p.ssafy.io:8234/hls/" + "1" + "/music.m3u8";
+
+    // let stream =
+    //   "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8";
+
+    let video = this.$refs["video"];
+    hls.loadSource(stream);
+    hls.attachMedia(video);
+    //스트리밍
+
     this.musicOverflowValid();
     this.artistOverflowValid();
     setInterval(this.fetchRoom, 100);
+
+    storyApi.getMormalStory(
+      this.$store.getters.themeId,
+      (res) => {
+        console.log(res.data);
+        this.story = res.data;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   },
   updated() {
     this.scrollToBottom();
@@ -316,21 +328,25 @@ export default {
 
     //채팅 보내기
     onSubmit(evt) {
-      if (this.inputChat.length > 0) {
-        evt.preventDefault();
-        let newData = firebase
-          .database()
-          .ref("chatrooms/" + this.chatRoomId + "/chats")
-          .push();
-        newData.set({
-          type: "newmsg",
-          user: localStorage.getItem("userSeq"),
-          userName: localStorage.getItem("userNickname"),
-          message: this.inputChat,
-          img: localStorage.getItem("characterNum"),
-          sendDate: this.$moment().format("MM-DD HH:mm:ss"),
-        });
-        this.inputChat = "";
+      if (localStorage.getItem("userType") == "user") {
+        if (this.inputChat.length > 0) {
+          evt.preventDefault();
+          let newData = firebase
+            .database()
+            .ref("chatrooms/" + this.chatRoomId + "/chats")
+            .push();
+          newData.set({
+            type: "newmsg",
+            user: localStorage.getItem("userSeq"),
+            userName: localStorage.getItem("userNickname"),
+            message: this.inputChat,
+            img: localStorage.getItem("characterNum"),
+            sendDate: this.$moment().format("MM-DD HH:mm:ss"),
+          });
+          this.inputChat = "";
+        }
+      } else {
+        this.$alert("로그인 후 이용해주세요.");
       }
     },
 
@@ -340,6 +356,17 @@ export default {
       if (container) {
         container.scrollTop = container.scrollHeight;
       }
+    },
+
+    mute() {
+      let video = this.$refs["video"];
+      if (this.isMute) {
+        video.muted = false;
+      } else {
+        video.muted = true;
+      }
+      video.play();
+      this.isMute = !this.isMute;
     },
   },
   watch: {
@@ -380,6 +407,16 @@ export default {
       }
       this.initChatRoom();
       this.curDate = this.$moment().format("MM-DD HH:mm:ss");
+      storyApi.getMormalStory(
+        this.$store.getters.themeId,
+        (res) => {
+          console.log(res.data);
+          this.story = res.data;
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
     },
   },
 };
