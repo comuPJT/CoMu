@@ -26,9 +26,6 @@ public class NicknameScript : MonoBehaviourPun
         {
             SetUserNickname(photonView.Owner.NickName);
         }
-        
-        Debug.Log("nickName is...");
-        Debug.Log(photonView.Owner.NickName);
     }
 
     void Update()
