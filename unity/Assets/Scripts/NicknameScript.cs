@@ -20,7 +20,7 @@ public class NicknameScript : MonoBehaviourPun
         }
         // 받아온 유저 닉네임 설정
         SetUserNickname(GetUserNickname());
-        // SetUserNickname("test");
+        //SetUserNickname("test");
     }
 
     void Update()

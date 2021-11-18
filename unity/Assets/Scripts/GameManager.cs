@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     public override void OnConnectedToMaster()
     {
         // 다른 룸으로
-        PhotonNetwork.JoinOrCreateRoom(PlayerMove.roomName, new RoomOptions { MaxPlayers = 20 }, TypedLobby.Default);
+        PhotonNetwork.JoinOrCreateRoom(PlayerMaster.roomName, new RoomOptions { MaxPlayers = 20 }, TypedLobby.Default);
     }
 
     public override void OnJoinedRoom()
