@@ -251,6 +251,33 @@ class ShareMusicServiceImpl implements ShareMusicService {
         else setOperations.remove(key, userId);
     }
 
+    @Override
+    public SharePlaylistMusicRes getNowPlayingMusic(long roomId) {
+        HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
+        SharePlaylistMusic play =  objectMapper().convertValue(hashOps.get("nowplaying", musicReqPrefix + ":" + roomId), SharePlaylistMusic.class);
+        if( play != null ){
+            Optional<Music> music = musicRepository.findById(play.getMusicId());
+            Optional<User> user = userRepository.findById(play.getUserId());
+            Long likeCount = redisTemplate.opsForSet().size("sharelike:" + play.getPlayId());
+            if( music.isPresent() && user.isPresent() && likeCount != null) {
+                Music musicReq = music.get();
+                return SharePlaylistMusicRes.builder()
+                        .playId(play.getPlayId())
+                        .title(play.getTitle())
+                        .contents(play.getContents())
+                        .timestamp(play.getTimestamp())
+                        .name(musicReq.getName())
+                        .thumbnail(musicReq.getThumbnail())
+                        .album(musicReq.getAlbum())
+                        .singer(musicReq.getSinger())
+                        .username(user.get().getUsername())
+                        .likes(likeCount)
+                        .build();
+            }
+        }
+        return null;
+    }
+
     // 5초 마다 재생중인 목록을 모니터링하며 사연 스트리밍 스케줄링
     @Scheduled(cron="*/5 * * * * *")
     public void scheduleLiveStream() {
