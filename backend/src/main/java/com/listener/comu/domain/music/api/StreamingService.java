@@ -33,9 +33,11 @@ public class StreamingService {
             Process pr = rt.exec(cmd);
             pr.waitFor();
             pr.destroy();
-            nowPlay.setStatus(Status.DONE);
             operations.delete(nowMusicKey, "room:" + roomId);
-            listOps.rightPush("roomPlayed:" +roomId , nowPlay);
+            if( !nowPlay.getPlayId().equals("Anonymous")) {
+                nowPlay.setStatus(Status.DONE);
+                listOps.rightPush("roomPlayed:" +roomId , nowPlay);
+            }
             System.out.println("Streaming eneded...Asynchronously");
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
