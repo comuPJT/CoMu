@@ -262,8 +262,8 @@ class ShareMusicServiceImpl implements ShareMusicService {
             System.out.println("There is music to be played soon..." + playId);
             musicName = musicRepository.getMusicById(nowPlay.getMusicId()).getSpotifyId();
             if ( nowPlay.getStatus().equals(Status.TODO) || nowPlay.getStatus().equals(Status.READY)) { // ready이거나 다음곡이 todo인 경우 play될때까지 기다린 후 반환
-                observeFileCreated(roomId, operations, nowMusicKey, nowPlay);
                 System.out.println("Getting ready for the music...!");
+                observeFileCreated(roomId, operations, nowMusicKey, nowPlay);
                 nowPlay.setStatus(Status.PLAYING);
                 operations.put(nowMusicKey, "room:"+roomId , nowPlay);
             }
@@ -334,7 +334,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
     }
     private static long getRandomSongForRoom(long roomId){
         Random rd = new Random();
-        return  rd.nextInt(3) + (roomId-1)*3;
+        return  rd.nextInt(3) + (roomId-1)*3 + 1;
     }
     // 매일 밤 12시 마다 redis에 있던 일반 사연 목록 중 좋아요수가 10이 넘는 사연을 명예의 전당에 영구적으로 저장한다.
     @Scheduled(cron = "0 0 0 * * *")
