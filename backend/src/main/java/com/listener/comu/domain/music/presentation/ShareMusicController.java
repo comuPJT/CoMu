@@ -163,8 +163,12 @@ public class ShareMusicController {
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<SharePlaylistMusicRes>  getPlayingMusic(@PathVariable long roomId) {
-        return ResponseEntity.status(200).body(shareMusicService.getNowPlayingMusic(roomId));
+    public ResponseEntity<?> getPlayingMusic(@PathVariable long roomId) {
+        SharePlaylistMusicRes response = shareMusicService.getNowPlayingMusic(roomId);
+        if (response != null) {
+            return ResponseEntity.status(200).body(response);
+        }
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Music is not playing"));
     }
 
 }
