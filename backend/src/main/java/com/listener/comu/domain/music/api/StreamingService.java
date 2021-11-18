@@ -33,9 +33,11 @@ public class StreamingService {
             Process pr = rt.exec(cmd);
             pr.waitFor();
             pr.destroy();
-            nowPlay.setStatus(Status.DONE);
             operations.delete(nowMusicKey, "room:" + roomId);
-            listOps.rightPush("roomPlayed:" +roomId , nowPlay);
+            if( !nowPlay.getPlayId().equals("Anonymous")) {
+                nowPlay.setStatus(Status.DONE);
+                listOps.rightPush("roomPlayed:" +roomId , nowPlay);
+            }
             System.out.println("Streaming eneded...Asynchronously");
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -45,11 +47,13 @@ public class StreamingService {
     @Async
     public void executeDownloadAndUploadToS3(Music music){
         String cmd = "youtube-dl -f 160+140 -o src/main/resources/static/" + music.getSpotifyId() + ".%(ext)s " + music.getSource();
+//        String cmd = "bash -c \"youtube-dl -f 160+140 -o src/main/resources/static/" + music.getSpotifyId() + ".%(ext)s " + music.getSource() + "\"";
         Runtime rt = Runtime.getRuntime();
         try {
             Process pr = rt.exec(cmd);
             pr.waitFor();
             String sourceFilepath = "src/main/resources/static/" + music.getSpotifyId() + ".mp4";
+//            String sourceFilepath = "bash -c \"src/main/resources/static/" + music.getSpotifyId() + ".mp4\"";
             s3Uploader.dirUpload(new File(sourceFilepath),"static");
             pr.destroy();
             music.setOnCloud(1);
