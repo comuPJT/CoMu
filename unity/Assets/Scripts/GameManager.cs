@@ -48,21 +48,9 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     // 게임 시작과 동시에 플레이어가 될 게임 오브젝트를 생성
     private void Start()
     {
-        // prefab 이름 조립 생각해보니 이걸 여기서 할 필요가 없는 것 같기도 하고
-        // string playerPrefabName = "Unit" + string.Format("{0:D3}", characterNum);
-
         // 네트워크 상의 모든 클라이언트들에서 생성 실행
         // 단, 해당 게임 오브젝트의 주도권은, 생성 메서드를 직접 실행한 클라이언트에게 있음
         PhotonNetwork.Instantiate("PlayerObject", new Vector3(0, 0, 0), Quaternion.identity);
-    }
-
-    // 키보드 입력을 감지하고 룸을 나가게 함
-    private void Update()
-    {
-        /*if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            PhotonNetwork.LeaveRoom();
-        }*/
     }
 
     public override void OnConnectedToMaster()

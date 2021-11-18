@@ -14,13 +14,21 @@ public class NicknameScript : MonoBehaviourPun
     void Start()
     {
         // 로컬 플레이어인 경우에만 적용
-        if (!photonView.IsMine)
+        if (photonView.IsMine)
         {
-            return;
+            // 받아온 유저 닉네임 설정
+            string userNickname = GetUserNickname();
+            //string userNickname = "test";
+            SetUserNickname(userNickname);
+            photonView.Owner.NickName = userNickname;
         }
-        // 받아온 유저 닉네임 설정
-        SetUserNickname(GetUserNickname());
-        //SetUserNickname("test");
+        else
+        {
+            SetUserNickname(photonView.Owner.NickName);
+        }
+        
+        Debug.Log("nickName is...");
+        Debug.Log(photonView.Owner.NickName);
     }
 
     void Update()
