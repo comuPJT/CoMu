@@ -61,7 +61,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks // MonoBehaviour 확장 + 
             // 룸 접속 실행
             connectionInfoText.text = "룸에 접속...";
             // 빈 무작위 룸에 접속 시도
-            PhotonNetwork.JoinRandomRoom();
+            PhotonNetwork.JoinOrCreateRoom("Main", new RoomOptions { MaxPlayers = 20 }, TypedLobby.Default);
         }
         else
         {
@@ -72,16 +72,16 @@ public class LobbyManager : MonoBehaviourPunCallbacks // MonoBehaviour 확장 + 
         }
     }
 
-    // (빈 방이 없어)랜덤 룸 참가에 실패한 경우 자동 실행
-    public override void OnJoinRandomFailed(short returnCode, string message)
+    // main 룸 참가에 실패한 경우 자동 실행
+    /*public override void OnJoinRoomFailed(short returnCode, string message)
     {
         // 접속 상태 표시
-        connectionInfoText.text = "빈 방이 없음, 새로운 방 생성...";
-        // 최대 10명을 수용 가능한 빈방을 생성
+        connectionInfoText.text = "새로운 방 생성...";
+        // 최대 20명을 수용 가능한 빈방을 생성
         // 방 제목, 방 옵션을 인자로 받음
         // 생성된 룸은 리슨 서버 방식으로 동작: 룸을 생성한 클라이언트가 호스트 역할
-        PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = 10 });
-    }
+        PhotonNetwork.CreateRoom("Main", new RoomOptions { MaxPlayers = 20 });
+    }*/
 
     // 룸에 참가 완료된 경우 자동 실행
     public override void OnJoinedRoom()
@@ -89,7 +89,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks // MonoBehaviour 확장 + 
         // 접속 상태 표시
         connectionInfoText.text = "방 참가 성공";
         // 모든 룸 참가자들이 Main 씬을 로드하게 함
-        PhotonNetwork.LoadLevel("Main");
+        PhotonNetwork.LoadLevel(PhotonNetwork.CurrentRoom.Name);
         /*
          * SceneManager.LoadScene("Main") 은 이전 씬의 오브젝트를 삭제하고 다음 씬을 로드하므로
          * 로비 씬의 네트워크 정보가 유지되지 않음.
