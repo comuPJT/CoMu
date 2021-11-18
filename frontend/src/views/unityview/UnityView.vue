@@ -5,7 +5,6 @@
     ></nav-bar>
     <!-- 유니티 화면 -->
     <div id="unity">
-      <button @click="showModalPlayList=true">dsds</button>
       <div
         v-if="isShowBlind"
         class="blind"
@@ -16,7 +15,6 @@
         </div>
       </div>
       <unity
-        v-if="false"
         src="unity/Build/unity.json"
         unityLoader="unity/Build/UnityLoader.js"
         ref="comu"
