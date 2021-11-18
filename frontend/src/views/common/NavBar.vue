@@ -156,14 +156,14 @@
                 <send-chat
                   v-if="chat.user == idChat"
                   :message="chat.message"
-                  :nickname="nickNameChat"
+                  :nickname="chat.userName"
                   :time="chat.sendDate"
                   :img="chat.img ? chat.img : 0"
                 ></send-chat>
                 <receive-chat
                   v-if="chat.user != idChat"
                   :message="chat.message"
-                  :nickname="nickNameChat"
+                  :nickname="chat.userName"
                   :time="chat.sendDate"
                   :img="chat.img ? chat.img : 0"
                 ></receive-chat>
@@ -325,6 +325,7 @@ export default {
         newData.set({
           type: "newmsg",
           user: localStorage.getItem("userSeq"),
+          userName: localStorage.getItem("userNickname"),
           message: this.inputChat,
           img: localStorage.getItem("characterNum"),
           sendDate: this.$moment().format("MM-DD HH:mm:ss"),
