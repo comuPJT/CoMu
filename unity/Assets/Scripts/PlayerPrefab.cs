@@ -11,11 +11,14 @@ public class PlayerPrefab : MonoBehaviourPun
     void Start()
     {
         // 로컬 플레이어인 경우에만 적용
-        if (!photonView.IsMine)
+        if (photonView.IsMine)
         {
-            return;
+            SetCharacterNum(GetMyCharacterNum());
         }
-        SetCharacterNum(GetMyCharacterNum());
+        else
+        {
+            SetCharacterNum(0);
+        }
         // SetCharacterNum(5);
     }
 
@@ -33,6 +36,6 @@ public class PlayerPrefab : MonoBehaviourPun
         }
         // 저장된 캐릭터 모델만 활성화
         this.transform.GetChild(num).gameObject.SetActive(true);
-        PlayerMove._prefabs = transform.GetChild(num).GetComponent<SPUM_Prefabs>();
+        PlayerMove._prefabs = this.transform.GetChild(num).GetComponent<SPUM_Prefabs>();
     }
 }

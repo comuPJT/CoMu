@@ -41,7 +41,7 @@ public class PlayerMove : MonoBehaviourPunCallbacks
     private void FixedUpdate()
     {
         // 로컬 플레이어인 경우에만 적용
-        if (!photonView.IsMine || _prefabs == null)
+        if (!photonView.IsMine)
         {
             return;
         }
@@ -93,11 +93,12 @@ public class PlayerMove : MonoBehaviourPunCallbacks
             // 메인 씬으로 돌아오기
             CameraFollow.isMain = true;
 
-            PhotonNetwork.LeaveRoom();
-            roomName = "Main";
-
             // 메인으로 방 이름 변경
             SetRoomName("Main");
+
+            roomName = "Main";
+            PhotonNetwork.LeaveRoom();
+
         }
         else if (move.y > 0 && (collision.gameObject.CompareTag("MyRoom")
             || collision.gameObject.CompareTag("Theme1")
@@ -110,12 +111,12 @@ public class PlayerMove : MonoBehaviourPunCallbacks
             CameraFollow.isMain = false;
             CameraFollow.isFirst = true;
 
-            // 문에 해당하는 씬으로 이동
-            PhotonNetwork.LeaveRoom();
-            roomName = collision.gameObject.tag;
-
             // 이동하는 곳으로 방 이름 변경
             SetRoomName(collision.gameObject.tag);
+
+            // 문에 해당하는 씬으로 이동
+            roomName = collision.gameObject.tag;
+            PhotonNetwork.LeaveRoom();
         }
     }
 }
