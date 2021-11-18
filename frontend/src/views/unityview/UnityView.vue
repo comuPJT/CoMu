@@ -176,6 +176,7 @@ export default {
     closeBestStoryModal() {
       this.showModalBestStory = false;
       localStorage.setItem("showBestStory", "FALSE");
+    },
     // 유저 캐릭터 커스텀창 닫기
     closeCharacterCustomModal() {
       this.showModalCharacterCustom = false;
