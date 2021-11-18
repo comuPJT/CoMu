@@ -136,7 +136,7 @@ export default {
     },
     // 유니티 화면에 보여지는 캐릭터 번호 변경
     setCharacterNum(num) {
-      this.$refs.comu.message("PlayerObject", "SetCharacterNum", num);
+      this.$refs.comu.message("PlayerObject(Clone)", "SetCharacterNum", num);
     },
     // 창 크기에 맞춰서 유니티 화면 크기 변경
     handleResize() {
