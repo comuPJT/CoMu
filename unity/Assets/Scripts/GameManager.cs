@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         PhotonNetwork.LoadLevel(PhotonNetwork.CurrentRoom.Name);
     }
 
-    public override void OnJoinFailed()
+    public override void OnJoinRoomFailed(short returnCode, string message)
     {
         Debug.LogFormat("RoomJoinFailed, RoomName is {0}", PlayerMaster.roomName);
         PhotonNetwork.JoinOrCreateRoom(PlayerMaster.roomName, new RoomOptions { MaxPlayers = 20 }, TypedLobby.Default);
