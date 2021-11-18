@@ -10,6 +10,7 @@ export default {
       this.$router.replace({name: "Main", params: {order: 3}});
     } else {
       //초기 설정이 완료된 플레이어는 바로 유니티화면으로
+      localStorage.setItem("userType", "user");
       localStorage.setItem(
         "userNickname",
         this.$store.getters.user.user.username
