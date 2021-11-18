@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Runtime.InteropServices;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMove : MonoBehaviourPun
 {
     // 현재 방 이름 저장
     [DllImport("__Internal")]
@@ -35,6 +37,11 @@ public class PlayerMove : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // 로컬 플레이어인 경우에만 적용
+        if (!photonView.IsMine || _prefabs == null)
+        {
+            return;
+        }
         UpdateState();
         MoveCharacter();
     }
@@ -53,6 +60,7 @@ public class PlayerMove : MonoBehaviour
 
     private void UpdateState()
     {
+        
         // 이동하고 있을 때 애니메이션 활성화
         if (move.x > 0)
         {
@@ -81,7 +89,10 @@ public class PlayerMove : MonoBehaviour
         {
             // 메인 씬으로 돌아오기
             CameraFollow.isMain = true;
-            SceneManager.LoadScene("Main", LoadSceneMode.Single);
+            // SceneManager.LoadScene("Main", LoadSceneMode.Single);
+            PhotonNetwork.Destroy(gameObject);
+            // Destroy(gameObject);
+            PhotonNetwork.LoadLevel("Main");
 
             // 메인으로 방 이름 변경
             SetRoomName("Main");
@@ -98,7 +109,10 @@ public class PlayerMove : MonoBehaviour
             CameraFollow.isFirst = true;
 
             // 문에 해당하는 씬으로 이동
-            SceneManager.LoadScene(collision.gameObject.tag, LoadSceneMode.Single);
+            // SceneManager.LoadScene(collision.gameObject.tag, LoadSceneMode.Single);
+            PhotonNetwork.Destroy(gameObject);
+            // Destroy(gameObject);
+            PhotonNetwork.LoadLevel(collision.gameObject.tag);
 
             // 이동하는 곳으로 방 이름 변경
             SetRoomName(collision.gameObject.tag);
