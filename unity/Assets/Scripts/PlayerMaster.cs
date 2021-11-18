@@ -46,8 +46,8 @@ public class PlayerMaster : MonoBehaviourPunCallbacks
             SetCharacterNum(10);
         }
 
-        SetRoomName("Main"); // 메인 공간에서 시작
-        roomName = "Main";
+        SetRoomName(PhotonNetwork.CurrentRoom.Name); // 메인 공간에서 시작
+        roomName = PhotonNetwork.CurrentRoom.Name;
     }
 
     void Update()
