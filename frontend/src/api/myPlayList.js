@@ -102,9 +102,53 @@ const playListDetail = (data, callback, errorCallback) => {
 };
 
 const editListName = (data, callback, errorCallback) => {
+    //플레이리스트 이름 수정
     http
         .put("/myplaylist/" + data.id, {
             name: data.name,
+            userSeq: data.userSeq
+        })
+        .then((res) => {
+            callback(res);
+        })
+        .catch((err) => {
+            errorCallback(err);
+        });
+};
+
+const deleteMusicPlayList = (data, callback, errorCallback) => {
+    //플레이리스트에서 곡 삭제
+    console.log(data)
+    http
+        .put("/myplaylist/" + data.myplaylistId + "/music", data.musicIds)
+        .then((res) => {
+            callback(res);
+        })
+        .catch((err) => {
+            errorCallback(err);
+        });
+};
+
+const moveMyPersonalList = (data, callback, errorCallback) => {
+    //재생 목록에 특정 플레이리스트 추가
+    http
+        .post("/mymainplaylist/playlist/" + data.playListId, {
+            userSeq: data.userSeq
+        })
+        .then((res) => {
+            callback(res);
+        })
+        .catch((err) => {
+            errorCallback(err);
+        });
+};
+
+const editPlayList = (data, callback, errorCallback) => {
+    //메인재생 목록에 삭제, 순서 변경
+    console.log(data)
+    http
+        .put("/mymainplaylist/setPlayOrder", {
+            musicIdPlayOrderDtoList: data.musicIdPlayOrderDtoList,
             userSeq: data.userSeq
         })
         .then((res) => {
@@ -125,5 +169,8 @@ export default {
     newPlayList,
     listPlayList,
     playListDetail,
-    editListName
+    editListName,
+    moveMyPersonalList,
+    editPlayList,
+    deleteMusicPlayList,
 };

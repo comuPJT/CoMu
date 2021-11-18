@@ -21,6 +21,7 @@
     "vue-router": "^3.5.3",
     "vue-simple-alert": "^1.1.1",
     "vue-unity-webgl": "^1.2.0",
+    "vue-youtube-embed": "^2.2.2",
     "vuedraggable": "^2.24.3",
     "vuex": "^3.6.2",
     "vuex-persistedstate": "^4.1.0"

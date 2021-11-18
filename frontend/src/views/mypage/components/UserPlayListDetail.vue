@@ -27,6 +27,12 @@
                 총 곡수 : {{ musicList.numberOfMusics }}곡
               </div>
             </div>
+            <img
+              v-if="!isEdit"
+              class="add_icon"
+              src="@/assets/images/add_mylist_icon.svg"
+              @click="moveToMyPersonal()"
+            />
           </div>
         </div>
 
@@ -46,30 +52,25 @@
         </div>
 
         <div class="list-info-detail" v-if="isEdit">
-          <draggable
-            ref="drag"
-            group="people"
-            v-model="musicList.musics"
-            @start="drag = true"
-            @end="drag = false"
-            ghost-class="ghost"
-            style="width: 100%; height: 100%"
+          <div
+            class="list-info-detail-music"
+            v-for="music in musicList.musics"
+            :key="music.spotifyId"
           >
-            <div
-              class="list-info-detail-music"
-              v-for="music in musicList.musics"
-              :key="music.spotifyId"
-            >
-              <div class="list-info-detail-music-cover">
-                <img :src="music.thumbnail" />
-              </div>
-              <div class="list-info-detail-music-name">{{ music.name }}</div>
-              <div class="list-info-detail-music-artist">
-                {{ music.singer }}
-              </div>
-              <div class="list-info-detail-music-album">{{ music.album }}</div>
+            <div class="list-info-detail-music-cover">
+              <img :src="music.thumbnail" />
             </div>
-          </draggable>
+            <div class="list-info-detail-music-name">{{ music.name }}</div>
+            <div class="list-info-detail-music-artist">
+              {{ music.singer }}
+            </div>
+            <div class="list-info-detail-music-album">{{ music.album }}</div>
+            <img
+              class="delete-icon"
+              src="@/assets/images/close_button.svg"
+              @click="removeMusic(music.spotifyId, music.id)"
+            />
+          </div>
         </div>
 
         <div class="list-info-detail-button-wrapper" v-if="!isEdit">
@@ -85,10 +86,7 @@
 
         <div class="list-info-detail-button-wrapper" v-if="isEdit">
           <div class="smallbuttonbrown" @click="isEdit = false">
-            <div class="buttoncontent">이전</div>
-          </div>
-          <div class="smallbuttonwhite" @click="isEdit = false">
-            <div class="buttoncontent">완료</div>
+            <div class="buttoncontent" @click="editList()">완료</div>
           </div>
         </div>
       </div>
@@ -98,12 +96,11 @@
 
 <script>
 import myPlayListApi from "@/api/myPlayList";
-import draggable from "vuedraggable";
 
 export default {
   name: "UserPlayListDetail",
 
-  components: {draggable},
+  components: {},
 
   props: {id: Number, name: String, create: String},
   data() {
@@ -142,6 +139,49 @@ export default {
           }
         );
       }
+    },
+
+    moveToMyPersonal() {
+      if (this.musicList.musics.length != 0) {
+        const data = {
+          playListId: this.id,
+          userSeq: localStorage.getItem("userSeq"),
+        };
+        myPlayListApi.moveMyPersonalList(
+          data,
+          (res) => {
+            this.$alert("내 재생목록에 추가되었습니다!");
+            console.log(res);
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
+      } else {
+        this.$alert("플레이리스트가 비어있습니다.");
+      }
+    },
+
+    removeMusic(spotifyId, ids) {
+      const data = {
+        musicIds: [ids],
+        myplaylistId: this.id,
+      };
+      myPlayListApi.deleteMusicPlayList(
+        data,
+        (res) => {
+          console.log(res);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+      this.musicList.musics.splice(
+        this.musicList.musics.findIndex(function (music) {
+          return music.spotifyId === spotifyId;
+        }),
+        1
+      );
     },
   },
 };
