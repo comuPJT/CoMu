@@ -118,7 +118,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
             Optional<Music> reqMusic = musicRepository.findById(play.getMusicId());
             Optional<User> user = userRepository.findById(play.getUserId());
             String username = ( user.isPresent())? user.get().getUsername() : "Anonymous";
-            if (likeCount != null && reqMusic.isPresent()) {
+            if ( reqMusic.isPresent()) {
                 Music music = reqMusic.get();
                 SharePlaylistMusicRes res = SharePlaylistMusicRes.builder()
                         .playId(play.getPlayId())
@@ -130,9 +130,9 @@ class ShareMusicServiceImpl implements ShareMusicService {
                         .album(music.getAlbum())
                         .singer(music.getSinger())
                         .username(username)
-                        .likes(likeCount)
                         .status(play.getStatus())
                         .build();
+                if(likeCount != null) res.setLikes(likeCount);
                 response.add(res);
             }
         }
@@ -150,8 +150,8 @@ class ShareMusicServiceImpl implements ShareMusicService {
                     Long likeCount = redisTemplate.opsForSet().size("sharelike:" + playId);
                     Music reqMusic = musicRepository.getMusicById(play.getMusicId());
                     User user = userRepository.getById(play.getUserId());
-                    if (likeCount != null && reqMusic != null) {
-                        return SharePlaylistMusicRes.builder()
+                    if ( reqMusic != null) {
+                        SharePlaylistMusicRes res = SharePlaylistMusicRes.builder()
                                 .playId(play.getPlayId())
                                 .title(play.getTitle())
                                 .contents(play.getContents())
@@ -161,8 +161,9 @@ class ShareMusicServiceImpl implements ShareMusicService {
                                 .album(reqMusic.getAlbum())
                                 .singer(reqMusic.getSinger())
                                 .username(user.getUsername())
-                                .likes(likeCount)
                                 .build();
+                        if( likeCount !=null) res.setLikes(likeCount);
+                        return res;
                     }
                 }
             }
@@ -259,9 +260,9 @@ class ShareMusicServiceImpl implements ShareMusicService {
             Optional<Music> music = musicRepository.findById(play.getMusicId());
             Optional<User> user = userRepository.findById(play.getUserId());
             Long likeCount = redisTemplate.opsForSet().size("sharelike:" + play.getPlayId());
-            if( music.isPresent() && user.isPresent() && likeCount != null) {
+            if( music.isPresent()) {
                 Music musicReq = music.get();
-                return SharePlaylistMusicRes.builder()
+                SharePlaylistMusicRes res =  SharePlaylistMusicRes.builder()
                         .playId(play.getPlayId())
                         .title(play.getTitle())
                         .contents(play.getContents())
@@ -270,9 +271,11 @@ class ShareMusicServiceImpl implements ShareMusicService {
                         .thumbnail(musicReq.getThumbnail())
                         .album(musicReq.getAlbum())
                         .singer(musicReq.getSinger())
-                        .username(user.get().getUsername())
-                        .likes(likeCount)
+                        .username("Anonymous")
                         .build();
+                user.ifPresent(value -> res.setUsername(value.getUsername()));
+                if(likeCount != null )res.setLikes(likeCount);
+                return res;
             }
         }
         return null;
