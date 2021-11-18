@@ -30,6 +30,16 @@
     width: 90%;
     height: 80%;
     display: flex;
+    position: relative;
+    .add_icon {
+      height: 1.5vw;
+      position: absolute;
+      right: 0;
+      top: 0;
+      margin-right: 0vw;
+      margin-top: 1vw;
+      cursor: pointer;
+    }
     img {
       height: 100%;
       margin-right: 2.48vw;
@@ -94,6 +104,10 @@
     margin-bottom: 1%;
     display: flex;
     align-items: center;
+    .delete-icon {
+      width: 1.5vw;
+      cursor: pointer;
+    }
   }
 }
 

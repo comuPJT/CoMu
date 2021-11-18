@@ -283,7 +283,6 @@ export default {
     },
 
     async addMusic() {
-      console.log(Object.keys(this.selectedMusicOnSearch).length);
       if (Object.keys(this.selectedMusicOnSearch).length === 0) {
         this.$alert("곡을 선택해주세요.");
       } else {

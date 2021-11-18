@@ -24,6 +24,6 @@ public class Music {
     private String singer;
     private String source;
     private String album;
-
+    private int onCloud;
 }
 

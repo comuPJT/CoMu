@@ -7,7 +7,7 @@ import router from "./router";
 import * as firebase from 'firebase';
 import VueMoment from 'vue-moment';
 import VueSimpleAlert from "vue-simple-alert";
-
+import VueYouTubeEmbed from 'vue-youtube-embed'
 
 import NavBar from "@/views/common/NavBar";
 Vue.config.productionTip = false
@@ -25,6 +25,7 @@ Vue.use(Vuex)
 Vue.use(VueChatScroll)
 Vue.use(VueMoment);
 Vue.use(VueSimpleAlert, { reverseButtons: true });
+Vue.use(VueYouTubeEmbed)
 Vue.component('NavBar', NavBar)
 Vue.component('store', store)
 new Vue({
