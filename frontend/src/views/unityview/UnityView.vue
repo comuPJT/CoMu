@@ -16,7 +16,6 @@
         </div>
       </div>
       <unity
-        v-if="false"
         src="unity/Build/unity.json"
         unityLoader="unity/Build/UnityLoader.js"
         ref="comu"
