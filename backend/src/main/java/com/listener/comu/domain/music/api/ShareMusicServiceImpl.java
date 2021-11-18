@@ -5,6 +5,7 @@ import com.listener.comu.domain.music.dto.SharePlaylistMusicReq;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicRes;
 import com.listener.comu.domain.oauthlogin.api.entity.user.User;
 import com.listener.comu.domain.oauthlogin.api.repository.user.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.Random;
 
 import static com.listener.comu.config.RedisConfig.objectMapper;
 
+@Slf4j
 @Service
 class ShareMusicServiceImpl implements ShareMusicService {
 
@@ -276,7 +278,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
                     }
                 }
                 streamingService.executeStreamingShell(i, listOps, hashOps, musicName, now, nowPlay);// 현재 재생으로 옮기고 streaming한다.
-                observeFileCreated(i, hashOps, now, nowPlay);
+                observeFileCreated(i, musicName, hashOps, now, nowPlay);
             }
         }
     }
@@ -295,10 +297,11 @@ class ShareMusicServiceImpl implements ShareMusicService {
         operations.put(nowMusicKey, "room:" + roomId, nowPlay);
         return nowPlay;
     }
-    private static void observeFileCreated(long roomId, HashOperations<String, Object, Object> operations,String nowMusicKey, SharePlaylistMusic nowPlay) {
-        String targetFile ="/tmp/hls/" + roomId + "/" + "music.m3u8";
+    private static void observeFileCreated(long roomId, String musicName, HashOperations<String, Object, Object> operations,String nowMusicKey, SharePlaylistMusic nowPlay) {
+//        String targetFile ="/tmp/hls/" + roomId + "/" + "music.m3u8";
 //        String targetFile = "stream.sh";
 //        String targetFile = "stream.bat";
+        String targetFile = musicName + ".mp4";
         while(true){ // 디렉토리를 모니터링 하다가 파일이 생성되는 시점에 응답주기
             File created = new File(targetFile);
             if(created.isFile()) {
@@ -315,17 +318,25 @@ class ShareMusicServiceImpl implements ShareMusicService {
     }
     // 매일 밤 12시 마다 redis에 있던 일반 사연 목록 중 좋아요수가 10이 넘는 사연을 명예의 전당에 영구적으로 저장한다.
     @Scheduled(cron = "0 0 0 * * ?")
+    @SuppressWarnings("unchecked")
     public void saveMusicAsHistory() {
         ListOperations<String, Object> operations = redisTemplate.opsForList();
         long roomSize = 6;
-        for(long i = 0; i < roomSize; i++){
+        for(long i = 1; i <= roomSize; i++){
             String key = playedPrefix + ":" + i;
             List<Object> roomPlayed = operations.range(key, 0,-1);
             if(roomPlayed != null) {
                 convertObjectListToHistoryAndSave(i, roomPlayed);
             }
         }
-
+        try {
+            redisTemplate.execute((RedisCallback) connection -> {
+                connection.flushAll();
+                return null;
+            });
+        } catch (Exception e) {
+            log.warn("모든 캐시를 삭제하는데 실패했습니다.", e);
+        }
     }
     private void convertObjectListToHistoryAndSave(Long roomId, List<Object> roomPlayed) {
         long threshold = 10L;
