@@ -44,6 +44,11 @@
         line-height: 25%;
         display: flex;
         align-items: center;
+        img {
+          height: 2vw;
+          margin-left: 0.7vw;
+          cursor: pointer;
+        }
       }
       .list-info-update {
         height: 25%;
@@ -141,7 +146,7 @@
   font-size: 0.94vw;
 }
 
-.ghost{
+.ghost {
   opacity: 1;
 }
 

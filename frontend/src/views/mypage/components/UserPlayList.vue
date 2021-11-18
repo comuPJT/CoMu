@@ -7,19 +7,34 @@
       <img class="line-3" src="@/assets/images/table-line.png" />
 
       <!--각각의 플레이 리스트-->
-      <div class="play-list-detail" @click="showModal = true">
-        <div class="play-list-detail-title">플레이리스트1</div>
+      <div
+        class="play-list-detail"
+        v-for="playList in this.myPlayList"
+        :key="playList.id"
+        @click="
+          [
+            (showModal = true),
+            (selectList = playList.id),
+            (createDate = playList.createdAt),
+            (listName = playList.name),
+          ]
+        "
+      >
+        <div class="play-list-detail-title">{{ playList.name }}</div>
         <img class="img-1" src="@/assets/images/lp_now_playing.png" />
         <img class="img-2" src="@/assets/images/tempcover1.jpg" />
-        <img class="img-3" src="@/assets/images/tempcover2.jpg" />
-        <img class="img-4" src="@/assets/images/tempcover3.jpg" />
-        <img class="img-5" src="@/assets/images/tempcover4.jpg" />
       </div>
 
       <!--각각의 플레이 리스트 끝-->
 
       <!-- 플레이리스트 상세보기 모달 -->
-      <user-play-list-detail v-if="showModal" @close="showModal = false">
+      <user-play-list-detail
+        :id="this.selectList"
+        :name="this.listName"
+        :create="createDate"
+        v-if="showModal"
+        @close="showModal = false"
+      >
       </user-play-list-detail>
       <!-- 플레이리스트 상세보기 모달 끝-->
     </div>
@@ -28,6 +43,8 @@
 
 <script>
 import UserPlayListDetail from "./UserPlayListDetail.vue";
+import myPlayListApi from "@/api/myPlayList";
+
 export default {
   name: "UserPlayList",
 
@@ -37,8 +54,26 @@ export default {
   data() {
     return {
       showModal: false,
+      myPlayList: [],
+      selectList: "",
+      listName: "",
+      createDate: "",
     };
   },
+
+  mounted() {
+    myPlayListApi.listPlayList(
+      localStorage.getItem("userSeq"),
+      (res) => {
+        console.log(res.data);
+        this.myPlayList = res.data;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  },
+
   methods: {},
 };
 </script>

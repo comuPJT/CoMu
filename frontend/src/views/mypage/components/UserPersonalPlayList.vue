@@ -115,7 +115,7 @@
                   }"
                 >
                   <td class="content-body-td2">
-                    <img :src="titleResult.album.images[2].url" />
+                    <img :src="titleResult.album.images[1].url" />
                   </td>
                   <td class="content-body-td3">
                     {{ titleResult.name }}
@@ -257,7 +257,7 @@ export default {
             singer: titleResult.artists,
             source: youtubesrc,
             album: titleResult.album.name,
-            thumbnail: titleResult.album.images[2].url,
+            thumbnail: titleResult.album.images[1].url,
           },
         ],
         userSeq: localStorage.getItem("userSeq"),
@@ -271,7 +271,7 @@ export default {
             singer: titleResult.artists,
             source: youtubesrc,
             album: titleResult.album.name,
-            thumbnail: titleResult.album.images[2].url,
+            thumbnail: titleResult.album.images[1].url,
           });
           console.log(res);
           this.$alert("곡이 추가되었습니다.");

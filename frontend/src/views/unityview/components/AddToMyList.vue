@@ -17,9 +17,14 @@
           <div class="modal-mylist-wrapper">
             <div class="modal-mylist">
               <div class="modal-mylist-img">
-                <img src="@/assets/images/playlist_add_button.svg" />
+                <img
+                  src="@/assets/images/playlist_add_button.svg"
+                  @click="addNewList()"
+                />
               </div>
-              <div class="modal-mylist-title">새 수납장</div>
+              <div class="modal-mylist-title">
+                <input v-model="newListName" placeholder="새 수납장" />
+              </div>
             </div>
 
             <div v-for="i in 5" :key="i" class="modal-mylist">
@@ -38,7 +43,43 @@
     </div>
   </transition>
 </template>
-<script></script>
+<script>
+import myPlayListApi from "@/api/myPlayList";
+
+export default {
+  name: "AddToMyList",
+
+  components: {},
+
+  props: {},
+  data() {
+    return {
+      newListName: "",
+    };
+  },
+
+  methods: {
+    addNewList() {
+      const data = {
+        musicIds: [],
+        name: this.newListName,
+        userSeq: localStorage.getItem("userSeq"),
+      };
+      myPlayListApi.newPlayList(
+        data,
+        (res) => {
+          console.log(res.data);
+          this.$alert("새로운 리스트가 생성되었습니다!");
+        },
+        (err) => {
+          console.log(err);
+          this.$alert("이미 존재하는 리스트 이름입니다.");
+        }
+      );
+    },
+  },
+};
+</script>
 
 <style lang="scss" scoped>
 @import "./AddToMyList.scss";

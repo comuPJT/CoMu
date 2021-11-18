@@ -58,7 +58,7 @@
   .modal-mylist {
     margin: 0.5vw 0;
     height: 4.16vw;
-    cursor:pointer;
+    cursor: pointer;
     .modal-mylist-img {
       float: left;
       display: flex;
@@ -80,10 +80,21 @@
       height: 4.16vw;
       font-size: 0.94vw;
       padding-left: 1.5vw;
+      input {
+        border: solid 1px #615344;
+        font-size: 0.94vw;
+        font-family: NANUM;
+      }
+      input:focus {
+        outline: none;
+      }
+      input::placeholder {
+        color: #aa938c;
+      }
     }
   }
-  .modal-mylist:hover{
-      background: #E0D3C8;
+  .modal-mylist:hover {
+    background: #e0d3c8;
   }
 }
 
