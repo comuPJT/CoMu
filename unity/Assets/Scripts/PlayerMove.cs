@@ -27,7 +27,7 @@ public class PlayerMove : MonoBehaviourPun
     void Start()
     {
         player = GetComponent<Rigidbody2D>();
-        // SetRoomName("Main"); // 메인 공간에서 시작
+        SetRoomName("Main"); // 메인 공간에서 시작
     }
 
     void Update()
@@ -95,7 +95,7 @@ public class PlayerMove : MonoBehaviourPun
             PhotonNetwork.LoadLevel("Main");
 
             // 메인으로 방 이름 변경
-            // SetRoomName("Main");
+            SetRoomName("Main");
         }
         else if (move.y > 0 && (collision.gameObject.CompareTag("MyRoom")
             || collision.gameObject.CompareTag("Theme1")
@@ -115,7 +115,7 @@ public class PlayerMove : MonoBehaviourPun
             PhotonNetwork.LoadLevel(collision.gameObject.tag);
 
             // 이동하는 곳으로 방 이름 변경
-            // SetRoomName(collision.gameObject.tag);
+            SetRoomName(collision.gameObject.tag);
         }
     }
 }

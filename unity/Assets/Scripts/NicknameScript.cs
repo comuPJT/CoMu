@@ -19,8 +19,8 @@ public class NicknameScript : MonoBehaviourPun
             return;
         }
         // 받아온 유저 닉네임 설정
-        // SetUserNickname(GetUserNickname());
-        SetUserNickname("test");
+        SetUserNickname(GetUserNickname());
+        // SetUserNickname("test");
     }
 
     void Update()

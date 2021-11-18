@@ -15,8 +15,8 @@ public class PlayerPrefab : MonoBehaviourPun
         {
             return;
         }
-        // SetCharacterNum(GetMyCharacterNum());
-        SetCharacterNum(5);
+        SetCharacterNum(GetMyCharacterNum());
+        // SetCharacterNum(5);
     }
 
     void Update()
