@@ -7,6 +7,7 @@
       controls
       autoplay="autoplay"
       muted="muted"
+      style="display: none"
     ></video>
     <!--네비바 좌측 메뉴선택부분-->
     <div class="nav-bar-left">
