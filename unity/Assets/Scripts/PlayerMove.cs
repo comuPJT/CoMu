@@ -4,11 +4,13 @@ using System.Runtime.InteropServices;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class PlayerMove : MonoBehaviourPun
+public class PlayerMove : MonoBehaviourPunCallbacks
 {
     // 현재 방 이름 저장
     [DllImport("__Internal")]
     private static extern void SetRoomName(string name);
+
+    public static string roomName;
 
     public float moveSpeed = 8.0f;
     Vector2 move = new Vector2();
@@ -28,6 +30,7 @@ public class PlayerMove : MonoBehaviourPun
     {
         player = GetComponent<Rigidbody2D>();
         SetRoomName("Main"); // 메인 공간에서 시작
+        roomName = "Main";
     }
 
     void Update()
@@ -89,10 +92,9 @@ public class PlayerMove : MonoBehaviourPun
         {
             // 메인 씬으로 돌아오기
             CameraFollow.isMain = true;
-            // SceneManager.LoadScene("Main", LoadSceneMode.Single);
-            PhotonNetwork.Destroy(gameObject);
-            // Destroy(gameObject);
-            PhotonNetwork.LoadLevel("Main");
+
+            PhotonNetwork.LeaveRoom();
+            roomName = "Main";
 
             // 메인으로 방 이름 변경
             SetRoomName("Main");
@@ -109,10 +111,8 @@ public class PlayerMove : MonoBehaviourPun
             CameraFollow.isFirst = true;
 
             // 문에 해당하는 씬으로 이동
-            // SceneManager.LoadScene(collision.gameObject.tag, LoadSceneMode.Single);
-            PhotonNetwork.Destroy(gameObject);
-            // Destroy(gameObject);
-            PhotonNetwork.LoadLevel(collision.gameObject.tag);
+            PhotonNetwork.LeaveRoom();
+            roomName = collision.gameObject.tag;
 
             // 이동하는 곳으로 방 이름 변경
             SetRoomName(collision.gameObject.tag);
