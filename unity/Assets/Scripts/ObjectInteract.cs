@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Runtime.InteropServices;
+using Photon.Pun;
 
 public class ObjectInteract : MonoBehaviour
 {
@@ -71,7 +72,7 @@ public class ObjectInteract : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // 플레이어가 오브젝트와 가까워지면 테두리 표시하기
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.GetPhotonView().IsMine)
         {
             target.GetComponent<SpriteRenderer>().material.shader = outline;
 
@@ -87,7 +88,7 @@ public class ObjectInteract : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         // 플레이어가 오브젝트와 멀어지면 테두리 없애기
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.GetPhotonView().IsMine)
         {
             target.GetComponent<SpriteRenderer>().material.shader = normal;
 
