@@ -41,10 +41,7 @@
               Naver로 로그인
             </div>
           </a>
-          <div
-            class="login_button guest"
-            @click="[socialLoginUrl('guest'), nextStep()]"
-          >
+          <div class="login_button guest" @click="loginGuest()">
             비회원으로 시작
           </div>
         </div>
@@ -134,6 +131,8 @@ export default {
     // sns 로그인시 첫 방문이면 닉네임, 캐릭터 설정으로 넘어갑니다.
     if (this.$route.params.order == 3) {
       this.order = 3;
+    } else if (this.$route.params.order == 2) {
+      this.order = 2;
     } else {
       this.order = 1;
     }
@@ -175,7 +174,7 @@ export default {
             console.log(err);
           }
         );
-        
+
         await userApi.updateCharacter(
           data,
           (res) => {
@@ -188,6 +187,12 @@ export default {
           }
         );
       }
+    },
+    loginGuest() {
+      localStorage.setItem("usernickName", "GUEST");
+      localStorage.setItem("characterNum", 0);
+      localStorage.setItem("userType", "guest");
+      this.$router.push({name: "UnityView"});
     },
   },
 

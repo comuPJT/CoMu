@@ -2,6 +2,7 @@
   <div>
     <nav-bar
       @clickNavbar="[SetUnityKeyboardInput('FALSE'), (isShowBlind = true)]"
+      :isMute="ismute"
     ></nav-bar>
     <!-- 유니티 화면 -->
     <div id="unity">
@@ -15,6 +16,7 @@
         </div>
       </div>
       <unity
+        v-if="false"
         src="unity/Build/unity.json"
         unityLoader="unity/Build/UnityLoader.js"
         ref="comu"
@@ -58,7 +60,6 @@ import PublicPlayListAdd from "./components/PublicPlayListAdd.vue";
 import NormalStory from "./components/NormalStory.vue";
 import BestStory from "./components/BestStory.vue";
 import CharacterCustom from "./components/CharacterCustom.vue";
-import Hls from "hls.js";
 
 export default {
   name: "UnityView",
@@ -83,6 +84,7 @@ export default {
       unityWidth: 0,
       unityHeight: 0,
       isShowBlind: false,
+      ismute: true,
     };
   },
 
@@ -102,17 +104,6 @@ export default {
 
     // localStorage 값 변경 확인할 인터벌 함수 실행
     setInterval(this.fetchShowModal, 100);
-
-    var video = document.getElementById("video");
-    var videoSrc = "http://k5a304.p.ssafy.io:8234/hls/1/1.m3u8";
-
-    if (video.canPlayType("application/vnd.apple.mpegurl")) {
-      video.src = videoSrc;
-    } else if (Hls.isSupported()) {
-      var hls = new Hls();
-      hls.loadSource(videoSrc);
-      hls.attachMedia(video);
-    }
   },
 
   beforeDestroy() {

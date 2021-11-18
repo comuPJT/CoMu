@@ -20,6 +20,7 @@ const config = {
   storageBucket: "comu-14e68.appspot.com",
 };
 
+
 firebase.initializeApp(config);
 Vue.use(Vuex)
 Vue.use(VueChatScroll)
@@ -28,6 +29,7 @@ Vue.use(VueSimpleAlert, { reverseButtons: true });
 Vue.use(VueYouTubeEmbed)
 Vue.component('NavBar', NavBar)
 Vue.component('store', store)
+
 new Vue({
   router,
   store,

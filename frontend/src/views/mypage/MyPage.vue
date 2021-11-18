@@ -67,7 +67,9 @@
       <user-info v-if="selectedMenu == 'userInfo'"></user-info>
       <user-custom v-if="selectedMenu == 'userCustom'"></user-custom>
       <user-play-list v-if="selectedMenu == 'userPlayList'"></user-play-list>
-      <user-personal-play-list v-if="selectedMenu == 'userPersonalPlayList'"></user-personal-play-list>
+      <user-personal-play-list
+        v-if="selectedMenu == 'userPersonalPlayList'"
+      ></user-personal-play-list>
     </div>
     <!-- 마이페이지 컨텐츠(회원정보, 캐릭터, 내 플레이 리스트) 뷰 끝 -->
   </div>
@@ -89,6 +91,11 @@ export default {
     return {
       selectedMenu: "userInfo",
     };
+  },
+  mounted() {
+    if (localStorage.getItem("userType") == "guest") {
+      this.$router.replace({name: "Main", params: {order: 2}});
+    }
   },
   methods: {},
 };
