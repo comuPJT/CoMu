@@ -65,7 +65,6 @@ const newPlayList = (data, callback, errorCallback) => {
     //새로운 플레이리스트를 생성합니다.
     http
         .post("/myplaylist/", {
-            musicIds: data.musicIds,
             name: data.name,
             userSeq: data.userSeq,
         })
