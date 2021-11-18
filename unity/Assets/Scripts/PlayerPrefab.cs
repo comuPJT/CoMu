@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Runtime.InteropServices;
+using Photon.Pun;
 
-public class PlayerPrefab : MonoBehaviour
+public class PlayerPrefab : MonoBehaviourPun
 {
     // 플레이어의 캐릭터 번호 받아오기
     [DllImport("__Internal")]
@@ -9,7 +10,13 @@ public class PlayerPrefab : MonoBehaviour
 
     void Start()
     {
+        // 로컬 플레이어인 경우에만 적용
+        if (!photonView.IsMine)
+        {
+            return;
+        }
         SetCharacterNum(GetMyCharacterNum());
+        // SetCharacterNum(5);
     }
 
     void Update()
