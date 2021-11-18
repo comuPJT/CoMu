@@ -18,8 +18,4 @@ public interface ShareMusicService {
     SharePlaylistMusicRes HonoredMusicAndContents(Long playId);
     void deleteMusicFromHonorList(Long playId);
     void toggleLikeMusicRequest(Long playId, Long userId);
-    void saveMusicAsHistory();
-    /* EVENT DRIVEN */
-    NextMusicRes getNextMusic(long roomId, String playId);
-    /* TO DO - 재생 후 list 조정 */
 }
