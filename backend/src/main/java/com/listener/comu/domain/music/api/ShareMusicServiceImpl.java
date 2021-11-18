@@ -6,13 +6,11 @@ import com.listener.comu.domain.music.dto.SharePlaylistMusicReq;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicRes;
 import com.listener.comu.domain.oauthlogin.api.entity.user.User;
 import com.listener.comu.domain.oauthlogin.api.repository.user.UserRepository;
-import com.listener.comu.util.S3Uploader;
 import org.springframework.data.redis.core.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,15 +30,13 @@ class ShareMusicServiceImpl implements ShareMusicService {
     private final MusicRepository musicRepository;
     private final UserRepository userRepository;
     private final HistoryRepository historyRepository;
-    private final S3Uploader s3Uploader;
     final StreamingService streamingService;
 
-    ShareMusicServiceImpl(RedisTemplate<String, Object> redisTemplate, MusicRepository musicRepository, UserRepository userRepository, HistoryRepository historyRepository, S3Uploader s3Uploader, StreamingService streamingService) {
+    ShareMusicServiceImpl(RedisTemplate<String, Object> redisTemplate, MusicRepository musicRepository, UserRepository userRepository, HistoryRepository historyRepository, StreamingService streamingService) {
         this.redisTemplate = redisTemplate;
         this.musicRepository = musicRepository;
         this.userRepository = userRepository;
         this.historyRepository = historyRepository;
-        this.s3Uploader = s3Uploader;
         this.streamingService = streamingService;
     }
 
@@ -59,22 +55,12 @@ class ShareMusicServiceImpl implements ShareMusicService {
                                     .singer(musicPlayReq.getSinger())
                                     .source(musicPlayReq.getSource())
                                     .album(musicPlayReq.getAlbum())
+                                    .onCloud(0)
                                     .build();
                 musicRepository.save(music);
                 // 음악 다운로드 -> s3 업로딩
-                String cmd = "youtube-dl -f 160+140 -o src/main/resources/static/" + music.getSpotifyId() + ".%(ext)s " + music.getSource();
-                Runtime rt = Runtime.getRuntime();
-                try {
-                    Process pr = rt.exec(cmd);
-                    pr.waitFor();
-                    String sourceFilepath = "src/main/resources/static/" + music.getSpotifyId() + ".mp4";
-                    s3Uploader.dirUpload(new File(sourceFilepath),"static");
-                    pr.destroy();
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
+                streamingService.executeDownloadAndUploadToS3(music);
             }
-
             // redis 현재 방 플레이리스트에 추가
             SharePlaylistMusic play = SharePlaylistMusic.builder()
                     .contents(musicPlayReq.getContents())
@@ -269,7 +255,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
         HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
         ListOperations<String, Object> listOps = redisTemplate.opsForList();
         String nowMusicKey = "nowplaying";
-        String musicName = "";
+        String musicName;
         SharePlaylistMusic nowPlay = objectMapper().convertValue(operations.get(nowMusicKey, "room:" + roomId), SharePlaylistMusic.class);
         // 진행할 신청곡이 있는 경우
         if( nowPlay != null ){
@@ -293,9 +279,18 @@ class ShareMusicServiceImpl implements ShareMusicService {
         //  재생되지 않은 신청곡 리스트에서 새로 값을 얻어와 스트리밍을 시작한다.
         Object next = listOps.leftPop(musicReqPrefix + ":" + roomId);
         nowPlay = objectMapper().convertValue(next, SharePlaylistMusic.class);
-        if(nowPlay == null) {// 신청곡이 하나도 없다면 랜덤으로 얻어오기
-            nowPlay = getRandomMusicObject(roomId, listOps, operations, nowMusicKey);
+        if(nowPlay == null ) {// 신청곡이 하나도 없다면 랜덤으로 얻어오기
+            nowPlay = getRandomMusicObject(roomId, operations, nowMusicKey);
             musicName = nowPlay.getTitle();
+        }
+        else {
+            Music music = musicRepository.getMusicById(nowPlay.getMusicId());
+            musicName = music.getSpotifyId();
+            if (music.getOnCloud() == 0) { // 신청곡이 있지만 음원이 없어 랜덤재생을 해야하는 경우
+                listOps.leftPush(musicReqPrefix + ":" + roomId, nowPlay); //꺼낸항목 다시 넣기
+                nowPlay = getRandomMusicObject(roomId, operations, nowMusicKey);
+                musicName = nowPlay.getTitle();
+            }
         }
         streamingService.executeStreamingShell(roomId, listOps, operations, musicName, nowMusicKey, nowPlay);// 현재 재생으로 옮기고 streaming한다.
         observeFileCreated(roomId, operations, nowMusicKey, nowPlay);
@@ -304,7 +299,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
                 .musicName(nowPlay.getTitle()).build();
     }
 
-    private SharePlaylistMusic getRandomMusicObject(long roomId, ListOperations<String, Object> listOps, HashOperations<String, Object, Object> operations, String nowMusicKey) {
+    private SharePlaylistMusic getRandomMusicObject(long roomId, HashOperations<String, Object, Object> operations, String nowMusicKey) {
         long rand = getRandomSongForRoom(roomId); // 방id를 토대로 방에 맞는 랜덤곡을 받아온다.
         SharePlaylistMusic nowPlay = SharePlaylistMusic.builder()
                 .title("")
@@ -315,6 +310,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
                 .build();
         String musicName = musicRepository.getMusicById(rand).getSpotifyId();
         nowPlay.setTitle(musicName);
+        operations.put(nowMusicKey, "room:" + roomId, nowPlay);
         return nowPlay;
     }
     private static void observeFileCreated(long roomId, HashOperations<String, Object, Object> operations,String nowMusicKey, SharePlaylistMusic nowPlay) {
@@ -326,6 +322,11 @@ class ShareMusicServiceImpl implements ShareMusicService {
             if(created.isFile()) {
                 nowPlay.setStatus(Status.PLAYING);
                 operations.put(nowMusicKey, "room:"+roomId, nowPlay);
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 System.out.println("Streaming file created...!");
                 return ; // 파일이 생성되어 스트리밍 가능
             }
