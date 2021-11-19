@@ -17,8 +17,8 @@ FROM openjdk:8-jdk
 RUN apt update && apt install ffmpeg -y
 RUN apt install youtube-dl -y
 ARG DEPENDENCY=build/dependency
-COPY ./stream.sh /app/lib
 COPY --from=builder ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=builder ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=builder ${DEPENDENCY}/BOOT-INF/classes /app
+COPY ./stream.sh /app/lib/stream.sh
 ENTRYPOINT ["java","-cp","app:app/lib/*","com.listener.comu.BackendApplication"]
