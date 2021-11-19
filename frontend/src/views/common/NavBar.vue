@@ -15,16 +15,16 @@
       <img class="logo-2X2" src="@/assets/images/logo_2X2.png" />
       <div class="menu_icons">
         <img
-          src="@/assets/images/chat_icon.svg"
-          class="menu_icon"
-          :class="{'menu-selected': selectedMenu === 'chat'}"
-          @click="changeMenu('chat')"
-        />
-        <img
           src="@/assets/images/letter_icon.svg"
           class="menu_icon"
           :class="{'menu-selected': selectedMenu === 'online'}"
           @click="changeMenu('online')"
+        />
+        <img
+          src="@/assets/images/chat_icon.svg"
+          class="menu_icon"
+          :class="{'menu-selected': selectedMenu === 'chat'}"
+          @click="changeMenu('chat')"
         />
         <img
           v-if="!isMute"
@@ -54,10 +54,10 @@
       <div class="now-playing">
         <div class="now-playing-img">
           <img class="img1" src="@/assets/images/lp_now_playing.png" />
-          <img
+          <!-- <img
             class="img2"
             src="https://upload.wikimedia.org/wikipedia/ko/f/f4/%EA%B1%B4%EC%A6%88_%EC%95%A4_%EB%A1%9C%EC%A7%80%EC%8A%A4_-_Use_Your_Illusion_I.jpg"
-          />
+          /> -->
         </div>
         <div style="float: left; width: 42%; height: 77%; margin-top: 10%">
           <div class="music-name-box" ref="musicNameBox">
@@ -101,28 +101,52 @@
       <!--현재 재생중인 음악 끝-->
       <!--접속중인 유저 목록-->
       <div v-show="selectedMenu == 'online'">
-        <div class="user-list-box">
-          <div class="story-wrapper">
+        <div class="user-list-box" v-if="story.length > 0">
+          <div
+            v-for="(story, index) in story"
+            :key="story.playId"
+            class="story-wrapper"
+            v-bind:class="{
+              'non-visible': index > 2,
+            }"
+          >
             <div class="story-wrapper-box">
               <div
                 class="story-wrapper-box-top"
                 style="width: 100%; height: 40%"
               >
-                <img src="@/assets/images/tempcover1.jpg" />
+                <img :src="story.thumbnail" />
                 <div class="title">
-                  <div class="title-title">노래제목</div>
-                  <div class="title-artist">가수이름</div>
+                  <div class="title-title">{{ story.name }}</div>
+                  <div class="title-artist">{{ story.singer }}</div>
                 </div>
               </div>
 
               <div class="story-wrapper-box-bottom">
                 <div class="story-title">
-                  사연제목사연제목사연제목사연제목사연제목사연제목사연제목사연제목사연제목
+                  {{ story.title }}
                 </div>
                 <div class="story-content">
-                  내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용
+                  {{ story.contents }}
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="user-list-box" v-else>
+          <div class="story-wrapper">
+            <div
+              class="story-wrapper-box"
+              style="
+                display: flex;
+                justify-content: center;
+                flex-direction: column;
+                align-items: center;
+              "
+            >
+              <div>등록된 사연이 없습니다!</div>
+              <div>원하는 곡과 사연을 신청해보세요!</div>
             </div>
           </div>
         </div>
@@ -188,7 +212,7 @@ import ReceiveChat from "./components/ReceiveChat.vue";
 import {mapMutations} from "vuex";
 import firebase from "firebase";
 import Hls from "hls.js";
-import storyApi from "@/api/story";
+import shareApi from "@/api/share";
 import MyPage from "@/views/mypage/MyPage";
 
 export default {
@@ -205,8 +229,8 @@ export default {
   data() {
     return {
       selectedMenu: "online", //네비바에서 현재 선택된 메뉴 => 온라인유저 보기가 디폴트
-      musicName: "November Rain",
-      artistName: "Guns & Roses",
+      musicName: "",
+      artistName: "",
       isMusicOverflow: false,
       isArtistOverflow: false, //아티스트 이름이 상위 div보다 클때 true
       isOnlineUnfold: true, //온라인 유저 목록 펼쳐져있는지
@@ -267,16 +291,7 @@ export default {
     this.artistOverflowValid();
     setInterval(this.fetchRoom, 100);
 
-    storyApi.getMormalStory(
-      this.$store.getters.themeId,
-      (res) => {
-        console.log(res.data);
-        this.story = res.data;
-      },
-      (err) => {
-        console.log(err);
-      }
-    );
+    this.getStory();
   },
   updated() {
     this.scrollToBottom();
@@ -402,6 +417,23 @@ export default {
     closeMyPage() {
       this.showMyPage = false;
     },
+
+    getStory() {
+      (this.story = []),
+        shareApi.getPublicPlayList(
+          this.$store.getters.themeId,
+          (res) => {
+            for (var i = 0; i < res.data.length; i++) {
+              if (res.data[i].contents != "") {
+                this.story.push(res.data[i]);
+              }
+            }
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
+    },
   },
   watch: {
     musicName: function () {
@@ -442,16 +474,7 @@ export default {
       this.initChatRoom();
       this.setStream();
       this.curDate = this.$moment().format("MM-DD HH:mm:ss");
-      storyApi.getMormalStory(
-        this.$store.getters.themeId,
-        (res) => {
-          console.log(res.data);
-          this.story = res.data;
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+      this.getStory();
     },
   },
 };

@@ -189,7 +189,7 @@ export default {
       }
     },
     loginGuest() {
-      localStorage.setItem("usernickName", "GUEST");
+      localStorage.setItem("userNickname", "GUEST");
       localStorage.setItem("characterNum", 0);
       localStorage.setItem("userType", "guest");
       this.$router.push({name: "UnityView"});
