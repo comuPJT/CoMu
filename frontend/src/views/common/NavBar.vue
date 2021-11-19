@@ -9,6 +9,7 @@
       muted="muted"
       style="display: none"
     ></video>
+    <my-page v-if="showMyPage" @close="closeMyPage"> </my-page>
     <!--네비바 좌측 메뉴선택부분-->
     <div class="nav-bar-left">
       <img class="logo-2X2" src="@/assets/images/logo_2X2.png" />
@@ -41,7 +42,7 @@
           src="@/assets/images/mypage_icon.svg"
           class="menu_icon"
           :class="{'menu-selected': selectedMenu === 'mypage'}"
-          @click="[changeMenu('mypage'), $router.push('/mypage')]"
+          @click="showModal()"
         />
       </div>
     </div>
@@ -188,6 +189,7 @@ import {mapMutations} from "vuex";
 import firebase from "firebase";
 import Hls from "hls.js";
 import storyApi from "@/api/story";
+import MyPage from "@/views/mypage/MyPage";
 
 export default {
   name: "NavBar",
@@ -196,6 +198,7 @@ export default {
     MarqueeText,
     SendChat,
     ReceiveChat,
+    MyPage,
   },
 
   props: {},
@@ -222,6 +225,7 @@ export default {
       chatRoomId: "-MoYW1WEd9p5xM_OxIDz",
       isMute: true,
       story: [],
+      showMyPage: false,
     };
   },
 
@@ -386,6 +390,17 @@ export default {
       let video = this.$refs["video"];
       hls.loadSource(stream);
       hls.attachMedia(video);
+    },
+
+    showModal() {
+      if (!this.isMute) {
+        this.mute();
+      }
+      this.showMyPage = true;
+    },
+
+    closeMyPage() {
+      this.showMyPage = false;
     },
   },
   watch: {
