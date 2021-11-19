@@ -45,12 +45,33 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         }
     }*/
 
+    private Vector3[] posList = 
+        { new Vector3(0, 0, 0), new Vector3(-5.5f, 17.5f, 0), 
+        new Vector3(1.35f, 17.5f, 0), new Vector3(8.3f, 17.5f, 0), 
+        new Vector3(15.3f, 17.5f, 0), new Vector3(22.35f, 17.5f, 0), 
+        new Vector3(29.37f, 3f, 0) };
+
     // 게임 시작과 동시에 플레이어가 될 게임 오브젝트를 생성
     private void Start()
     {
+        int num = 0;
+        string pRoomName = PrevRoomName.prevRoomName;
+        if (pRoomName == "Main")
+        {
+            num = 0;
+        }
+        else
+        {
+            if (pRoomName == "Theme1") num = 1;
+            else if (pRoomName == "Theme2") num = 2;
+            else if (pRoomName == "Theme3") num = 3;
+            else if (pRoomName == "Theme4") num = 4;
+            else if (pRoomName == "Theme5") num = 5;
+            else if (pRoomName == "MyRoom") num = 6;
+        }
         // 네트워크 상의 모든 클라이언트들에서 생성 실행
         // 단, 해당 게임 오브젝트의 주도권은, 생성 메서드를 직접 실행한 클라이언트에게 있음
-        PhotonNetwork.Instantiate("PlayerObject", new Vector3(0, 0, 0), Quaternion.identity);
+        PhotonNetwork.Instantiate("PlayerObject", posList[num], Quaternion.identity);
     }
 
     public override void OnConnectedToMaster()
