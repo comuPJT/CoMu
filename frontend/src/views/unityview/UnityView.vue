@@ -123,7 +123,7 @@ export default {
     // 유니티 화면에 표시되는 닉네임 변경
     setUserNickname(nickname) {
       this.$refs.comu.message("Nickname", "SetUserNickname", nickname);
-      localStorage.setItem("user-nickname", nickname);
+      localStorage.setItem("userNickname", nickname);
     },
     // 유니티 화면에 보여지는 캐릭터 번호 변경
     setCharacterNum(num) {
