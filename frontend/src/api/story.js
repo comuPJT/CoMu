@@ -28,7 +28,19 @@ const getNormalStoryDetail = (data, callback, errorCallback) => {
 const storyLike = (data, callback, errorCallback) => {
     //사연에 좋아요를 누릅니다.
     http
-        .get("​/share/like/"+data.playId+"/user/"+data.userId)
+        .get("​/share/like/" + data.playId + "/user/" + data.userId)
+        .then((res) => {
+            callback(res);
+        })
+        .catch((err) => {
+            errorCallback(err);
+        });
+};
+
+const getHonorList = (data, callback, errorCallback) => {
+    //명예의전당 리스트를 반납합니다.
+    http
+        .get("​/share/honor")
         .then((res) => {
             callback(res);
         })
@@ -40,8 +52,10 @@ const storyLike = (data, callback, errorCallback) => {
 
 
 
+
 export default {
     getNormalStory,
     getNormalStoryDetail,
-    storyLike
+    storyLike,
+    getHonorList
 };
