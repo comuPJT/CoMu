@@ -3,12 +3,13 @@
     <video
       ref="video"
       width="100%"
-      height="0"
+      height="640"
       controls
       autoplay="autoplay"
       muted="muted"
       style="display: none"
     ></video>
+    <my-page v-if="showMyPage" @close="closeMyPage"> </my-page>
     <!--네비바 좌측 메뉴선택부분-->
     <div class="nav-bar-left">
       <img class="logo-2X2" src="@/assets/images/logo_2X2.png" />
@@ -41,7 +42,7 @@
           src="@/assets/images/mypage_icon.svg"
           class="menu_icon"
           :class="{'menu-selected': selectedMenu === 'mypage'}"
-          @click="[changeMenu('mypage'), $router.push('/mypage')]"
+          @click="showModal()"
         />
       </div>
     </div>
@@ -188,6 +189,7 @@ import {mapMutations} from "vuex";
 import firebase from "firebase";
 import Hls from "hls.js";
 import storyApi from "@/api/story";
+import MyPage from "@/views/mypage/MyPage";
 
 export default {
   name: "NavBar",
@@ -196,6 +198,7 @@ export default {
     MarqueeText,
     SendChat,
     ReceiveChat,
+    MyPage,
   },
 
   props: {},
@@ -222,6 +225,7 @@ export default {
       chatRoomId: "-MoYW1WEd9p5xM_OxIDz",
       isMute: true,
       story: [],
+      showMyPage: false,
     };
   },
 
@@ -244,11 +248,12 @@ export default {
   mounted() {
     //스트리밍
     let hls = new Hls();
-    // let stream =
-    //   "http://k5a304.p.ssafy.io:8234/hls/" +
-    //   this.$store.getters.themeId +
-    //   "/music.m3u8";
-    let stream = "http://k5a304.p.ssafy.io:8234/hls/" + "1" + "/music.m3u8";
+    let stream =
+      "http://k5a304.p.ssafy.io:8234/hls/" +
+      this.$store.getters.themeId +
+      "/music.m3u8";
+
+    //let stream = "http://k5a304.p.ssafy.io:8234/hls/" + "1" + "/music.m3u8";
 
     // let stream =
     //   "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8";
@@ -369,6 +374,34 @@ export default {
       video.play();
       this.isMute = !this.isMute;
     },
+
+    setStream() {
+      let hls = new Hls();
+      let stream =
+        "http://k5a304.p.ssafy.io:8234/hls/" +
+        this.$store.getters.themeId +
+        "/music.m3u8";
+
+      //let stream = "http://k5a304.p.ssafy.io:8234/hls/" + "1" + "/music.m3u8";
+
+      // let stream =
+      //   "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8";
+
+      let video = this.$refs["video"];
+      hls.loadSource(stream);
+      hls.attachMedia(video);
+    },
+
+    showModal() {
+      if (!this.isMute) {
+        this.mute();
+      }
+      this.showMyPage = true;
+    },
+
+    closeMyPage() {
+      this.showMyPage = false;
+    },
   },
   watch: {
     musicName: function () {
@@ -407,6 +440,7 @@ export default {
         this.chatRoomId = "-MoYW1WEd9p5xM_OxIDz";
       }
       this.initChatRoom();
+      this.setStream();
       this.curDate = this.$moment().format("MM-DD HH:mm:ss");
       storyApi.getMormalStory(
         this.$store.getters.themeId,

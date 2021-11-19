@@ -14,13 +14,18 @@ public class NicknameScript : MonoBehaviourPun
     void Start()
     {
         // 로컬 플레이어인 경우에만 적용
-        if (!photonView.IsMine)
+        if (photonView.IsMine)
         {
-            return;
+            // 받아온 유저 닉네임 설정
+            string userNickname = GetUserNickname();
+            //string userNickname = "test";
+            SetUserNickname(userNickname);
+            photonView.Owner.NickName = userNickname;
         }
-        // 받아온 유저 닉네임 설정
-        SetUserNickname(GetUserNickname());
-        //SetUserNickname("test");
+        else
+        {
+            SetUserNickname(photonView.Owner.NickName);
+        }
     }
 
     void Update()
@@ -32,5 +37,10 @@ public class NicknameScript : MonoBehaviourPun
     {
         // TextMesh에 닉네임 설정
         nickname.text = newNickname;
+        // 로컬 플레이어인 경우에만 닉네임 컬러 다르게 설정
+        if (photonView.IsMine)
+        {
+            nickname.color = new Color(0.5f, 1, 0);
+        }
     }
 }

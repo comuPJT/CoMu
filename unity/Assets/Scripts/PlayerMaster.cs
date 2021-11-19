@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Runtime.InteropServices;
 using Photon.Pun;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class PlayerMaster : MonoBehaviourPunCallbacks
 {
@@ -35,15 +36,21 @@ public class PlayerMaster : MonoBehaviourPunCallbacks
         player = GetComponent<Rigidbody2D>();
         prevPos = this.transform.position;
 
+        Hashtable playerInfo;
+
         // 로컬 플레이어인 경우에만 적용
         if (photonView.IsMine)
         {
-            SetCharacterNum(GetMyCharacterNum());
-            //SetCharacterNum(5);
+            int characterNum = GetMyCharacterNum();
+            //int characterNum = 5;
+            SetCharacterNum(characterNum);
+            playerInfo = new Hashtable() { { "cNum", characterNum.ToString() } };
+            photonView.Owner.SetCustomProperties(playerInfo);
         }
         else
         {
-            SetCharacterNum(10);
+            playerInfo = photonView.Owner.CustomProperties;
+            SetCharacterNum(int.Parse((string)playerInfo["cNum"]));
         }
 
         SetRoomName(PhotonNetwork.CurrentRoom.Name); // 메인 공간에서 시작

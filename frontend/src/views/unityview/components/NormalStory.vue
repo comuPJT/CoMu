@@ -5,7 +5,7 @@
         <div class="modal-window">
           <!-- 사연 모아보기 타이틀 / 모달 닫기 버튼-->
           <div class="modal-top">
-            <p>오늘의 사연함</p>
+            <p>오늘의 사연함 - {{ this.$store.getters.themeName }}</p>
             <img
               src="@/assets/images/close_button.svg"
               @click.self="$emit('close')"
@@ -17,26 +17,26 @@
           <div class="modal-content" v-if="!isDetailView">
             <div class="normal-story-wrapper">
               <div class="normal-story-header">
-                <div class="td1">No.</div>
+                <div class="td1"></div>
                 <div class="td2">제목</div>
                 <div class="td3">작성자</div>
                 <div class="td4">신청곡</div>
                 <div class="td5"><img src="@/assets/images/heart.svg" /></div>
               </div>
               <div
-                v-for="k in 15"
-                :key="k.id"
+                v-for="story in storyList"
+                :key="story.playId"
                 class="normal-story-content"
-                @click="gotoDetail()"
+                @click="gotoDetail(story)"
               >
-                <div class="td1">{{ k }}</div>
-                <div class="td2">퇴근 전에 꼭꼭! 들어야할 것 같아요</div>
-                <div class="td3">dnguszz</div>
+                <div class="td1"></div>
+                <div class="td2">{{ story.title }}</div>
+                <div class="td3">{{ story.username }}</div>
                 <div class="td4">
-                  <p class="title">노래제목</p>
-                  <p class="artist">아티스트</p>
+                  <p class="title">{{ story.name }}</p>
+                  <p class="artist">{{ story.singer }}</p>
                 </div>
-                <div class="td5">82</div>
+                <div class="td5">{{ story.likes }}</div>
               </div>
             </div>
 
@@ -54,31 +54,35 @@
           <div class="modal-content-detail" v-if="isDetailView">
             <div class="modal-content-detail-wrapper">
               <div class="detail-header">
-                <div>중간고사까지 3일이 남았어요!</div>
-                <div class="detail-header-nickname">oneway</div>
-                <div class="detail-header-time">2021-10-27 10:16:50</div>
+                <div>{{ story.title }}</div>
+                <div class="detail-header-nickname">{{ story.username }}</div>
+                <div class="detail-header-time">{{ story.timestamp }}</div>
               </div>
               <div class="detail-content">
                 <div class="detail-content-top">
-                  <img src="@/assets/images/tempcover1.jpg" />
+                  <img :src="story.thumbnail" />
                   <div class="detail-content-left">
                     <div class="detail-content-left-title">
-                      행복했던 날들이었다
+                      {{ story.name }}
                     </div>
-                    <div class="detail-content-left-artist">DAY6</div>
-                    <div class="detail-content-left-album">Best Album</div>
+                    <div class="detail-content-left-artist">
+                      {{ story.singer }}
+                    </div>
+                    <div class="detail-content-left-album">
+                      {{ story.album }}
+                    </div>
                   </div>
                 </div>
                 <div class="detail-content-bottom">
-                  안녕하세요! 현역 고3 입니다! 벌써 고3 막바지를 달리고 있는데
-                  고 3이라는 것도 믿기지 않고 곧 학교를 졸업하는 것도 믿기지
-                  않아요ㅠㅠ 그동안 학교를 다니면서 10대 동안 행복했고
-                  즐거웠다는 의미로 DAY6의 행복했던 날들이었다 신청합니다! :)
+                  {{ story.contents }}
                 </div>
               </div>
               <div class="detail-button-wrapper">
                 <div class="detail-button-like">
-                  <img src="@/assets/images/heart_unfill.svg" />&nbsp;82
+                  <img
+                    src="@/assets/images/heart_fill.svg"
+                    @click="likeStory(story)"
+                  />&nbsp;{{ story.likes }}
                 </div>
                 <div class="smallbuttonwhite">
                   <div class="buttoncontent" @click="isDetailView = false">
@@ -96,6 +100,9 @@
 </template>
 
 <script>
+import shareApi from "@/api/share";
+import storyApi from "@/api/story";
+
 export default {
   name: "NormalStory",
 
@@ -105,13 +112,64 @@ export default {
   data() {
     return {
       isDetailView: false, //현재 사연 상세보기중인지
+      storyList: [],
+      story: {},
     };
+  },
+  mounted() {
+    shareApi.getPublicPlayList(
+      this.$store.getters.themeId, //몇번 플레이리스트인지
+      (res) => {
+        console.log(res.data);
+        for (var i = 0; i < res.data.length; i++) {
+          if (res.data[i].contents != "") {
+            this.storyList.push(res.data[i]);
+          }
+        }
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   },
 
   methods: {
-    gotoDetail() {
-      //클릭한 사연 상세보기
+    //클릭한 사연 상세보기
+    gotoDetail(selectStory) {
+      // const data = {
+      //   storyId: story.playId,
+      //   roomId: this.$store.getters.themeId,
+      // };
+      // this.isDetailView = true;
+      // storyApi.getNormalStoryDetail(
+      //   data,
+      //   (res) => {
+      //     console.log(res);
+      //     this.story = res.data;
+      //   },
+      //   (err) => {
+      //     console.log(err);
+      //   }
+      // );
+      this.story = selectStory;
       this.isDetailView = true;
+    },
+
+    likeStory(story) {
+      const data = {
+        playId: story.playId,
+        userId: localStorage.getItem("userSeq"),
+      };
+      storyApi.storyLike(
+        data,
+        (res) => {
+          console.log(res);
+          story.likes++;
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
     },
   },
 };

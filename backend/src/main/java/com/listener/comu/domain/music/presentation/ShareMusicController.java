@@ -155,16 +155,20 @@ public class ShareMusicController {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
-//    @GetMapping("/nextmusic/{roomId}")
-//    @ApiOperation(value = "재생순서", notes = "유저측에서 재생이 끝나면 다음 곡을 위한 요청이 들어온다.")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
-//            @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
-//            @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
-//            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
-//    })
-//    public ResponseEntity getNextMusic(@PathVariable long roomId, @RequestParam String playId) {
-//        return  ResponseEntity.status(200).body(shareMusicService.getNextMusic(roomId, playId));
-//    }
+    @GetMapping("/playingmusic/{roomId}")
+    @ApiOperation(value = "현재 재생 곡", notes = "현재 재생중인 곡을 요청하고 반환한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
+            @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<?> getPlayingMusic(@PathVariable long roomId) {
+        SharePlaylistMusicRes response = shareMusicService.getNowPlayingMusic(roomId);
+        if (response != null) {
+            return ResponseEntity.status(200).body(response);
+        }
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Music is not playing"));
+    }
 
 }

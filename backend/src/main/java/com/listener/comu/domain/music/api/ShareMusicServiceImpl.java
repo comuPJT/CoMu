@@ -5,6 +5,7 @@ import com.listener.comu.domain.music.dto.SharePlaylistMusicReq;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicRes;
 import com.listener.comu.domain.oauthlogin.api.entity.user.User;
 import com.listener.comu.domain.oauthlogin.api.repository.user.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.Random;
 
 import static com.listener.comu.config.RedisConfig.objectMapper;
 
+@Slf4j
 @Service
 class ShareMusicServiceImpl implements ShareMusicService {
 
@@ -116,7 +118,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
             Optional<Music> reqMusic = musicRepository.findById(play.getMusicId());
             Optional<User> user = userRepository.findById(play.getUserId());
             String username = ( user.isPresent())? user.get().getUsername() : "Anonymous";
-            if (likeCount != null && reqMusic.isPresent()) {
+            if ( reqMusic.isPresent()) {
                 Music music = reqMusic.get();
                 SharePlaylistMusicRes res = SharePlaylistMusicRes.builder()
                         .playId(play.getPlayId())
@@ -128,9 +130,9 @@ class ShareMusicServiceImpl implements ShareMusicService {
                         .album(music.getAlbum())
                         .singer(music.getSinger())
                         .username(username)
-                        .likes(likeCount)
                         .status(play.getStatus())
                         .build();
+                if(likeCount != null) res.setLikes(likeCount);
                 response.add(res);
             }
         }
@@ -148,8 +150,8 @@ class ShareMusicServiceImpl implements ShareMusicService {
                     Long likeCount = redisTemplate.opsForSet().size("sharelike:" + playId);
                     Music reqMusic = musicRepository.getMusicById(play.getMusicId());
                     User user = userRepository.getById(play.getUserId());
-                    if (likeCount != null && reqMusic != null) {
-                        return SharePlaylistMusicRes.builder()
+                    if ( reqMusic != null) {
+                        SharePlaylistMusicRes res = SharePlaylistMusicRes.builder()
                                 .playId(play.getPlayId())
                                 .title(play.getTitle())
                                 .contents(play.getContents())
@@ -159,8 +161,9 @@ class ShareMusicServiceImpl implements ShareMusicService {
                                 .album(reqMusic.getAlbum())
                                 .singer(reqMusic.getSinger())
                                 .username(user.getUsername())
-                                .likes(likeCount)
                                 .build();
+                        if( likeCount !=null) res.setLikes(likeCount);
+                        return res;
                     }
                 }
             }
@@ -249,6 +252,35 @@ class ShareMusicServiceImpl implements ShareMusicService {
         else setOperations.remove(key, userId);
     }
 
+    @Override
+    public SharePlaylistMusicRes getNowPlayingMusic(long roomId) {
+        HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
+        SharePlaylistMusic play =  objectMapper().convertValue(hashOps.get("nowplaying", musicReqPrefix + ":" + roomId), SharePlaylistMusic.class);
+        if( play != null ){
+            Optional<Music> music = musicRepository.findById(play.getMusicId());
+            Optional<User> user = userRepository.findById(play.getUserId());
+            Long likeCount = redisTemplate.opsForSet().size("sharelike:" + play.getPlayId());
+            if( music.isPresent()) {
+                Music musicReq = music.get();
+                SharePlaylistMusicRes res =  SharePlaylistMusicRes.builder()
+                        .playId(play.getPlayId())
+                        .title(play.getTitle())
+                        .contents(play.getContents())
+                        .timestamp(play.getTimestamp())
+                        .name(musicReq.getName())
+                        .thumbnail(musicReq.getThumbnail())
+                        .album(musicReq.getAlbum())
+                        .singer(musicReq.getSinger())
+                        .username("Anonymous")
+                        .build();
+                user.ifPresent(value -> res.setUsername(value.getUsername()));
+                if(likeCount != null )res.setLikes(likeCount);
+                return res;
+            }
+        }
+        return null;
+    }
+
     // 5초 마다 재생중인 목록을 모니터링하며 사연 스트리밍 스케줄링
     @Scheduled(cron="*/5 * * * * *")
     public void scheduleLiveStream() {
@@ -276,7 +308,7 @@ class ShareMusicServiceImpl implements ShareMusicService {
                     }
                 }
                 streamingService.executeStreamingShell(i, listOps, hashOps, musicName, now, nowPlay);// 현재 재생으로 옮기고 streaming한다.
-                observeFileCreated(i, hashOps, now, nowPlay);
+                observeFileCreated(i, musicName, hashOps, now, nowPlay);
             }
         }
     }
@@ -295,10 +327,11 @@ class ShareMusicServiceImpl implements ShareMusicService {
         operations.put(nowMusicKey, "room:" + roomId, nowPlay);
         return nowPlay;
     }
-    private static void observeFileCreated(long roomId, HashOperations<String, Object, Object> operations,String nowMusicKey, SharePlaylistMusic nowPlay) {
-        String targetFile ="/tmp/hls/" + roomId + "/" + "music.m3u8";
+    private static void observeFileCreated(long roomId, String musicName, HashOperations<String, Object, Object> operations,String nowMusicKey, SharePlaylistMusic nowPlay) {
+//        String targetFile ="/tmp/hls/" + roomId + "/" + "music.m3u8";
 //        String targetFile = "stream.sh";
 //        String targetFile = "stream.bat";
+        String targetFile = musicName + ".mp4";
         while(true){ // 디렉토리를 모니터링 하다가 파일이 생성되는 시점에 응답주기
             File created = new File(targetFile);
             if(created.isFile()) {
@@ -315,17 +348,25 @@ class ShareMusicServiceImpl implements ShareMusicService {
     }
     // 매일 밤 12시 마다 redis에 있던 일반 사연 목록 중 좋아요수가 10이 넘는 사연을 명예의 전당에 영구적으로 저장한다.
     @Scheduled(cron = "0 0 0 * * ?")
+    @SuppressWarnings("unchecked")
     public void saveMusicAsHistory() {
         ListOperations<String, Object> operations = redisTemplate.opsForList();
         long roomSize = 6;
-        for(long i = 0; i < roomSize; i++){
+        for(long i = 1; i <= roomSize; i++){
             String key = playedPrefix + ":" + i;
             List<Object> roomPlayed = operations.range(key, 0,-1);
             if(roomPlayed != null) {
                 convertObjectListToHistoryAndSave(i, roomPlayed);
             }
         }
-
+        try {
+            redisTemplate.execute((RedisCallback) connection -> {
+                connection.flushAll();
+                return null;
+            });
+        } catch (Exception e) {
+            log.warn("모든 캐시를 삭제하는데 실패했습니다.", e);
+        }
     }
     private void convertObjectListToHistoryAndSave(Long roomId, List<Object> roomPlayed) {
         long threshold = 10L;

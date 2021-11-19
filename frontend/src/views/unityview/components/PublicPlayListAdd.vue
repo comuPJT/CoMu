@@ -265,8 +265,6 @@ export default {
       for (var i = 0; i < this.searchResultTitle.length; i++) {
         if (this.searchResultTitle[i].id == id) {
           this.selectedMusicOnSearch = this.searchResultTitle[i];
-          this.searchResultTitle[i].isselected;
-          console.log(this.searchResultTitle[i].isselected);
         } else {
           this.searchResultTitle[i].isselected = false;
         }
