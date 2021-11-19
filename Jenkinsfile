@@ -13,6 +13,7 @@ pipeline {
 						sh 'docker build -t dockerize-spring-boot-app ./backend'
 						sh 'docker run --name backend --network mysql -d -p 8080:8080 dockerize-spring-boot-app'
 						sh 'docker network connect front-back backend'
+						sh 'docker network connect redis-back backend'
 					} catch(e) {
 						currentBuild.result = "FAILURE"
 					} finally {
