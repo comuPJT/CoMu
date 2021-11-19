@@ -17,8 +17,8 @@ public class NicknameScript : MonoBehaviourPun
         if (photonView.IsMine)
         {
             // 받아온 유저 닉네임 설정
-            // string userNickname = GetUserNickname();
-            string userNickname = "test";
+            string userNickname = GetUserNickname();
+            //string userNickname = "test";
             SetUserNickname(userNickname);
             photonView.Owner.NickName = userNickname;
         }

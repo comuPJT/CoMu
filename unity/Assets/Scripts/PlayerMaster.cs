@@ -41,8 +41,8 @@ public class PlayerMaster : MonoBehaviourPunCallbacks
         // 로컬 플레이어인 경우에만 적용
         if (photonView.IsMine)
         {
-            //int characterNum = GetMyCharacterNum();
-            int characterNum = 5;
+            int characterNum = GetMyCharacterNum();
+            //int characterNum = 5;
             SetCharacterNum(characterNum);
             playerInfo = new Hashtable() { { "cNum", characterNum.ToString() } };
             photonView.Owner.SetCustomProperties(playerInfo);
@@ -53,7 +53,7 @@ public class PlayerMaster : MonoBehaviourPunCallbacks
             SetCharacterNum(int.Parse((string)playerInfo["cNum"]));
         }
 
-        //SetRoomName(PhotonNetwork.CurrentRoom.Name);
+        SetRoomName(PhotonNetwork.CurrentRoom.Name);
         roomName = PhotonNetwork.CurrentRoom.Name;
     }
 
@@ -122,7 +122,7 @@ public class PlayerMaster : MonoBehaviourPunCallbacks
             CameraFollow.isMain = true;
 
             // 메인으로 방 이름 변경
-            // SetRoomName("Main");
+            SetRoomName("Main");
 
             PrevRoomName.prevRoomName = PhotonNetwork.CurrentRoom.Name;
             roomName = "Main";
@@ -141,7 +141,7 @@ public class PlayerMaster : MonoBehaviourPunCallbacks
             CameraFollow.isFirst = true;
 
             // 이동하는 곳으로 방 이름 변경
-            //SetRoomName(collision.gameObject.tag);
+            SetRoomName(collision.gameObject.tag);
 
             // 문에 해당하는 씬으로 이동
             PrevRoomName.prevRoomName = PhotonNetwork.CurrentRoom.Name;
