@@ -99,6 +99,7 @@ export default {
     localStorage.setItem("showPlayList", "FALSE");
     localStorage.setItem("showPlayListAdd", "FALSE");
     localStorage.setItem("showTodayStory", "FALSE");
+    localStorage.setItem("showBestStory", "FALSE");
     localStorage.setItem("showCharacter", "FALSE");
 
     // localStorage 값 변경 확인할 인터벌 함수 실행
@@ -142,7 +143,7 @@ export default {
       this.showModalTodayStory =
         localStorage.getItem("showTodayStory") == "TRUE" ? true : false;
       this.showModalBestStory =
-        localStorage.getItem("showestStory") == "TRUE" ? true : false;
+        localStorage.getItem("showBestStory") == "TRUE" ? true : false;
       this.showModalCharacterCustom =
         localStorage.getItem("showCharacter") == "TRUE" ? true : false;
     },
