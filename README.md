@@ -28,7 +28,7 @@
 
 |원지연|김우현|류한길|박지현|신지수|
 |:--:|:--:|:--:|:--:|:--:|
-|`Front-end`<br />`Project Manager`<br />`UI/UX Design`|`Front-end`<br />`UI/UX Design`|`Back-end`<br />`Unity`|`Back-end`<br />`CI/CD`|`Back-end`<br />`UI/UX Design`|
+|`Front-end`<br />`Project Manager`<br />`UI/UX Design`|`Front-end`<br />`UI/UX Design`|`Unity`<br />`CI/CD`|`Back-end`<br />`Redis`|`Back-end`<br />`UI/UX Design`|
 
 <br>
 
