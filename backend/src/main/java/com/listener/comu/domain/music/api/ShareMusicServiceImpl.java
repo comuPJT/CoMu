@@ -82,11 +82,16 @@ class ShareMusicServiceImpl implements ShareMusicService {
         final String key = playedPrefix + ":" + roomId; //room
         ListOperations<String, Object> operations = redisTemplate.opsForList();
         List<Object> roomPlaylist = operations.range(key, 0,-1);
-        List<SharePlaylistMusicRes> response = new ArrayList<>();
+        List<SharePlaylistMusicRes> tempRes = new ArrayList<>();
         if(roomPlaylist != null) {
-            convertObjectListToDtoList(roomPlaylist, response);
+            convertObjectListToDtoList(roomPlaylist, tempRes);
+            List<SharePlaylistMusicRes> response = new ArrayList<>();
+            for(SharePlaylistMusicRes res : tempRes) {
+                if (!res.getContents().equals("")) response.add(res);
+            }
+            return response;
         }
-        return response;
+        return tempRes;
     }
 
     @Override

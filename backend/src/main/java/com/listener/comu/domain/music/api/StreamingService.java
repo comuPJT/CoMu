@@ -34,7 +34,7 @@ public class StreamingService {
             pr.waitFor();
             pr.destroy();
             operations.delete(nowMusicKey, "room:" + roomId);
-            if( !nowPlay.getPlayId().equals("Anonymous") && !nowPlay.getContents().equals("")) {
+            if( !nowPlay.getPlayId().equals("Anonymous")) {
                 nowPlay.setStatus(Status.DONE);
                 listOps.rightPush("roomPlayed:" +roomId , nowPlay);
             }
