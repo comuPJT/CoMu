@@ -151,8 +151,9 @@ public class ShareMusicController {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> likeMusicRequest (@PathVariable Long playId, @PathVariable Long userId) {
-        shareMusicService.toggleLikeMusicRequest(playId, userId);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        if(shareMusicService.toggleLikeMusicRequest(playId, userId)) // 좋아요가 된 경우
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "liked"));
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "disliked")); //좋아요가 해제된 경우
     }
 
     @GetMapping("/playingmusic/{roomId}")

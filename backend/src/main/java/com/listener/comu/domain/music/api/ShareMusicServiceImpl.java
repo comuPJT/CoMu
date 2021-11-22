@@ -245,11 +245,15 @@ class ShareMusicServiceImpl implements ShareMusicService {
 
 
     @Override
-    public void toggleLikeMusicRequest(Long playId, Long userId ) {
+    public boolean toggleLikeMusicRequest(Long playId, Long userId ) {
         SetOperations<String,Object> setOperations = redisTemplate.opsForSet();
         final String key = musicLikePrefix + ":" + playId;
-        if (Boolean.TRUE.equals(setOperations.isMember(key, userId))) setOperations.add(key, userId);
+        if (Boolean.TRUE.equals(setOperations.isMember(key, userId))) {
+            setOperations.add(key, userId);
+            return true;
+        }
         else setOperations.remove(key, userId);
+        return false;
     }
 
     @Override
