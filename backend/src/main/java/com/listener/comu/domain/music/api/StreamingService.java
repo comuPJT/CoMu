@@ -34,7 +34,7 @@ public class StreamingService {
             pr.waitFor();
             pr.destroy();
             operations.delete(nowMusicKey, "room:" + roomId);
-            if( !nowPlay.getPlayId().equals("Anonymous")) {
+            if( !nowPlay.getPlayId().equals("Anonymous") && !nowPlay.getContents().equals("")) {
                 nowPlay.setStatus(Status.DONE);
                 listOps.rightPush("roomPlayed:" +roomId , nowPlay);
             }
@@ -46,16 +46,16 @@ public class StreamingService {
 
     @Async
     public void executeDownloadAndUploadToS3(Music music){
-        String cmd = "youtube-dl -f 160+140 -o src/main/resources/static/" + music.getSpotifyId() + ".%(ext)s " + music.getSource();
+        String cmd = "youtube-dl -f 160+140 -o " + music.getSpotifyId() + ".%(ext)s " + music.getSource();
 //        String cmd = "bash -c \"youtube-dl -f 160+140 -o src/main/resources/static/" + music.getSpotifyId() + ".%(ext)s " + music.getSource() + "\"";
         Runtime rt = Runtime.getRuntime();
         try {
             Process pr = rt.exec(cmd);
             pr.waitFor();
-            String sourceFilepath = "src/main/resources/static/" + music.getSpotifyId() + ".mp4";
+            pr.destroy();
+            String sourceFilepath = music.getSpotifyId() + ".mp4";
 //            String sourceFilepath = "bash -c \"src/main/resources/static/" + music.getSpotifyId() + ".mp4\"";
             s3Uploader.dirUpload(new File(sourceFilepath),"static");
-            pr.destroy();
             music.setOnCloud(1);
             musicRepository.save(music);
         } catch (IOException | InterruptedException e) {
