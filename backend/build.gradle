@@ -61,6 +61,8 @@ dependencies {
 
     // AWS s3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
+    // ffmpeg
+    implementation 'net.bramp.ffmpeg:ffmpeg:0.6.2'
 }
 
 test {

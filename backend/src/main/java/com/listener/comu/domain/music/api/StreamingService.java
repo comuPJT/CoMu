@@ -31,7 +31,7 @@ public class StreamingService {
         try {
             System.out.println("Streaming start...");
             Process pr = rt.exec(cmd);
-            pr.waitFor();
+            Thread.sleep(1000*60*4); // 4분 대기 시간
             pr.destroy();
             operations.delete(nowMusicKey, "room:" + roomId);
             if( !nowPlay.getPlayId().equals("Anonymous")) {
