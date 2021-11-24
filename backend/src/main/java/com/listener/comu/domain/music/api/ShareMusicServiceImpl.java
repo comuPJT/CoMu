@@ -290,8 +290,8 @@ class ShareMusicServiceImpl implements ShareMusicService {
         return null;
     }
 
-    // 5초 마다 재생중인 목록을 모니터링하며 사연 스트리밍 스케줄링
-    @Scheduled(cron="*/5 * * * * *")
+    // 10초 마다 재생중인 목록을 모니터링하며 사연 스트리밍 스케줄링
+    @Scheduled(cron="*/10 * * * * *")
     public void scheduleLiveStream() {
         HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
         ListOperations<String, Object> listOps = redisTemplate.opsForList();

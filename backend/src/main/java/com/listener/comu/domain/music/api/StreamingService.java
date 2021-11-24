@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -31,8 +32,10 @@ public class StreamingService {
         try {
             System.out.println("Streaming start...");
             Process pr = rt.exec(cmd);
-            Thread.sleep(1000*60*4); // 4분 대기 시간
-            pr.destroy();
+            if(!pr.waitFor(6, TimeUnit.MINUTES)) {
+                //timeout - kill the process.
+                pr.destroyForcibly();
+            }
             operations.delete(nowMusicKey, "room:" + roomId);
             if( !nowPlay.getPlayId().equals("Anonymous")) {
                 nowPlay.setStatus(Status.DONE);
