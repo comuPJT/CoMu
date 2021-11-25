@@ -28,7 +28,7 @@ public class StreamingService {
         operations.put(nowMusicKey, "room:"+roomId , nowPlay);
 
         Runtime rt = Runtime.getRuntime();
-        String cmd = "sh ~/stream.sh " + roomId + " " + musicName;
+        String cmd = "sh /home/stream.sh " + roomId + " " + musicName; // stream.sh가 위치한 절대경로를 쓸 것
         //    String cmd = "%userprofile%/stream.bat " + roomId + " " + musicName;
         try {
             System.out.println("Streaming start...");
@@ -50,7 +50,7 @@ public class StreamingService {
 
     @Async
     public void executeDownloadAndUploadToS3(Music music){
-        String cmd = "youtube-dl -f 160+140 -o ~/" + music.getSpotifyId() + ".%(ext)s " + music.getSource();
+        String cmd = "youtube-dl -f 160+140 -o /home/" + music.getSpotifyId() + ".%(ext)s " + music.getSource();
 //        String cmd = "bash -c \"youtube-dl -f 160+140 -o %userportfolio%/" + music.getSpotifyId() + ".%(ext)s " + music.getSource() + "\"";
         Runtime rt = Runtime.getRuntime();
         try {
