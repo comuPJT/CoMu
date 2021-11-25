@@ -338,8 +338,6 @@ class ShareMusicServiceImpl implements ShareMusicService {
     }
     private static void observeFileCreated(long roomId, String musicName, HashOperations<String, Object, Object> operations,String nowMusicKey, SharePlaylistMusic nowPlay) {
 //        String targetFile ="/tmp/hls/" + roomId + "/" + "music.m3u8";
-//        String targetFile = "stream.sh";
-//        String targetFile = "stream.bat";
         String targetFile = musicName + ".mp4";
         while(true){ // 디렉토리를 모니터링 하다가 파일이 생성되는 시점에 응답주기
             File created = new File(targetFile);

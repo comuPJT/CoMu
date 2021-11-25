@@ -4,7 +4,7 @@ roomid=$1
 music=$2
 
 if [ ! -e $music.mp4 ];then
-	wget https://comu304.s3.ap-northeast-2.amazonaws.com/static/$music.mp4
+	wget https://ddvcht04ftegx.cloudfront.net/$music.mp4
 fi
 
 if [ $? -eq 0 ]

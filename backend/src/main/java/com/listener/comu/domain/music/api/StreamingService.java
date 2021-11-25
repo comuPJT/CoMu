@@ -26,9 +26,10 @@ public class StreamingService {
     public void executeStreamingShell(long roomId, ListOperations<String, Object> listOps, HashOperations<String, Object, Object> operations, String musicName, String nowMusicKey, SharePlaylistMusic nowPlay) {
         nowPlay.setStatus(Status.READY);
         operations.put(nowMusicKey, "room:"+roomId , nowPlay);
+
         Runtime rt = Runtime.getRuntime();
-        String cmd = "sh stream.sh " + roomId + " " + musicName;
-        //    String cmd = "stream.bat " + roomId + " " + musicName;
+        String cmd = "sh ~/stream.sh " + roomId + " " + musicName;
+        //    String cmd = "%userprofile%/stream.bat " + roomId + " " + musicName;
         try {
             System.out.println("Streaming start...");
             Process pr = rt.exec(cmd);
@@ -49,8 +50,8 @@ public class StreamingService {
 
     @Async
     public void executeDownloadAndUploadToS3(Music music){
-        String cmd = "youtube-dl -f 160+140 -o " + music.getSpotifyId() + ".%(ext)s " + music.getSource();
-//        String cmd = "bash -c \"youtube-dl -f 160+140 -o src/main/resources/static/" + music.getSpotifyId() + ".%(ext)s " + music.getSource() + "\"";
+        String cmd = "youtube-dl -f 160+140 -o ~/" + music.getSpotifyId() + ".%(ext)s " + music.getSource();
+//        String cmd = "bash -c \"youtube-dl -f 160+140 -o %userportfolio%/" + music.getSpotifyId() + ".%(ext)s " + music.getSource() + "\"";
         Runtime rt = Runtime.getRuntime();
         try {
             Process pr = rt.exec(cmd);
