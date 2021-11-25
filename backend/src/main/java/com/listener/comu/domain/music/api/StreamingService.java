@@ -30,7 +30,7 @@ public class StreamingService {
         nowPlay.setStatus(Status.READY);
         operations.put(nowMusicKey, "room:"+roomId , nowPlay);
 
-        String cmd = "sh stream.sh " + roomId + " " + musicName; // stream.sh가 위치한 절대경로를 쓸 것
+        String cmd = "sh /stream.sh " + roomId + " " + musicName; // stream.sh가 위치한 절대경로를 쓸 것
         //    String cmd = "%userprofile%/stream.bat " + roomId + " " + musicName;
         try {
             System.out.println("Streaming start...");
