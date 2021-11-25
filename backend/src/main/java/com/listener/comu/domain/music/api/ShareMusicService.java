@@ -17,6 +17,6 @@ public interface ShareMusicService {
     List<SharePlaylistMusicRes> getHonoredPlayList();
     SharePlaylistMusicRes HonoredMusicAndContents(Long playId);
     void deleteMusicFromHonorList(Long playId);
-    void toggleLikeMusicRequest(Long playId, Long userId);
+    boolean toggleLikeMusicRequest(Long playId, Long userId);
     SharePlaylistMusicRes getNowPlayingMusic(long roomId);
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -25,14 +26,17 @@ public class StreamingService {
     public void executeStreamingShell(long roomId, ListOperations<String, Object> listOps, HashOperations<String, Object, Object> operations, String musicName, String nowMusicKey, SharePlaylistMusic nowPlay) {
         nowPlay.setStatus(Status.READY);
         operations.put(nowMusicKey, "room:"+roomId , nowPlay);
+
         Runtime rt = Runtime.getRuntime();
-        String cmd = "sh stream.sh " + roomId + " " + musicName;
-        //    String cmd = "stream.bat " + roomId + " " + musicName;
+        String cmd = "sh ~/stream.sh " + roomId + " " + musicName;
+        //    String cmd = "%userprofile%/stream.bat " + roomId + " " + musicName;
         try {
             System.out.println("Streaming start...");
             Process pr = rt.exec(cmd);
-            pr.waitFor();
-            pr.destroy();
+            if(!pr.waitFor(6, TimeUnit.MINUTES)) {
+                //timeout - kill the process.
+                pr.destroyForcibly();
+            }
             operations.delete(nowMusicKey, "room:" + roomId);
             if( !nowPlay.getPlayId().equals("Anonymous")) {
                 nowPlay.setStatus(Status.DONE);
@@ -46,16 +50,16 @@ public class StreamingService {
 
     @Async
     public void executeDownloadAndUploadToS3(Music music){
-        String cmd = "youtube-dl -f 160+140 -o src/main/resources/static/" + music.getSpotifyId() + ".%(ext)s " + music.getSource();
-//        String cmd = "bash -c \"youtube-dl -f 160+140 -o src/main/resources/static/" + music.getSpotifyId() + ".%(ext)s " + music.getSource() + "\"";
+        String cmd = "youtube-dl -f 160+140 -o ~/" + music.getSpotifyId() + ".%(ext)s " + music.getSource();
+//        String cmd = "bash -c \"youtube-dl -f 160+140 -o %userportfolio%/" + music.getSpotifyId() + ".%(ext)s " + music.getSource() + "\"";
         Runtime rt = Runtime.getRuntime();
         try {
             Process pr = rt.exec(cmd);
             pr.waitFor();
-            String sourceFilepath = "src/main/resources/static/" + music.getSpotifyId() + ".mp4";
+            pr.destroy();
+            String sourceFilepath = music.getSpotifyId() + ".mp4";
 //            String sourceFilepath = "bash -c \"src/main/resources/static/" + music.getSpotifyId() + ".mp4\"";
             s3Uploader.dirUpload(new File(sourceFilepath),"static");
-            pr.destroy();
             music.setOnCloud(1);
             musicRepository.save(music);
         } catch (IOException | InterruptedException e) {

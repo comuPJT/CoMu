@@ -82,11 +82,16 @@ class ShareMusicServiceImpl implements ShareMusicService {
         final String key = playedPrefix + ":" + roomId; //room
         ListOperations<String, Object> operations = redisTemplate.opsForList();
         List<Object> roomPlaylist = operations.range(key, 0,-1);
-        List<SharePlaylistMusicRes> response = new ArrayList<>();
+        List<SharePlaylistMusicRes> tempRes = new ArrayList<>();
         if(roomPlaylist != null) {
-            convertObjectListToDtoList(roomPlaylist, response);
+            convertObjectListToDtoList(roomPlaylist, tempRes);
+            List<SharePlaylistMusicRes> response = new ArrayList<>();
+            for(SharePlaylistMusicRes res : tempRes) {
+                if (!res.getContents().equals("")) response.add(res);
+            }
+            return response;
         }
-        return response;
+        return tempRes;
     }
 
     @Override
@@ -245,11 +250,15 @@ class ShareMusicServiceImpl implements ShareMusicService {
 
 
     @Override
-    public void toggleLikeMusicRequest(Long playId, Long userId ) {
+    public boolean toggleLikeMusicRequest(Long playId, Long userId ) {
         SetOperations<String,Object> setOperations = redisTemplate.opsForSet();
         final String key = musicLikePrefix + ":" + playId;
-        if (Boolean.TRUE.equals(setOperations.isMember(key, userId))) setOperations.add(key, userId);
+        if (Boolean.TRUE.equals(setOperations.isMember(key, userId))) {
+            setOperations.add(key, userId);
+            return true;
+        }
         else setOperations.remove(key, userId);
+        return false;
     }
 
     @Override
@@ -281,8 +290,8 @@ class ShareMusicServiceImpl implements ShareMusicService {
         return null;
     }
 
-    // 5초 마다 재생중인 목록을 모니터링하며 사연 스트리밍 스케줄링
-    @Scheduled(cron="*/5 * * * * *")
+    // 10초 마다 재생중인 목록을 모니터링하며 사연 스트리밍 스케줄링
+    @Scheduled(cron="*/10 * * * * *")
     public void scheduleLiveStream() {
         HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
         ListOperations<String, Object> listOps = redisTemplate.opsForList();
@@ -329,8 +338,6 @@ class ShareMusicServiceImpl implements ShareMusicService {
     }
     private static void observeFileCreated(long roomId, String musicName, HashOperations<String, Object, Object> operations,String nowMusicKey, SharePlaylistMusic nowPlay) {
 //        String targetFile ="/tmp/hls/" + roomId + "/" + "music.m3u8";
-//        String targetFile = "stream.sh";
-//        String targetFile = "stream.bat";
         String targetFile = musicName + ".mp4";
         while(true){ // 디렉토리를 모니터링 하다가 파일이 생성되는 시점에 응답주기
             File created = new File(targetFile);
