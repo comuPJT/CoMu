@@ -1,0 +1,191 @@
+.play-list-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 30;
+  top: 0;
+  right: 0;
+  width: 84.6vw;
+  height: 100%;
+  font-family: NANUM;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.play-list-window {
+  overflow: hidden;
+  width: 70%;
+  height: 87%;
+  background: #eee3d7;
+  box-shadow: 0.16vw 0.16vw 0px #613a2e;
+  border-radius: 0.52vw;
+}
+.list-info-wrapper {
+  width: 100%;
+  height: 35%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .list-info-cover {
+    width: 90%;
+    height: 80%;
+    display: flex;
+    position: relative;
+    .add_icon {
+      height: 1.5vw;
+      position: absolute;
+      right: 0;
+      top: 0;
+      margin-right: 0vw;
+      margin-top: 1vw;
+      cursor: pointer;
+    }
+    img {
+      height: 100%;
+      margin-right: 2.48vw;
+    }
+    .list-info-text {
+      height: 100%;
+      .list-info-name {
+        height: 25%;
+        font-family: BMHANNA;
+        font-size: 1.56vw;
+        color: #615344;
+        line-height: 25%;
+        display: flex;
+        align-items: center;
+        img {
+          height: 2vw;
+          margin-left: 0.7vw;
+          cursor: pointer;
+        }
+      }
+      .list-info-update {
+        height: 25%;
+        font-family: BMHANNA;
+        font-size: 1.56vw;
+        color: #615344;
+        line-height: 25%;
+        display: flex;
+        align-items: center;
+      }
+      .list-info-amount {
+        height: 25%;
+        font-family: BMHANNA;
+        font-size: 1.56vw;
+        color: #615344;
+        line-height: 25%;
+        display: flex;
+        align-items: center;
+      }
+      .list-info-playtime {
+        height: 25%;
+        font-family: BMHANNA;
+        font-size: 1.56vw;
+        color: #615344;
+        line-height: 25%;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+}
+.list-info-detail {
+  width: 100%;
+  height: 48%;
+  overflow-y: scroll;
+  padding-top: 1%;
+  .list-info-detail-music {
+    background: #e0d3c8;
+    width: 90%;
+    height: 24%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1%;
+    display: flex;
+    align-items: center;
+    .delete-icon {
+      width: 1.5vw;
+      cursor: pointer;
+    }
+  }
+}
+
+.list-info-detail-button-wrapper {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  height: 17%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  .smallbuttonbrown {
+    margin-right: 1.5vw;
+  }
+  .smallbuttonwhite {
+    img {
+      width: 1.04vw;
+      margin-left: 0.6vw;
+    }
+  }
+}
+
+.list-info-detail-music-cover {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 3vw;
+  img {
+    height: 85%;
+    margin: 0.5vw;
+  }
+}
+.list-info-detail-music-name {
+  width: 25%;
+  font-family: NANUMBOLD;
+  color: #613a2e;
+  font-size: 0.94vw;
+}
+.list-info-detail-music-artist {
+  width: 25%;
+  font-family: NANUM;
+  color: #613a2e;
+  font-size: 0.94vw;
+}
+.list-info-detail-music-album {
+  width: 25%;
+  font-family: NANUM;
+  color: #613a2e;
+  font-size: 0.94vw;
+}
+
+.ghost {
+  opacity: 1;
+}
+
+// 오버레이 트랜지션
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.4s;
+
+  // 오버레이에 포함되어 있는 모달 윈도의 트랜지션
+  .modal-window {
+    transition: opacity 0.4s, transform 0.4s;
+  }
+}
+
+// 딜레이가 적용된 모달 윈도가 제거된 후에 오버레이가 사라짐
+.modal-leave-active {
+  transition: opacity 0.6s ease 0.4s;
+}
+
+.modal-enter,
+.modal-leave-to {
+  opacity: 0;
+
+  .modal-window {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}

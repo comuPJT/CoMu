@@ -1,0 +1,22 @@
+#unity {
+  float: right; 
+  width: 76vw; 
+  height: 100vh;
+
+  .blind {
+    position: fixed;
+    z-index: 10;
+    width: 76vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &-msg {
+      font-family: BMHANNA;
+      font-size: 1.8vw;
+      color: #ffffff;
+    }
+  }
+}

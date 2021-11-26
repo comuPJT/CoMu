@@ -1,0 +1,125 @@
+.modal-overlay-second {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 30;
+  top: 0;
+  right: 0;
+  width: 76vw;
+  height: 100%;
+  font-family: NANUM;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.modal-window-second {
+  overflow: hidden;
+  width: 35%;
+  height: 27vw;
+  max-height: 45%;
+  background: #eee3d7;
+  box-shadow: 3px 3px 0px #613a2e;
+  border-radius: 10px;
+  .modal-top-second {
+    width: 100%;
+    height: 20%;
+    background: #aa938c;
+    font-family: BMHANNA;
+    border-radius: 10px 10px 0 0;
+    border: 2px solid #613a2e;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #613a2e;
+    font-size: 1.56vw;
+    padding: 0 0.94vw;
+    img {
+      width: 1.88vw;
+      cursor: pointer;
+    }
+  }
+  .modal-content-second {
+    width: 100%;
+    height: 80%;
+    border-radius: 0 0 10px 10px;
+    border: 2px solid #613a2e;
+    border-top: none !important;
+    box-sizing: border-box;
+  }
+}
+
+.modal-mylist-wrapper {
+  height: 95%;
+  width: 80%;
+  margin: auto;
+  overflow-y: scroll;
+  padding-top: 0.8vw;
+  .modal-mylist {
+    margin: 0.5vw 0;
+    height: 4.16vw;
+    cursor: pointer;
+    .modal-mylist-img {
+      float: left;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 4.16vw;
+      height: 4.16vw;
+      text-align: center;
+      img {
+        width: 3.5vw;
+        height: 3.5vw;
+      }
+    }
+    .modal-mylist-title {
+      float: left;
+      display: flex;
+      align-items: center;
+      width: 15.14vw;
+      height: 4.16vw;
+      font-size: 0.94vw;
+      padding-left: 1.5vw;
+      input {
+        border: solid 1px #615344;
+        font-size: 0.94vw;
+        font-family: NANUM;
+      }
+      input:focus {
+        outline: none;
+      }
+      input::placeholder {
+        color: #aa938c;
+      }
+    }
+  }
+  .modal-mylist:hover {
+    background: #e0d3c8;
+  }
+}
+
+// 오버레이 트랜지션
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.4s;
+
+  // 오버레이에 포함되어 있는 모달 윈도의 트랜지션
+  .modal-window {
+    transition: opacity 0.4s, transform 0.4s;
+  }
+}
+
+// 딜레이가 적용된 모달 윈도가 제거된 후에 오버레이가 사라짐
+.modal-leave-active {
+  transition: opacity 0.6s ease 0.4s;
+}
+
+.modal-enter,
+.modal-leave-to {
+  opacity: 0;
+
+  .modal-window {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}

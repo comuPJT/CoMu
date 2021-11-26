@@ -1,0 +1,93 @@
+.mypage-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 30;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("../../assets/images/mainpage_background.png");
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  .mypage-nav {
+    width: 15.4vw;
+    height: 100vh;
+    background-color: #eee3d7;
+    float: left;
+    font-family: BMHANNA;
+    position: relative;
+    box-shadow: 0px 0.2vw 0.2vw rgba(0, 0, 0, 0.25);
+    border-radius: 0.52vw;
+    .mypage-nav-logo {
+      height: 9.43vw;
+      width: 100%;
+      background: #aa938c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.52vw 0.52vw 0 0;
+      img {
+        width: 11vw;
+      }
+    }
+    .mypage-nav-text {
+      height: 7.2vw;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5vw;
+      cursor: default;
+    }
+    .mypage-nav-type {
+      height: 4.17vw;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      font-size: 1.88vw;
+      color: #615344;
+      border-bottom: 1.5px solid;
+      border-top: 1.5px solid;
+      cursor: default;
+      img {
+        width: 1.8vw;
+        margin: 0 1.25vw;
+      }
+    }
+    .mypage-nav-detail {
+      height: 4.17vw;
+      width: calc(100% - 1.8vw);
+      display: flex;
+      align-items: center;
+      font-size: 1.25vw;
+      color: #615344;
+      padding-left: 1.8vw;
+      cursor: pointer;
+    }
+    .mypage-nav-detail-selected {
+      background: #aa938c;
+      color: black;
+    }
+    .mypage-nav-detail:hover {
+      background: #aa938c;
+      color: black;
+    }
+  }
+  .mypage-nav-exit {
+    display: flex;
+    position: absolute;
+    bottom: 1.35vw;
+    width: 100%;
+    justify-content: center;
+    img {
+      width: 9.1vw;
+      cursor: pointer;
+    }
+  }
+  .mypage-content {
+    height: 100vh;
+    width: 84.6vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

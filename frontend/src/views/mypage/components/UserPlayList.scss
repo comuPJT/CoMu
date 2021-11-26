@@ -1,0 +1,107 @@
+.play-list-wrapper {
+  width: 100%;
+  height: 100%;
+  background-image: url("../../../assets/images/bgr-temp.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  .play-list-table {
+    width: 84.7%;
+    height: 83.6%;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    .line-1 {
+      z-index: 7;
+      width: 71.6vw;
+      position: absolute;
+      top: 29.4%;
+      left: 6.5vw;
+    }
+    .line-2 {
+      z-index: 7;
+      width: 71.6vw;
+      position: absolute;
+      top: 57.1%;
+      left: 6.5vw;
+    }
+    .line-3 {
+      z-index: 7;
+      width: 71.6vw;
+      position: absolute;
+      top: 85%;
+      left: 6.5vw;
+    }
+    .play-list-detail > * {
+      cursor: pointer;
+    }
+    .play-list-detail:hover > .img-1 {
+      transform: translateY(-70%);
+    }
+    .play-list-detail {
+      width: 25%;
+      height: 33.5%;
+      position: relative;
+      .play-list-detail-title {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 4px 20px;
+        position: absolute;
+        width: 6vw;
+        height: 1.2vw;
+        left: 2.5vw;
+        bottom: 0;
+        background: #af4f19;
+        border-radius: 8px 8px 0px 0px;
+        font-family: BMHANNA;
+        color: white;
+        font-size: 0.83vw;
+        z-index: 6;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .img-1 {
+        width: 60%;
+        position: absolute;
+        bottom: 4%;
+        left: 10%;
+        z-index: 5;
+        transition: all 0.5s;
+      }
+      .img-2 {
+        width: 60%;
+        position: absolute;
+        bottom: 7%;
+        left: 20%;
+        z-index: 4;
+      }
+      .img-3 {
+        width: 60%;
+        position: absolute;
+        bottom: 12%;
+        left: 25%;
+        z-index: 3;
+      }
+      .img-4 {
+        width: 60%;
+        position: absolute;
+        bottom: 7%;
+        left: 30%;
+        z-index: 2;
+      }
+      .img-5 {
+        width: 60%;
+        position: absolute;
+        bottom: 12%;
+        left: 35%;
+        z-index: 1;
+      }
+    }
+  }
+}
