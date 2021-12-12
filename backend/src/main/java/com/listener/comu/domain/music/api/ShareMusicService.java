@@ -14,7 +14,7 @@ public interface ShareMusicService {
     void deletePlayedMusicFromPlayList(Long roomId, String playId);
     void deleteMusicRequestFromPlayList(Long roomId, String playId);
     List<SharePlaylistMusicRes> getHonoredPlayList();
-    SharePlaylistMusicRes HonoredMusicAndContents(Long playId);
+    SharePlaylistMusicRes getHonoredMusicAndContents(Long playId);
     void deleteMusicFromHonorList(Long playId);
     boolean toggleLikeMusicRequest(Long playId, Long userId);
     SharePlaylistMusicRes getNowPlayingMusic(long roomId);
