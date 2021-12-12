@@ -10,11 +10,9 @@ import org.springframework.data.redis.core.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import static com.listener.comu.config.RedisConfig.objectMapper;
 
@@ -290,70 +288,6 @@ class ShareMusicServiceImpl implements ShareMusicService {
         return null;
     }
 
-    // 10초 마다 재생중인 목록을 모니터링하며 사연 스트리밍 스케줄링
-    @Scheduled(cron="*/10 * * * * *")
-    public void scheduleLiveStream() {
-        HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
-        ListOperations<String, Object> listOps = redisTemplate.opsForList();
-        String now = "nowplaying", musicName;
-        for(long i = 1 ; i <= 6 ; i++){
-            SharePlaylistMusic nowPlay = objectMapper().convertValue(hashOps.get(now, musicReqPrefix + ":" + i), SharePlaylistMusic.class);
-            if( nowPlay == null ){ //재생곡이 없는 경우
-                //  재생되지 않은 신청곡 리스트에서 새로 값을 얻어와 스트리밍을 시작한다.
-                Object next = listOps.leftPop(musicReqPrefix + ":" + i);
-                nowPlay = objectMapper().convertValue(next, SharePlaylistMusic.class);
-                if( nowPlay == null ) {// 신청곡이 하나도 없다면 랜덤으로 얻어오기
-                    nowPlay = getRandomMusicObject(i, hashOps, now);
-                    musicName = nowPlay.getTitle();
-                }
-                else { // 신청곡이 있는 경우
-                    Music music = musicRepository.getMusicById(nowPlay.getMusicId());
-                    musicName = music.getSpotifyId();
-                    if (music.getOnCloud() == 0) { // 신청곡이 있지만 음원이 없어 랜덤재생을 해야하는 경우
-                        listOps.leftPush(musicReqPrefix + ":" + i, nowPlay); //꺼낸항목 다시 넣기
-                        streamingService.executeDownloadAndUploadToS3(music);
-                        nowPlay = getRandomMusicObject(i, hashOps, now);
-                        musicName = nowPlay.getTitle();
-                    }
-                }
-                streamingService.executeStreamingShell(i, listOps, hashOps, musicName, now, nowPlay);// 현재 재생으로 옮기고 streaming한다.
-                observeFileCreated(i, musicName, hashOps, now, nowPlay);
-            }
-        }
-    }
-
-    private SharePlaylistMusic getRandomMusicObject(long roomId, HashOperations<String, Object, Object> operations, String nowMusicKey) {
-        long rand = getRandomSongForRoom(roomId); // 방id를 토대로 방에 맞는 랜덤곡을 받아온다.
-        SharePlaylistMusic nowPlay = SharePlaylistMusic.builder()
-                .title("")
-                .contents("")
-                .playId("Anonymous")
-                .musicId(rand)
-                .userId(-1L)
-                .build();
-        String musicName = musicRepository.getMusicById(rand).getSpotifyId();
-        nowPlay.setTitle(musicName);
-        operations.put(nowMusicKey, "room:" + roomId, nowPlay);
-        return nowPlay;
-    }
-    private static void observeFileCreated(long roomId, String musicName, HashOperations<String, Object, Object> operations,String nowMusicKey, SharePlaylistMusic nowPlay) {
-//        String targetFile ="/tmp/hls/" + roomId + "/" + "music.m3u8";
-//        String targetFile = musicName + ".mp4"; // mac or window
-        String targetFile = musicName + ".mp4"; // EC2 docker
-        while(true){ // 디렉토리를 모니터링 하다가 파일이 생성되는 시점에 응답주기
-            File created = new File(targetFile);
-            if(created.isFile()) {
-                nowPlay.setStatus(Status.PLAYING);
-                operations.put(nowMusicKey, "room:"+roomId, nowPlay);
-                System.out.println("Streaming file created...!");
-                return ; // 파일이 생성되어 스트리밍 가능
-            }
-        }
-    }
-    private static long getRandomSongForRoom(long roomId){
-        Random rd = new Random();
-        return  rd.nextInt(3) + (roomId-1)*3 + 1;
-    }
     // 매일 밤 12시 마다 redis에 있던 일반 사연 목록 중 좋아요수가 10이 넘는 사연을 명예의 전당에 영구적으로 저장한다.
     @Scheduled(cron = "0 0 0 * * ?")
     @SuppressWarnings("unchecked")

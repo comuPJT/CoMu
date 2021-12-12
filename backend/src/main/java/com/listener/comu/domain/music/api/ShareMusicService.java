@@ -1,6 +1,5 @@
 package com.listener.comu.domain.music.api;
 
-import com.listener.comu.domain.music.dto.NextMusicRes;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicReq;
 import com.listener.comu.domain.music.dto.SharePlaylistMusicRes;
 
