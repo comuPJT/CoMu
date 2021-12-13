@@ -125,7 +125,7 @@ public class ShareMusicController {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<SharePlaylistMusicRes> getHonoredMusicAndContents(@PathVariable Long playId) {
-        return ResponseEntity.status(200).body(shareMusicService.HonoredMusicAndContents(playId));
+        return ResponseEntity.status(200).body(shareMusicService.getHonoredMusicAndContents(playId));
     }
 
     @DeleteMapping("/honor/{playId}")
