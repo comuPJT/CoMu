@@ -41,6 +41,7 @@ https://user-images.githubusercontent.com/69590041/149337094-42b18f64-0876-4010-
 
 |원지연|김우현|류한길|박지현|신지수|
 |:--:|:--:|:--:|:--:|:--:|
+|<img src="https://i.imgur.com/pv74EXu.png" width="120px;">|<img src="https://i.imgur.com/xwWgNQT.png" width="120px;">|<img src="https://i.imgur.com/f6FzFVL.png" width="120px;">|<img src="https://i.imgur.com/9Gf2GlM.png" width="120px;">|<img src="https://i.imgur.com/VINQYOi.png" width="120px;">|<img src="https://i.imgur.com/.png" width="120px;">|
 |`Unity`<br />`Project Manager`<br />`UI/UX Design`|`Front-end`<br />`UI/UX Design`|`Unity`<br />`CI/CD`|`Back-end`<br />`Database`|`Back-end`<br />`Database`<br />`UI/UX Design`|
 
 <br>
