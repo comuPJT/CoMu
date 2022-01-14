@@ -1,6 +1,8 @@
 # 📀 CoMu(코뮤)
 
 > 음악 공유 서비스, CoMu
+
+
 ![version](https://img.shields.io/badge/version-v1.0.1-0062AD) ![web](https://img.shields.io/badge/platform-web-yellow) ![framework](https://img.shields.io/badge/-SpringBoot-6DB33F?logo=SpringBoot&logoColor=white) ![library](https://img.shields.io/badge/-Vue.js-4FC08D?logo=Vue.js&logoColor=white) ![db](https://img.shields.io/badge/-MySQL-4479A1?logo=MySQL&logoColor=white) ![Unity](https://img.shields.io/badge/-Unity-FFFFFF?logo=Unity&logoColor=grey)
 
 <br>
